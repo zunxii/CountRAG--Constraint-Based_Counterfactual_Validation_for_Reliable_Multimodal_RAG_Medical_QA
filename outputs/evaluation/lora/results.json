@@ -1,39 +1,34 @@
 {
-  "timestamp": "2025-12-27T19:21:34.799407",
+  "timestamp": "2026-01-04T23:32:07.031271",
   "tests": {
     "embedding_comparison": {
-      "distance_l2": 0.0,
-      "cosine_similarity": 1.0,
+      "distance_l2": 0.2228002299865087,
+      "cosine_similarity": 0.9748748739560446,
       "per_query": [
         {
-          "distance": 0.0,
-          "similarity": 1.0
+          "distance": 0.21588176488876343,
+          "similarity": 0.976697564125061
         },
         {
-          "distance": 0.0,
-          "similarity": 1.0
+          "distance": 0.19659994542598724,
+          "similarity": 0.9806742072105408
         },
         {
-          "distance": 0.0,
-          "similarity": 1.0
+          "distance": 0.2559189796447754,
+          "similarity": 0.9672528505325317
         }
       ]
     },
     "alignment_improvement": {
-      "base_similarity": 0.40066273510456085,
-      "lora_similarity": 0.13685797061771154,
-      "improvement": -0.2638047644868493,
-      "improvement_pct": -65.84210144175357,
+      "base_similarity": 0.34534111618995667,
+      "lora_similarity": 0.41114869713783264,
+      "improvement": 0.06580758094787598,
+      "improvement_pct": 19.055819843843377,
       "per_pair": [
         {
-          "base": 0.3587632477283478,
-          "lora": 0.02544344775378704,
-          "improvement": -0.33331979997456074
-        },
-        {
-          "base": 0.4425622224807739,
-          "lora": 0.24827249348163605,
-          "improvement": -0.19428972899913788
+          "base": 0.34534111618995667,
+          "lora": 0.41114869713783264,
+          "improvement": 0.06580758094787598
         }
       ]
     }

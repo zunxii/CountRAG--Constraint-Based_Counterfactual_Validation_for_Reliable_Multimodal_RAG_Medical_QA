@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-12-26T17:06:27.195961",
+  "timestamp": "2026-01-05T18:32:31.363079",
   "num_samples": 50,
   "stability_tests": [
     {
-      "case_id": "clipsyntel_002910",
-      "diagnosis": "skin rash",
+      "case_id": "clipsyntel_000338",
+      "diagnosis": "eye redness",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0,
+          "no_text": 0.036,
           "no_image": 0.0,
           "noisy": 0.0
         },
@@ -15,283 +15,13 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 1.0
+          "eye redness": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_000203",
-      "diagnosis": "neck swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "neck swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001733",
-      "diagnosis": "swollen eye",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "swollen eye": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000860",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002808",
-      "diagnosis": "foot swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "foot swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000305",
-      "diagnosis": "knee swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "knee swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002235",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002397",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001474",
-      "diagnosis": "knee swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "knee swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002827",
-      "diagnosis": "lip swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "lip swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002207",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002402",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000094",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000195",
-      "diagnosis": "foot swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "foot swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000596",
-      "diagnosis": "mouth ulcers",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "mouth ulcers": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002536",
-      "diagnosis": "skin irritation",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin irritation": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001600",
+      "case_id": "clipsyntel_000400",
       "diagnosis": "hand lump",
       "stability": {
         "js_divergence": {
@@ -309,7 +39,7 @@
       }
     },
     {
-      "case_id": "clipsyntel_002327",
+      "case_id": "clipsyntel_002879",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -327,7 +57,7 @@
       }
     },
     {
-      "case_id": "clipsyntel_002178",
+      "case_id": "clipsyntel_002021",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -345,7 +75,43 @@
       }
     },
     {
-      "case_id": "clipsyntel_001735",
+      "case_id": "clipsyntel_001252",
+      "diagnosis": "skin growth",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "skin growth": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000604",
+      "diagnosis": "mouth ulcers",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "mouth ulcers": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002205",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -363,8 +129,26 @@
       }
     },
     {
-      "case_id": "clipsyntel_002203",
-      "diagnosis": "skin rash",
+      "case_id": "clipsyntel_001023",
+      "diagnosis": "swollen eye",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0749,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "swollen eye": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001089",
+      "diagnosis": "foot swelling",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -375,13 +159,13 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 1.0
+          "foot swelling": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_000657",
+      "case_id": "clipsyntel_000862",
       "diagnosis": "neck swelling",
       "stability": {
         "js_divergence": {
@@ -399,133 +183,7 @@
       }
     },
     {
-      "case_id": "clipsyntel_001116",
-      "diagnosis": "lip swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "lip swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001481",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000575",
-      "diagnosis": "mouth ulcers",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "mouth ulcers": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000572",
-      "diagnosis": "mouth ulcers",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "mouth ulcers": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001897",
-      "diagnosis": "skin irritation",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin irritation": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000054",
-      "diagnosis": "swollen eye",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "swollen eye": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001491",
-      "diagnosis": "knee swelling",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "knee swelling": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000912",
+      "case_id": "clipsyntel_002717",
       "diagnosis": "swollen tonsils",
       "stability": {
         "js_divergence": {
@@ -543,8 +201,8 @@
       }
     },
     {
-      "case_id": "clipsyntel_000266",
-      "diagnosis": "lip swelling",
+      "case_id": "clipsyntel_002992",
+      "diagnosis": "neck swelling",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -555,13 +213,13 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "lip swelling": 1.0
+          "neck swelling": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_002986",
+      "case_id": "clipsyntel_001773",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -579,26 +237,8 @@
       }
     },
     {
-      "case_id": "clipsyntel_000156",
-      "diagnosis": "skin irritation",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.342,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "low"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin irritation": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_001167",
-      "diagnosis": "edema",
+      "case_id": "clipsyntel_002702",
+      "diagnosis": "swollen eye",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -609,14 +249,14 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "edema": 1.0
+          "swollen eye": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_000460",
-      "diagnosis": "foot swelling",
+      "case_id": "clipsyntel_001863",
+      "diagnosis": "skin dryness",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -627,13 +267,31 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 1.0
+          "skin dryness": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_000619",
+      "case_id": "clipsyntel_000662",
+      "diagnosis": "neck swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "neck swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000645",
       "diagnosis": "mouth ulcers",
       "stability": {
         "js_divergence": {
@@ -651,8 +309,8 @@
       }
     },
     {
-      "case_id": "clipsyntel_001543",
-      "diagnosis": "foot swelling",
+      "case_id": "clipsyntel_000052",
+      "diagnosis": "swollen eye",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -663,13 +321,31 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 1.0
+          "swollen eye": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_001868",
+      "case_id": "clipsyntel_001578",
+      "diagnosis": "hand lump",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "hand lump": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002802",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -687,7 +363,25 @@
       }
     },
     {
-      "case_id": "clipsyntel_001782",
+      "case_id": "clipsyntel_000702",
+      "diagnosis": "neck swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "neck swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002370",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -705,7 +399,7 @@
       }
     },
     {
-      "case_id": "clipsyntel_002336",
+      "case_id": "clipsyntel_002668",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -723,7 +417,97 @@
       }
     },
     {
-      "case_id": "clipsyntel_002159",
+      "case_id": "clipsyntel_001903",
+      "diagnosis": "skin dryness",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "skin dryness": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001438",
+      "diagnosis": "neck swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "neck swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001237",
+      "diagnosis": "neck swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "neck swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000013",
+      "diagnosis": "swollen tonsils",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "swollen tonsils": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001684",
+      "diagnosis": "knee swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "knee swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002688",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -741,7 +525,25 @@
       }
     },
     {
-      "case_id": "clipsyntel_000096",
+      "case_id": "clipsyntel_001463",
+      "diagnosis": "knee swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "knee swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002746",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -777,8 +579,8 @@
       }
     },
     {
-      "case_id": "clipsyntel_000430",
-      "diagnosis": "lip swelling",
+      "case_id": "clipsyntel_001521",
+      "diagnosis": "neck swelling",
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
@@ -789,31 +591,13 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "lip swelling": 1.0
+          "neck swelling": 1.0
         },
         "num_clusters": 1
       }
     },
     {
-      "case_id": "clipsyntel_002977",
-      "diagnosis": "eye inflamation",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "eye inflamation": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_002608",
+      "case_id": "clipsyntel_002033",
       "diagnosis": "skin rash",
       "stability": {
         "js_divergence": {
@@ -831,25 +615,7 @@
       }
     },
     {
-      "case_id": "clipsyntel_002175",
-      "diagnosis": "skin rash",
-      "stability": {
-        "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0,
-          "noisy": 0.0
-        },
-        "robustness_level": "high"
-      },
-      "baseline_distribution": {
-        "distribution": {
-          "skin rash": 1.0
-        },
-        "num_clusters": 1
-      }
-    },
-    {
-      "case_id": "clipsyntel_000217",
+      "case_id": "clipsyntel_001548",
       "diagnosis": "mouth ulcers",
       "stability": {
         "js_divergence": {
@@ -867,11 +633,155 @@
       }
     },
     {
-      "case_id": "clipsyntel_000922",
+      "case_id": "clipsyntel_002960",
+      "diagnosis": "foot swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "foot swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001513",
+      "diagnosis": "hand lump",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "hand lump": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002193",
+      "diagnosis": "skin rash",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "skin rash": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001428",
+      "diagnosis": "knee swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "knee swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000782",
+      "diagnosis": "swollen tonsils",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "swollen tonsils": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000303",
+      "diagnosis": "knee swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "knee swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001456",
+      "diagnosis": "hand lump",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "hand lump": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001543",
+      "diagnosis": "foot swelling",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "foot swelling": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001663",
       "diagnosis": "swollen eye",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0749,
+          "no_text": 0.0,
           "no_image": 0.0,
           "noisy": 0.0
         },
@@ -885,11 +795,29 @@
       }
     },
     {
-      "case_id": "clipsyntel_000441",
-      "diagnosis": "edema",
+      "case_id": "clipsyntel_001022",
+      "diagnosis": "skin irritation",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1173,
+          "no_text": 0.2744,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "medium"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "skin irritation": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000061",
+      "diagnosis": "swollen eye",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
           "no_image": 0.0,
           "noisy": 0.0
         },
@@ -897,7 +825,79 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "edema": 1.0
+          "swollen eye": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000576",
+      "diagnosis": "mouth ulcers",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "mouth ulcers": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_001489",
+      "diagnosis": "hand lump",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "hand lump": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_000386",
+      "diagnosis": "cyanosis",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "cyanosis": 1.0
+        },
+        "num_clusters": 1
+      }
+    },
+    {
+      "case_id": "clipsyntel_002325",
+      "diagnosis": "skin rash",
+      "stability": {
+        "js_divergence": {
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
+        },
+        "robustness_level": "high"
+      },
+      "baseline_distribution": {
+        "distribution": {
+          "skin rash": 1.0
         },
         "num_clusters": 1
       }
@@ -905,82 +905,88 @@
   ],
   "analysis": {
     "avg_divergences": {
-      "no_text": 0.010684,
+      "no_text": 0.0077059999999999984,
       "no_image": 0.0,
       "noisy": 0.0
     },
     "robustness_distribution": {
       "high": 49,
-      "low": 1
+      "medium": 1
     },
     "per_diagnosis_stability": {
-      "skin rash": {
-        "count": 21,
-        "high": 21,
+      "eye redness": {
+        "count": 1,
+        "high": 1,
         "medium": 0,
         "low": 0
       },
-      "neck swelling": {
-        "count": 2,
-        "high": 2,
-        "medium": 0,
-        "low": 0
-      },
-      "swollen eye": {
-        "count": 3,
-        "high": 3,
-        "medium": 0,
-        "low": 0
-      },
-      "foot swelling": {
-        "count": 4,
-        "high": 4,
-        "medium": 0,
-        "low": 0
-      },
-      "knee swelling": {
-        "count": 3,
-        "high": 3,
-        "medium": 0,
-        "low": 0
-      },
-      "lip swelling": {
-        "count": 4,
-        "high": 4,
-        "medium": 0,
-        "low": 0
-      },
-      "mouth ulcers": {
+      "hand lump": {
         "count": 5,
         "high": 5,
         "medium": 0,
         "low": 0
       },
-      "skin irritation": {
-        "count": 3,
-        "high": 2,
+      "skin rash": {
+        "count": 13,
+        "high": 13,
         "medium": 0,
-        "low": 1
+        "low": 0
       },
-      "hand lump": {
+      "skin growth": {
         "count": 1,
         "high": 1,
+        "medium": 0,
+        "low": 0
+      },
+      "mouth ulcers": {
+        "count": 4,
+        "high": 4,
+        "medium": 0,
+        "low": 0
+      },
+      "swollen eye": {
+        "count": 5,
+        "high": 5,
+        "medium": 0,
+        "low": 0
+      },
+      "foot swelling": {
+        "count": 3,
+        "high": 3,
+        "medium": 0,
+        "low": 0
+      },
+      "neck swelling": {
+        "count": 7,
+        "high": 7,
         "medium": 0,
         "low": 0
       },
       "swollen tonsils": {
-        "count": 1,
-        "high": 1,
+        "count": 3,
+        "high": 3,
         "medium": 0,
         "low": 0
       },
-      "edema": {
+      "skin dryness": {
         "count": 2,
         "high": 2,
         "medium": 0,
         "low": 0
       },
-      "eye inflamation": {
+      "knee swelling": {
+        "count": 4,
+        "high": 4,
+        "medium": 0,
+        "low": 0
+      },
+      "skin irritation": {
+        "count": 1,
+        "high": 0,
+        "medium": 1,
+        "low": 0
+      },
+      "cyanosis": {
         "count": 1,
         "high": 1,
         "medium": 0,

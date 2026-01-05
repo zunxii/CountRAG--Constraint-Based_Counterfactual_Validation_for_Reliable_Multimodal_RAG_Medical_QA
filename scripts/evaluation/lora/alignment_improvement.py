@@ -29,10 +29,10 @@ class AlignmentAnalyzer:
         """Analyze alignment improvement"""
         # Test pairs
         pairs = [
-            ("data/images/edema_Image_1.jpg", 
-             "swelling noted around joint"),
-            ("data/images/cyanosis_Image_1.jpg",
-             "bluish discoloration observed")
+            ("Multimodal_images/edema/Image_5.jpg", 
+             "Just visited a poor community in Guatemala. Young boy (age 10) swollen calf muscles on both legs and now beginning in arms. Not typical type (soft and spongy) but like a hardened muscle that is growing in size.Please doctor see the current condition below . The mother (widowed) and extremely poor was told that her bright young boy had only two years to live. They do not have access or money to be treated. Wondering what might be the diagnosis. Someone said cystic fibrosis - but that is lung related is it not."),
+            ("Multimodal_images/skin_rash/Image_40.jpg",
+             "Hi Dr. Samuel, My name is Jamkt and I have this rash, it started on my hands, it s not itchy like scabies, but it seems like I detect tiny little eggs coming out of my skin, it s on my hands and now it on my face.The image for that is attached below I tried anti biotic ointment and wash it with salt. But it seems it s getting worse and worse. Please can you help.")
         ]
         
         base_sims = []

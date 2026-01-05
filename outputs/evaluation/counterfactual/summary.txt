@@ -4,10 +4,10 @@ COUNTERFACTUAL STABILITY SUMMARY
 Samples tested: 50
 
 Average JS Divergences:
-  no_text: 0.0107
+  no_text: 0.0077
   no_image: 0.0000
   noisy: 0.0000
 
 Robustness level distribution:
   high: 49
-  low: 1
+  medium: 1
