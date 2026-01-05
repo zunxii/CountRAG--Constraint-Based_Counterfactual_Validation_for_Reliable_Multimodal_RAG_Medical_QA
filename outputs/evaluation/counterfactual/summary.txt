@@ -1,13 +1,33 @@
-COUNTERFACTUAL STABILITY SUMMARY
+COUNTERFACTUAL STABILITY EVALUATION - RESEARCH REPORT
 ======================================================================
 
-Samples tested: 50
+Samples tested: 100
 
-Average JS Divergences:
-  no_text: 0.0077
-  no_image: 0.0000
-  noisy: 0.0000
+AVERAGE JS DIVERGENCES:
+  no_text: 0.0412
+  no_image: 0.0079
+  noisy: 0.0037
 
-Robustness level distribution:
-  high: 49
-  medium: 1
+ROBUSTNESS DISTRIBUTION:
+  high: 86
+  medium: 8
+  low: 6
+
+
+STATISTICAL SIGNIFICANCE:
+
+Text Modality Effect:
+  p-value: 0.0003
+  Cohen's d: -0.5292 (medium)
+  Significant: True
+
+Image Modality Effect:
+  p-value: 0.0668
+  Cohen's d: -0.2621 (small)
+  Significant: False
+
+
+PER-DIAGNOSIS ANALYSIS:
+Most stable: swollen tonsils
+Least stable: eye inflamation
+Stability variance: 0.0337

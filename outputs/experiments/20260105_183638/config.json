@@ -1,0 +1,27 @@
+{
+  "training": {
+    "lora": {
+      "enabled": true
+    },
+    "fusion": {
+      "enabled": true
+    }
+  },
+  "kb_building": {
+    "enabled": true
+  },
+  "evaluation": {
+    "retrieval": {
+      "enabled": true
+    },
+    "encoders": {
+      "enabled": true
+    },
+    "counterfactual": {
+      "enabled": true
+    },
+    "lora": {
+      "enabled": true
+    }
+  }
+}
