@@ -1,6 +1,3 @@
-"""
-Stability testing logic
-"""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
@@ -17,15 +14,17 @@ from core.reasoning.counterfactuals.stability.retrieval import StabilityRetrieve
 
 
 class StabilityTester:
-    """Tests counterfactual stability"""
+    """Tests counterfactual stability on evaluation queries"""
     
     def __init__(self, kb_dir: str, device: str = "cpu"):
         self.device = device
         
         # Load KB
-        self.index = faiss.read_index(f"{kb_dir}/index.faiss")
-        with open(f"{kb_dir}/metadata.json") as f:
-            self.metadata = json.load(f)
+        kb_dir = Path(kb_dir)
+        self.index = faiss.read_index(str(kb_dir / "index.faiss"))
+        
+        with open(kb_dir / "metadata.json") as f:
+            self.kb_metadata = json.load(f)
         
         # Load models
         self.encoder = BioMedCLIPEncoder(device=device)
@@ -40,18 +39,45 @@ class StabilityTester:
         self.fusion.eval()
         
         # Setup stability runner
-        retriever = StabilityRetriever(self.index, self.metadata)
+        retriever = StabilityRetriever(self.index, self.kb_metadata)
         self.runner = StabilityRunner(retriever, self.fusion)
     
+    def test_query(self, query: dict) -> dict:
+        """
+        Test stability for an evaluation query.
+        
+        Args:
+            query: Dict with keys: image_path, combined_text, diagnosis_label, query_id
+            
+        Returns:
+            Stability test results
+        """
+        # Load and encode query
+        img = self.image_loader.load(query['image_path'])
+        
+        with torch.no_grad():
+            img_emb = self.encoder.encode_image(img).unsqueeze(0)
+            txt_emb = self.encoder.encode_text(query['combined_text']).unsqueeze(0)
+        
+        # Run stability analysis
+        stability_output = self.runner.run(img_emb, txt_emb)
+        
+        return {
+            "query_id": query['query_id'],
+            "diagnosis": query['diagnosis_label'],
+            "image_path": query['image_path'],
+            "stability": stability_output["stability"],
+            "baseline_distribution": stability_output["baseline"]
+        }
+    
     def get_metadata(self):
-        """Get metadata for sampling"""
-        return self.metadata
+        """Get KB metadata (for backward compatibility)"""
+        return self.kb_metadata
     
     def test_sample(self, idx: int):
-        """Test stability for a single sample"""
-        entry = self.metadata[idx]
+        """Test KB sample by index (for backward compatibility)"""
+        entry = self.kb_metadata[idx]
         
-        # Encode
         img = self.image_loader.load(entry["image_path"])
         
         with torch.no_grad():
@@ -60,7 +86,6 @@ class StabilityTester:
                 entry["clinical_text"]["combined"]
             ).unsqueeze(0)
         
-        # Run stability analysis
         stability_output = self.runner.run(img_emb, txt_emb)
         
         return {

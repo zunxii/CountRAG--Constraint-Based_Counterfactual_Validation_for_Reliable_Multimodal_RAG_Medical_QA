@@ -1,11 +1,7 @@
-"""
-Mode-specific evaluation (text, image, fusion)
-"""
 import sys
 from pathlib import Path
 from typing import Dict
 
-from scripts.evaluation.retrieval.query_dataset import ExternalQueryDataset
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
 import torch
@@ -20,14 +16,19 @@ from scripts.evaluation.retrieval.metrics import MetricsCalculator
 
 
 class ModeEvaluator:
-    """Evaluates different retrieval modes"""
+    """Evaluates different retrieval modes using evaluation queries"""
     
-    def __init__(self, kb_dir: str, query_csv, device: str = "cpu"):
+    def __init__(self, kb_dir: str, eval_dataset, device: str = "cpu"):
+        """
+        Args:
+            kb_dir: Path to knowledge base
+            eval_dataset: EvaluationQueryDataset instance
+            device: Device for computation
+        """
         self.device = device
         self.retriever = KBRetriever(kb_dir)
         self.kb_metadata = self.retriever.metadata
-        self.query_dataset = ExternalQueryDataset(query_csv)
-
+        self.eval_dataset = eval_dataset
         
         # Load models
         self.encoder = BioMedCLIPEncoder(device=device)
@@ -47,20 +48,34 @@ class ModeEvaluator:
         self.metrics_calc = MetricsCalculator()
     
     def evaluate_mode(self, mode: str, top_k: int = 20):
+        """
+        Evaluate retrieval for a specific mode using evaluation queries.
+        
+        Args:
+            mode: One of "text", "image", "fusion"
+            top_k: Number of results to retrieve
+            
+        Returns:
+            Dictionary with aggregated metrics
+        """
         all_metrics = defaultdict(list)
 
-        for query in tqdm(self.query_dataset, desc=f"Evaluating {mode}"):
-            gt_label = query["label"]
+        for query in tqdm(self.eval_dataset, desc=f"Evaluating {mode}"):
+            gt_label = query["diagnosis_label"]
 
-            query_emb = self._encode_query_external(query, mode)
+            # Encode query based on mode
+            query_emb = self._encode_query(query, mode)
             if query_emb is None:
                 continue
 
+            # Retrieve
             query_np = query_emb.cpu().numpy().reshape(1, -1)
             _, indices = self.retriever.search(query_np, top_k)
 
+            # Get retrieved metadata
             retrieved = [self.kb_metadata[idx] for idx in indices]
 
+            # Compute metrics
             metrics = self.metrics_calc.compute_all_metrics(
                 retrieved, gt_label
             )
@@ -69,47 +84,36 @@ class ModeEvaluator:
                 all_metrics[k].append(v)
 
         return {
-            "metrics": {k: sum(v)/len(v) for k,v in all_metrics.items()},
-            "num_queries": len(self.query_dataset)
+            "metrics": {k: sum(v)/len(v) for k, v in all_metrics.items()},
+            "num_queries": len(self.eval_dataset)
         }
     
-    def _encode_query(self, entry: Dict, mode: str):
-        """Encode query based on mode"""
+    def _encode_query(self, query: Dict, mode: str):
+        """
+        Encode query based on mode.
+        
+        Args:
+            query: Query dict with keys: image_path, combined_text
+            mode: One of "text", "image", "fusion"
+        """
         with torch.no_grad():
             if mode == "text":
-                return self.encoder.encode_text(
-                    entry["clinical_text"]["combined"]
-                )
+                return self.encoder.encode_text(query["combined_text"])
             
             elif mode == "image":
-                img = self.image_loader.load(entry["image_path"])
+                img = self.image_loader.load(query["image_path"])
                 return self.encoder.encode_image(img)
             
             elif mode == "fusion":
                 if self.fusion is None:
                     return None
-                img = self.image_loader.load(entry["image_path"])
+                
+                img = self.image_loader.load(query["image_path"])
                 img_emb = self.encoder.encode_image(img).unsqueeze(0)
                 txt_emb = self.encoder.encode_text(
-                    entry["clinical_text"]["combined"]
+                    query["combined_text"]
                 ).unsqueeze(0)
+                
                 return self.fusion(img_emb, txt_emb).squeeze(0)
         
         return None
-    def _encode_query_external(self, query, mode):
-        with torch.no_grad():
-            if mode == "text":
-                return self.encoder.encode_text(query["text"])
-
-            elif mode == "image":
-                img = self.image_loader.load(query["image_path"])
-                return self.encoder.encode_image(img)
-
-            elif mode == "fusion":
-                if self.fusion is None:
-                    return None
-                img = self.image_loader.load(query["image_path"])
-                img_emb = self.encoder.encode_image(img).unsqueeze(0)
-                txt_emb = self.encoder.encode_text(query["text"]).unsqueeze(0)
-                return self.fusion(img_emb, txt_emb).squeeze(0)
-

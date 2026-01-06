@@ -2,7 +2,7 @@
 
 # LoRA Training Config - FIXED
 LORA_CONFIG = {
-    "csv_path": "data/raw/clipsyntel.csv",
+    "csv_path": "data/processed/train.csv",
     "image_root": "data/images",
     "output_dir": "outputs/models/trained_lora",
     "device": "cpu",
@@ -15,7 +15,7 @@ LORA_CONFIG = {
 
 # Fusion Training Config
 FUSION_CONFIG = {
-    "csv_path": "data/raw/clipsyntel.csv",
+    "csv_path": "data/processed/train.csv",
     "image_root": "data/images",
     "output_path": "outputs/models/trained_fusion/fusion.pt",
     "device": "cpu",

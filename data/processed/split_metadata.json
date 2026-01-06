@@ -1,0 +1,8 @@
+{
+  "total_samples": 3015,
+  "train_samples": 2815,
+  "eval_samples": 200,
+  "train_path": "data/processed/train.csv",
+  "eval_path": "data/processed/eval_queries.csv",
+  "split_method": "last_n_for_eval"
+}
