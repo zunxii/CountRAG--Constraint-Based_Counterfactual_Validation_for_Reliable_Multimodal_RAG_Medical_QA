@@ -22,7 +22,8 @@ class RetrievalEvaluator:
         kb_dir: str, 
         eval_queries_csv: str,  # CHANGED: Use eval queries
         output_dir: str, 
-        device: str = "cpu"
+        device: str = "cpu",
+        query_csv : str = None  # Added for compatibility
     ):
         self.kb_dir = Path(kb_dir)
         self.output_dir = Path(output_dir)
