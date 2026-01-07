@@ -33,7 +33,6 @@ class EvaluationQueryDataset:
         print(f"✓ Loaded {len(self.queries)} evaluation queries from {csv_path}")
     
     def _load_queries(self) -> List[Dict]:
-        """Load queries from CSV"""
         queries = []
         
         with open(self.csv_path, 'r', encoding='utf-8') as f:
@@ -43,13 +42,9 @@ class EvaluationQueryDataset:
                     'query_id': idx,
                     'image_path': row.get('image_path', '').strip(),
                     'diagnosis_label': row.get('category', '').strip(),
-                    'context': row.get('context', '').strip(),
                     'question': row.get('question', '').strip(),
-                    'combined_text': self._combine_text(
-                        row.get('context', ''),
-                        row.get('question', '')
-                    ),
-                    'original_index': idx  # Keep track of original position
+                    'combined_text': row.get('question', '').strip(),  # ✅ ONLY QUESTION!
+                    'original_index': idx
                 }
                 queries.append(query)
         
