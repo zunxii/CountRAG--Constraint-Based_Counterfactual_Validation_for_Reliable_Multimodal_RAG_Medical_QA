@@ -1,6 +1,6 @@
 """
-LoRA Training with Loss Tracking and Validation
-LOCAL VERSION - For repository use
+Fusion Training with Loss Tracking and Validation
+LOCAL VERSION
 """
 
 import os
@@ -8,47 +8,45 @@ import csv
 import json
 from pathlib import Path
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 from tqdm import tqdm
-from peft import LoraConfig, get_peft_model, TaskType
-import open_clip
 from PIL import Image
 import matplotlib.pyplot as plt
-import numpy as np
+import sys
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from core.embeddings.biomedclip import BioMedCLIPEncoder
+from core.fusion.adaptive_fusion import AdaptiveFusion
 
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
 CSV_PATH = "data/processed/train.csv"
 IMAGE_ROOT = "data/images"
-OUTPUT_DIR = "outputs/models/trained_lora"
-PLOTS_DIR = "outputs/plots/lora"
+OUTPUT_PATH = "outputs/models/trained_fusion/fusion.pt"
+PLOTS_DIR = "outputs/plots/fusion"
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE = 16
-EPOCHS = 15
-LR = 5e-5
+EPOCHS = 10
+LR = 1e-4
+TEMPERATURE = 0.07
+VAL_SPLIT = 0.1
 PATIENCE = 3
-VAL_SPLIT = 0.1  # 10% for validation
 
-MODEL_NAME = "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
-
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+os.makedirs(Path(OUTPUT_PATH).parent, exist_ok=True)
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
 print(f"Device: {DEVICE}")
-if DEVICE == "cuda":
-    print(f"GPU: {torch.cuda.get_device_name()}")
 
 # ============================================================================
 # DATASET
 # ============================================================================
-class TrainingDataset(Dataset):
-    def __init__(self, csv_path, image_root, preprocess):
+class FusionDataset(Dataset):
+    def __init__(self, csv_path, image_root):
         self.samples = []
-        self.preprocess = preprocess
         self.image_root = Path(image_root)
         
         print(f"Loading training data from {csv_path}...")
@@ -57,94 +55,67 @@ class TrainingDataset(Dataset):
             reader = csv.DictReader(f)
             for row in reader:
                 img_name = row.get("image_path", "").strip()
-                category = row.get("category", "").strip()
                 context = row.get("context", "")
                 description = row.get("description", "")
                 text = f"{context} {description}".strip()
                 
-                if not img_name or not text or not category:
+                if not img_name or len(text) < 10:
                     continue
                 
                 img_path = self.image_root / img_name
                 if img_path.exists():
-                    self.samples.append((img_path, text, category))
+                    self.samples.append((img_path, text))
         
-        print(f"✓ Loaded {len(self.samples)} training samples")
+        print(f"✓ Loaded {len(self.samples)} samples")
     
     def __len__(self):
         return len(self.samples)
     
     def __getitem__(self, idx):
-        img_path, text, category = self.samples[idx]
-        try:
-            image = Image.open(img_path).convert("RGB")
-            image = self.preprocess(image)
-            return image, text, category
-        except Exception as e:
-            print(f"Error loading {img_path}: {e}")
-            dummy_img = torch.zeros(3, 224, 224)
-            return dummy_img, text, category
+        return self.samples[idx]
+
+def fusion_collate_fn(batch):
+    image_paths, texts = zip(*batch)
+    return list(image_paths), list(texts)
 
 # ============================================================================
 # LOSS FUNCTION
 # ============================================================================
-def contrastive_loss(img_emb, txt_emb, temperature=0.07):
-    """CLIP-style contrastive loss"""
-    img_emb = F.normalize(img_emb, dim=-1)
-    txt_emb = F.normalize(txt_emb, dim=-1)
+def contrastive_loss(a, b, temperature):
+    a = F.normalize(a, dim=-1)
+    b = F.normalize(b, dim=-1)
     
-    logits = img_emb @ txt_emb.T / temperature
-    labels = torch.arange(len(img_emb), device=img_emb.device)
+    logits = a @ b.T / temperature
+    labels = torch.arange(len(a), device=a.device)
     
-    loss_i2t = F.cross_entropy(logits, labels)
-    loss_t2i = F.cross_entropy(logits.T, labels)
+    loss_ab = F.cross_entropy(logits, labels)
+    loss_ba = F.cross_entropy(logits.T, labels)
     
-    return (loss_i2t + loss_t2i) / 2
+    return (loss_ab + loss_ba) / 2
 
 # ============================================================================
-# SMART TARGET MODULE SELECTION
+# TRAINING FUNCTIONS
 # ============================================================================
-def find_attention_layers(model):
-    """Find attention layers for LoRA"""
-    attention_layers = []
-    
-    for name, module in model.named_modules():
-        if isinstance(module, nn.Linear):
-            name_lower = name.lower()
-            attention_keywords = [
-                'attn', 'attention', 'q_proj', 'k_proj', 
-                'v_proj', 'qkv', 'out_proj', 'c_proj'
-            ]
-            
-            if any(keyword in name_lower for keyword in attention_keywords):
-                attention_layers.append(name)
-    
-    return attention_layers
-
-# ============================================================================
-# TRAINING LOOP
-# ============================================================================
-def train_epoch(model, loader, optimizer, device):
-    """Train for one epoch"""
-    model.train()
+def train_epoch(fusion, encoder, loader, optimizer, device):
+    fusion.train()
     total_loss = 0.0
     num_batches = 0
     
     pbar = tqdm(loader, desc="Training")
-    for images, texts, _ in pbar:
+    for image_paths, texts in pbar:
         try:
-            images = images.to(device)
-            tokenizer = open_clip.get_tokenizer(MODEL_NAME)
-            tokens = tokenizer(list(texts)).to(device)
+            images = [Image.open(p).convert("RGB") for p in image_paths]
             
-            img_emb = model.encode_image(images)
-            txt_emb = model.encode_text(tokens)
+            with torch.no_grad():
+                img_emb = encoder.encode_image_batch(images)
+                txt_emb = encoder.encode_text_batch(texts)
             
-            loss = contrastive_loss(img_emb, txt_emb)
+            fused = fusion(img_emb, txt_emb)
+            loss = contrastive_loss(fused, txt_emb, TEMPERATURE)
             
             optimizer.zero_grad()
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            torch.nn.utils.clip_grad_norm_(fusion.parameters(), 1.0)
             optimizer.step()
             
             total_loss += loss.item()
@@ -157,23 +128,22 @@ def train_epoch(model, loader, optimizer, device):
     
     return total_loss / num_batches if num_batches > 0 else 0.0
 
-def validate(model, loader, device):
-    """Validate on validation set"""
-    model.eval()
+def validate(fusion, encoder, loader, device):
+    fusion.eval()
     total_loss = 0.0
     num_batches = 0
     
     with torch.no_grad():
-        for images, texts, _ in tqdm(loader, desc="Validating"):
+        for image_paths, texts in tqdm(loader, desc="Validating"):
             try:
-                images = images.to(device)
-                tokenizer = open_clip.get_tokenizer(MODEL_NAME)
-                tokens = tokenizer(list(texts)).to(device)
+                images = [Image.open(p).convert("RGB") for p in image_paths]
                 
-                img_emb = model.encode_image(images)
-                txt_emb = model.encode_text(tokens)
+                img_emb = encoder.encode_image_batch(images)
+                txt_emb = encoder.encode_text_batch(texts)
                 
-                loss = contrastive_loss(img_emb, txt_emb)
+                fused = fusion(img_emb, txt_emb)
+                loss = contrastive_loss(fused, txt_emb, TEMPERATURE)
+                
                 total_loss += loss.item()
                 num_batches += 1
                 
@@ -186,7 +156,6 @@ def validate(model, loader, device):
 # VISUALIZATION
 # ============================================================================
 def plot_training_curves(history, save_path):
-    """Plot training and validation curves"""
     epochs = [h['epoch'] for h in history]
     train_losses = [h['train_loss'] for h in history]
     val_losses = [h['val_loss'] for h in history]
@@ -196,7 +165,7 @@ def plot_training_curves(history, save_path):
     plt.plot(epochs, val_losses, 'r-', label='Validation Loss', linewidth=2)
     plt.xlabel('Epoch', fontsize=12)
     plt.ylabel('Loss', fontsize=12)
-    plt.title('LoRA Training: Loss Curves', fontsize=14, fontweight='bold')
+    plt.title('Fusion Training: Loss Curves', fontsize=14, fontweight='bold')
     plt.legend(fontsize=11)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -209,39 +178,25 @@ def plot_training_curves(history, save_path):
 # ============================================================================
 def train():
     print("="*70)
-    print("LoRA TRAINING WITH VALIDATION")
+    print("FUSION TRAINING WITH VALIDATION")
     print("="*70)
     
-    # Load base model
-    print("\n[1/5] Loading BioMedCLIP...")
-    model, _, preprocess = open_clip.create_model_and_transforms(MODEL_NAME)
-    tokenizer = open_clip.get_tokenizer(MODEL_NAME)
-    model = model.to(DEVICE)
-    print("✓ Model loaded")
+    # Load frozen encoder
+    print("\n[1/4] Loading frozen encoder...")
+    encoder = BioMedCLIPEncoder(device=DEVICE)
+    encoder.model.eval()
+    for p in encoder.model.parameters():
+        p.requires_grad = False
+    print("✓ Encoder loaded and frozen")
     
-    # Find target modules
-    print("\n[2/5] Finding attention layers for LoRA...")
-    target_modules = find_attention_layers(model)
-    print(f"✓ Found {len(target_modules)} attention layers")
+    # Initialize fusion
+    print("\n[2/4] Initializing fusion module...")
+    fusion = AdaptiveFusion().to(DEVICE)
+    print(f"✓ Fusion parameters: {sum(p.numel() for p in fusion.parameters()):,}")
     
-    # Apply LoRA
-    print("\n[3/5] Applying LoRA...")
-    lora_config = LoraConfig(
-        r=8,
-        lora_alpha=16,
-        lora_dropout=0.05,
-        target_modules=target_modules if target_modules else "all-linear",
-        bias="none",
-        task_type=TaskType.FEATURE_EXTRACTION
-    )
-    
-    model = get_peft_model(model, lora_config)
-    print("✓ LoRA applied")
-    model.print_trainable_parameters()
-    
-    # Load dataset and split
-    print("\n[4/5] Loading dataset...")
-    full_dataset = TrainingDataset(CSV_PATH, IMAGE_ROOT, preprocess)
+    # Load dataset
+    print("\n[3/4] Loading dataset...")
+    full_dataset = FusionDataset(CSV_PATH, IMAGE_ROOT)
     
     val_size = int(VAL_SPLIT * len(full_dataset))
     train_size = len(full_dataset) - val_size
@@ -252,22 +207,19 @@ def train():
     
     train_loader = DataLoader(
         train_dataset, batch_size=BATCH_SIZE,
-        shuffle=True, num_workers=2, pin_memory=True, drop_last=True
+        shuffle=True, collate_fn=fusion_collate_fn, num_workers=2
     )
     
     val_loader = DataLoader(
         val_dataset, batch_size=BATCH_SIZE,
-        shuffle=False, num_workers=2, pin_memory=True
+        shuffle=False, collate_fn=fusion_collate_fn, num_workers=2
     )
     
     print(f"✓ Train: {train_size}, Validation: {val_size}")
     
     # Setup optimizer
-    print("\n[5/5] Starting training...")
-    optimizer = torch.optim.AdamW(
-        [p for p in model.parameters() if p.requires_grad],
-        lr=LR, weight_decay=0.01
-    )
+    print("\n[4/4] Starting training...")
+    optimizer = torch.optim.AdamW(fusion.parameters(), lr=LR, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
     
     # Training loop
@@ -280,8 +232,8 @@ def train():
         print(f"Epoch {epoch+1}/{EPOCHS}")
         print(f"{'='*70}")
         
-        train_loss = train_epoch(model, train_loader, optimizer, DEVICE)
-        val_loss = validate(model, val_loader, DEVICE)
+        train_loss = train_epoch(fusion, encoder, train_loader, optimizer, DEVICE)
+        val_loss = validate(fusion, encoder, val_loader, DEVICE)
         scheduler.step()
         
         print(f"\nEpoch {epoch+1} Results:")
@@ -300,7 +252,7 @@ def train():
             best_val_loss = val_loss
             patience_counter = 0
             print(f"  ✓ New best model! Saving...")
-            model.save_pretrained(OUTPUT_DIR)
+            torch.save(fusion.state_dict(), OUTPUT_PATH)
         else:
             patience_counter += 1
         
@@ -309,20 +261,20 @@ def train():
             print(f"\n⚠ Early stopping at epoch {epoch+1}")
             break
     
-    # Save training history
-    history_path = Path(OUTPUT_DIR) / "training_history.json"
+    # Save history
+    history_path = Path(OUTPUT_PATH).parent / "training_history.json"
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=2)
     print(f"\n✓ Training history saved to {history_path}")
     
     # Plot curves
-    plot_path = Path(PLOTS_DIR) / "lora_training_curves.png"
+    plot_path = Path(PLOTS_DIR) / "fusion_training_curves.png"
     plot_training_curves(history, plot_path)
     
     print("\n" + "="*70)
     print("✓ TRAINING COMPLETE")
     print(f"✓ Best validation loss: {best_val_loss:.4f}")
-    print(f"✓ Model saved to: {OUTPUT_DIR}")
+    print(f"✓ Model saved to: {OUTPUT_PATH}")
     print(f"✓ Plots saved to: {PLOTS_DIR}")
     print("="*70)
 

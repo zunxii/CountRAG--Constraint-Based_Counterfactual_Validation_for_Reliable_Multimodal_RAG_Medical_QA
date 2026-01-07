@@ -25,12 +25,12 @@
   "rank_pattern": {},
   "revision": null,
   "target_modules": [
-    "query",
+    "key",
+    "attention.output.dense",
     "qkv",
     "attn.proj",
-    "value",
-    "key",
-    "attention.output.dense"
+    "query",
+    "value"
   ],
   "target_parameters": null,
   "task_type": "FEATURE_EXTRACTION",
