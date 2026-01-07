@@ -7,9 +7,9 @@ class ExternalQueryDataset:
         self.queries = []
         for _, row in df.iterrows():
             self.queries.append({
-                "text": row["Updated_Question"],  # or Question_summ
-                "image_path": row["Image_path"],
-                "label": row["Identified_disorder"]
+                "text": row["Question"],  # or Question_summ
+                "image_path": row["image_path"],
+                "label": row["category"]
             })
 
     def __len__(self):

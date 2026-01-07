@@ -3,7 +3,7 @@ RETRIEVAL EVALUATION SUMMARY
 
 Evaluation queries: 200
 KB directory: outputs/kb/kb_final_v2
-Timestamp: 2026-01-07T15:03:53.527370
+Timestamp: 2026-01-07T15:21:19.903900
 
 TEXT Mode:
   R@1:  1.0000

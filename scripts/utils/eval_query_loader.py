@@ -44,10 +44,10 @@ class EvaluationQueryDataset:
                     'image_path': row.get('image_path', '').strip(),
                     'diagnosis_label': row.get('category', '').strip(),
                     'context': row.get('context', '').strip(),
-                    'description': row.get('description', '').strip(),
+                    'question': row.get('question', '').strip(),
                     'combined_text': self._combine_text(
                         row.get('context', ''),
-                        row.get('description', '')
+                        row.get('question', '')
                     ),
                     'original_index': idx  # Keep track of original position
                 }

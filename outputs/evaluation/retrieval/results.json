@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-07T15:03:53.527370",
+  "timestamp": "2026-01-07T15:21:19.903900",
   "kb_dir": "outputs/kb/kb_final_v2",
   "eval_queries_csv": "data/processed/eval_queries.csv",
   "num_eval_queries": 200,
