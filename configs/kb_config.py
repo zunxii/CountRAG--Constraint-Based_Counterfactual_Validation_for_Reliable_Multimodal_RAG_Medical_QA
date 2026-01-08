@@ -2,7 +2,7 @@
 """Configuration for KB building - UPDATED to use training split"""
 
 KB_BUILD_CONFIG = {
-    "csv_path": "data/processed/train.csv",  # CHANGED: Use training split only
+    "csv_path": "data/processed/splits/train.csv",  # CHANGED: Use training split only
     "image_root": "data/images",
     "output_dir": "outputs/kb/kb_final_v2",
     "device": "cpu",

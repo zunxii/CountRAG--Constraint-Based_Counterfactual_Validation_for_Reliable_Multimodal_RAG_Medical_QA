@@ -1,5 +1,5 @@
 {
-  "num_entries": 2815,
+  "num_entries": 2428,
   "embedding_dim": 512,
   "device": "cpu"
 }

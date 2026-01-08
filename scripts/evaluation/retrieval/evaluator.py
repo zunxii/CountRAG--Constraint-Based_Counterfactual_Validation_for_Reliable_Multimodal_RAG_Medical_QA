@@ -29,7 +29,7 @@ class RetrievalEvaluator:
         self.device = device
         
         # Load evaluation queries from correct path
-        eval_csv = "data/processed/eval_queries.csv"
+        eval_csv = "data/processed/splits/eval.csv"
         print(f"Loading evaluation queries from {eval_csv}...")
         self.eval_dataset = EvaluationQueryDataset(eval_csv)
         print(f"✓ Loaded {len(self.eval_dataset)} evaluation queries")
