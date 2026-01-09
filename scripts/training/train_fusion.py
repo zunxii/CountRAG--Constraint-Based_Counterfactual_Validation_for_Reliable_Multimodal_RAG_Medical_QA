@@ -1,8 +1,6 @@
 """
-Fusion Training with Loss Tracking and Validation
-LOCAL VERSION
+Fusion Training - FIXED: Uses ONLY question + image (NO LEAKAGE)
 """
-
 import os
 import csv
 import json
@@ -23,7 +21,7 @@ from core.fusion.adaptive_fusion import AdaptiveFusion
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-CSV_PATH = "data/processed/train.csv"
+CSV_PATH = "data/processed/splits/train.csv"
 IMAGE_ROOT = "data/images"
 OUTPUT_PATH = "outputs/models/trained_fusion/fusion.pt"
 PLOTS_DIR = "outputs/plots/fusion"
@@ -40,9 +38,10 @@ os.makedirs(Path(OUTPUT_PATH).parent, exist_ok=True)
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
 print(f"Device: {DEVICE}")
+print("✓ FIXED: Using ONLY question + image (no context/description)")
 
 # ============================================================================
-# DATASET
+# DATASET - FIXED TO USE ONLY QUESTION
 # ============================================================================
 class FusionDataset(Dataset):
     def __init__(self, csv_path, image_root):
@@ -55,18 +54,16 @@ class FusionDataset(Dataset):
             reader = csv.DictReader(f)
             for row in reader:
                 img_name = row.get("image_path", "").strip()
-                context = row.get("context", "")
-                description = row.get("description", "")
-                text = f"{context} {description}".strip()
+                question = row.get("Question", "").strip()  # ONLY question!
                 
-                if not img_name or len(text) < 10:
+                if not img_name or len(question) < 10:
                     continue
                 
                 img_path = self.image_root / img_name
                 if img_path.exists():
-                    self.samples.append((img_path, text))
+                    self.samples.append((img_path, question))
         
-        print(f"✓ Loaded {len(self.samples)} samples")
+        print(f"✓ Loaded {len(self.samples)} samples (question + image only)")
     
     def __len__(self):
         return len(self.samples)
@@ -79,7 +76,7 @@ def fusion_collate_fn(batch):
     return list(image_paths), list(texts)
 
 # ============================================================================
-# LOSS FUNCTION
+# LOSS
 # ============================================================================
 def contrastive_loss(a, b, temperature):
     a = F.normalize(a, dim=-1)
@@ -94,7 +91,7 @@ def contrastive_loss(a, b, temperature):
     return (loss_ab + loss_ba) / 2
 
 # ============================================================================
-# TRAINING FUNCTIONS
+# TRAINING
 # ============================================================================
 def train_epoch(fusion, encoder, loader, optimizer, device):
     fusion.train()
@@ -152,9 +149,6 @@ def validate(fusion, encoder, loader, device):
     
     return total_loss / num_batches if num_batches > 0 else 0.0
 
-# ============================================================================
-# VISUALIZATION
-# ============================================================================
 def plot_training_curves(history, save_path):
     epochs = [h['epoch'] for h in history]
     train_losses = [h['train_loss'] for h in history]
@@ -165,34 +159,33 @@ def plot_training_curves(history, save_path):
     plt.plot(epochs, val_losses, 'r-', label='Validation Loss', linewidth=2)
     plt.xlabel('Epoch', fontsize=12)
     plt.ylabel('Loss', fontsize=12)
-    plt.title('Fusion Training: Loss Curves', fontsize=14, fontweight='bold')
+    plt.title('Fusion Training (Question+Image Only)', fontsize=14, fontweight='bold')
     plt.legend(fontsize=11)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
-    print(f"✓ Loss curves saved to {save_path}")
 
 # ============================================================================
-# MAIN TRAINING
+# MAIN
 # ============================================================================
 def train():
     print("="*70)
-    print("FUSION TRAINING WITH VALIDATION")
+    print("FUSION TRAINING - FIXED VERSION")
+    print("Uses ONLY: question + image (NO context/description)")
     print("="*70)
     
-    # Load frozen encoder
+    # Load encoder
     print("\n[1/4] Loading frozen encoder...")
     encoder = BioMedCLIPEncoder(device=DEVICE)
     encoder.model.eval()
     for p in encoder.model.parameters():
         p.requires_grad = False
-    print("✓ Encoder loaded and frozen")
     
-    # Initialize fusion
-    print("\n[2/4] Initializing fusion module...")
+    # Init fusion
+    print("\n[2/4] Initializing fusion...")
     fusion = AdaptiveFusion().to(DEVICE)
-    print(f"✓ Fusion parameters: {sum(p.numel() for p in fusion.parameters()):,}")
+    print(f"✓ Params: {sum(p.numel() for p in fusion.parameters()):,}")
     
     # Load dataset
     print("\n[3/4] Loading dataset...")
@@ -209,20 +202,18 @@ def train():
         train_dataset, batch_size=BATCH_SIZE,
         shuffle=True, collate_fn=fusion_collate_fn, num_workers=2
     )
-    
     val_loader = DataLoader(
         val_dataset, batch_size=BATCH_SIZE,
         shuffle=False, collate_fn=fusion_collate_fn, num_workers=2
     )
     
-    print(f"✓ Train: {train_size}, Validation: {val_size}")
+    print(f"✓ Train: {train_size}, Val: {val_size}")
     
-    # Setup optimizer
+    # Train
     print("\n[4/4] Starting training...")
     optimizer = torch.optim.AdamW(fusion.parameters(), lr=LR, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
     
-    # Training loop
     best_val_loss = float('inf')
     patience_counter = 0
     history = []
@@ -236,9 +227,9 @@ def train():
         val_loss = validate(fusion, encoder, val_loader, DEVICE)
         scheduler.step()
         
-        print(f"\nEpoch {epoch+1} Results:")
-        print(f"  Train Loss: {train_loss:.4f}")
-        print(f"  Val Loss:   {val_loss:.4f}")
+        print(f"\nEpoch {epoch+1}:")
+        print(f"  Train: {train_loss:.4f}")
+        print(f"  Val:   {val_loss:.4f}")
         
         history.append({
             'epoch': epoch + 1,
@@ -247,35 +238,29 @@ def train():
             'lr': optimizer.param_groups[0]['lr']
         })
         
-        # Save best model
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             patience_counter = 0
-            print(f"  ✓ New best model! Saving...")
+            print(f"  ✓ Best! Saving...")
             torch.save(fusion.state_dict(), OUTPUT_PATH)
         else:
             patience_counter += 1
         
-        # Early stopping
         if patience_counter >= PATIENCE:
-            print(f"\n⚠ Early stopping at epoch {epoch+1}")
+            print(f"\n⚠ Early stopping")
             break
     
     # Save history
-    history_path = Path(OUTPUT_PATH).parent / "training_history.json"
-    with open(history_path, 'w') as f:
+    with open(Path(OUTPUT_PATH).parent / "training_history.json", 'w') as f:
         json.dump(history, f, indent=2)
-    print(f"\n✓ Training history saved to {history_path}")
     
-    # Plot curves
-    plot_path = Path(PLOTS_DIR) / "fusion_training_curves.png"
-    plot_training_curves(history, plot_path)
+    # Plot
+    plot_training_curves(history, Path(PLOTS_DIR) / "fusion_training_curves.png")
     
     print("\n" + "="*70)
     print("✓ TRAINING COMPLETE")
-    print(f"✓ Best validation loss: {best_val_loss:.4f}")
-    print(f"✓ Model saved to: {OUTPUT_PATH}")
-    print(f"✓ Plots saved to: {PLOTS_DIR}")
+    print(f"✓ Best val: {best_val_loss:.4f}")
+    print(f"✓ Model: {OUTPUT_PATH}")
     print("="*70)
 
 if __name__ == "__main__":
