@@ -1,0 +1,32 @@
+{
+  "start_time": "2026-01-10T13:49:46.044379",
+  "end_time": "2026-01-10T14:05:09.888800",
+  "total_rows": 2428,
+  "processed_rows": 18,
+  "failed_rows": 0,
+  "category_distribution": {
+    "swollen tonsils": 1,
+    "neck swelling": 1,
+    "lip swelling": 1,
+    "mouth ulcers": 1,
+    "swollen eye": 1,
+    "skin rash": 1,
+    "skin irritation": 1,
+    "skin growth": 1,
+    "skin dryness": 1,
+    "foot swelling": 1,
+    "knee swelling": 1,
+    "itichy eyelid": 1,
+    "hand lump": 1,
+    "eye redness": 1,
+    "edema": 1,
+    "dry scalp": 1,
+    "cyanosis": 1,
+    "eye inflamation": 1
+  },
+  "anatomy_region_distribution": {
+    "concept": 18
+  },
+  "rows_with_explicit_anatomy": 18,
+  "failures": []
+}

@@ -14,8 +14,14 @@
 - `python main.py build-kb-smoke`  
   Builds a small smoke-test KB for quick validation.
 
-- `python main.py build-kb-dry`  
-  Runs a dry KB build to validate configs and data flow.
+## Mean aggregation (default, robust)
+`python scripts/kb/build_kb.py --mode concept --aggregation mean`
+
+## Max aggregation (emphasizes extremes)
+`python scripts/kb/build_kb.py --mode concept --aggregation max`
+
+## Weighted aggregation (by embedding norm)
+`python scripts/kb/build_kb.py --mode concept --aggregation weighted`
 
 ## Pipeline
 - `python main.py pipeline`  

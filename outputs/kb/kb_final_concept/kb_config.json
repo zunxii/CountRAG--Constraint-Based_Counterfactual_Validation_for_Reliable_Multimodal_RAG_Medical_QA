@@ -1,0 +1,7 @@
+{
+  "num_concepts": 18,
+  "num_images": 2428,
+  "embedding_dim": 512,
+  "mode": "concept",
+  "aggregation_method": "mean"
+}
