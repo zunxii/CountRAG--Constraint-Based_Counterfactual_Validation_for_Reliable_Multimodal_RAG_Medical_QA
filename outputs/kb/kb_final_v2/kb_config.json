@@ -1,5 +1,7 @@
 {
   "num_entries": 2428,
   "embedding_dim": 512,
-  "device": "cpu"
+  "device": "cpu",
+  "kb_text": "context+description",
+  "training_text": "question_only"
 }

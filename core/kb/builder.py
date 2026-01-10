@@ -1,3 +1,7 @@
+"""
+KB Builder - FIXED: Uses context+description for KB text
+(NOT used in training, only for retrieval reference)
+"""
 import csv
 from pathlib import Path
 import numpy as np
@@ -15,13 +19,10 @@ from core.fusion.adaptive_fusion import AdaptiveFusion
 
 class KBBuilder:
     """
-    Production-grade Knowledge Base builder for ClipSyntel.
-
-    Design guarantees:
-    - Deterministic (no randomness, no dropout)
-    - No LLM usage
-    - No inference beyond encoders
-    - Auditable + paper-safe
+    KB builder using context+description for reference text.
+    
+    IMPORTANT: This is ONLY for the KB (retrieval reference).
+    Training uses ONLY question+image.
     """
 
     def __init__(
@@ -35,21 +36,16 @@ class KBBuilder:
     ):
         self.device = device
 
-        # ---- Models ----
         self.image_encoder = image_encoder
         self.text_encoder = text_encoder
         self.fusion_model = fusion_model.to(device)
-
-        # Enforce eval mode (CRITICAL)
         self.fusion_model.eval()
 
-        # ---- Utilities ----
         self.text_processor = TextProcessor()
         self.image_loader = ImageLoader()
         self.storage = KBStorage()
         self.report = BuildReport()
 
-        # ---- Paths ----
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -57,25 +53,24 @@ class KBBuilder:
         if not self.image_root.exists():
             raise FileNotFoundError(f"Image root not found: {self.image_root}")
 
-        # ---- State ----
         self.entries: list[KBEntry] = []
         self.embeddings: list[np.ndarray] = []
 
-    # --------------------------------------------------
-    # Public entry point
-    # --------------------------------------------------
     def build(self, csv_path: str):
         csv_path = Path(csv_path)
         if not csv_path.exists():
             raise FileNotFoundError(f"CSV not found: {csv_path}")
 
+        print("\n" + "="*70)
+        print("BUILDING KB - Uses context+description for reference")
+        print("(Training uses question+image only)")
+        print("="*70 + "\n")
+
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
 
-            for idx, row in tqdm(
-                enumerate(reader),
-                desc="Building KB",
-                unit="rows"
+            for idx, row in enumerate(
+                tqdm(reader, desc="Building KB", unit="rows")
             ):
                 self.report.log_row_seen()
 
@@ -94,11 +89,8 @@ class KBBuilder:
 
         self._finalize()
 
-    # --------------------------------------------------
-    # Row processing
-    # --------------------------------------------------
     def _process_row(self, row: dict, idx: int) -> KBEntry:
-        # ---- Resolve image path ----
+        # Resolve image
         image_name = row.get("image_path", "").strip()
         if not image_name:
             raise ValueError("Missing image_path")
@@ -107,12 +99,12 @@ class KBBuilder:
         if not image_path.exists():
             raise FileNotFoundError(f"Image not found: {image_path}")
 
-        # ---- Label ----
+        # Label
         category = row.get("category", "").strip()
         if not category:
             raise ValueError("Missing category")
 
-        # ---- Text ----
+        # Text: Use context+description for KB reference
         context = row.get("context", "")
         description = row.get("description", "")
         combined_text = self.text_processor.combine_text(context, description)
@@ -131,10 +123,10 @@ class KBBuilder:
             "normalized_region": normalized_region,
         }
 
-        # ---- Load image ----
+        # Load image
         image = self.image_loader.load(image_path)
 
-        # ---- Encode & fuse ----
+        # Encode & fuse
         with torch.no_grad():
             img_emb = self.image_encoder.encode_image(image).to(self.device)
             txt_emb = self.text_encoder.encode_text(combined_text).to(self.device)
@@ -149,7 +141,7 @@ class KBBuilder:
         fused_np = fused.squeeze(0).cpu().numpy()
 
         if np.isnan(fused_np).any():
-            raise ValueError("NaN detected in fused embedding")
+            raise ValueError("NaN in fused embedding")
 
         embedding_id = len(self.embeddings)
         self.embeddings.append(fused_np)
@@ -167,23 +159,17 @@ class KBBuilder:
             embedding_id=embedding_id,
         )
 
-    # --------------------------------------------------
-    # Finalize & persist
-    # --------------------------------------------------
     def _finalize(self):
         if not self.embeddings:
-            raise RuntimeError(
-                "KB build failed: no valid entries processed. "
-                "Check CSV paths, text length, and image availability."
-            )
+            raise RuntimeError("No valid entries")
 
         embeddings = np.vstack(self.embeddings).astype("float32")
 
-        # ---- FAISS index ----
+        # FAISS index
         index = KBIndex(dim=embeddings.shape[1])
         index.add(embeddings)
 
-        # ---- Save artifacts ----
+        # Save
         self.storage.save_embeddings(
             embeddings,
             self.output_dir / "embeddings.npy"
@@ -196,15 +182,23 @@ class KBBuilder:
 
         index.save(self.output_dir / "index.faiss")
 
-        # ---- Save build config (important for paper) ----
         self.storage.save_metadata(
             {
                 "num_entries": len(self.entries),
                 "embedding_dim": embeddings.shape[1],
                 "device": self.device,
+                "kb_text": "context+description",
+                "training_text": "question_only"
             },
             self.output_dir / "kb_config.json"
         )
 
         self.report.finalize()
         self.report.save(self.output_dir / "build_report.json")
+        
+        print("\n" + "="*70)
+        print("✓ KB BUILD COMPLETE")
+        print(f"✓ Entries: {len(self.entries)}")
+        print(f"✓ KB text: context+description (for reference)")
+        print(f"✓ Training used: question+image only")
+        print("="*70)
