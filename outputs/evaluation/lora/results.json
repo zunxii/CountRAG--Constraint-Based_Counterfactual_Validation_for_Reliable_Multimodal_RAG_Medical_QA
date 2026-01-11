@@ -1,34 +1,34 @@
 {
-  "timestamp": "2026-01-07T15:41:43.688455",
+  "timestamp": "2026-01-10T20:12:21.288426",
   "tests": {
     "embedding_comparison": {
-      "distance_l2": 0.20672657589117685,
-      "cosine_similarity": 0.9785502155621847,
+      "distance_l2": 0.3468710680802663,
+      "cosine_similarity": 0.9397867321968079,
       "per_query": [
         {
-          "distance": 0.22034455835819244,
-          "similarity": 0.9757241606712341
+          "distance": 0.3394439220428467,
+          "similarity": 0.9423889517784119
         },
         {
-          "distance": 0.18960393965244293,
-          "similarity": 0.982025146484375
+          "distance": 0.36150068044662476,
+          "similarity": 0.9346586465835571
         },
         {
-          "distance": 0.2102312296628952,
-          "similarity": 0.9779013395309448
+          "distance": 0.3396686017513275,
+          "similarity": 0.9423125982284546
         }
       ]
     },
     "alignment_improvement": {
       "base_similarity": 0.34534111618995667,
-      "lora_similarity": 0.4145422577857971,
-      "improvement": 0.06920114159584045,
-      "improvement_pct": 20.038489004528497,
+      "lora_similarity": 0.4868549406528473,
+      "improvement": 0.14151382446289062,
+      "improvement_pct": 40.977983167532884,
       "per_pair": [
         {
           "base": 0.34534111618995667,
-          "lora": 0.4145422577857971,
-          "improvement": 0.06920114159584045
+          "lora": 0.4868549406528473,
+          "improvement": 0.14151382446289062
         }
       ]
     }

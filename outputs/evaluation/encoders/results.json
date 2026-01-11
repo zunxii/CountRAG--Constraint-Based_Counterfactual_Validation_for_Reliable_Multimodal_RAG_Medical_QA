@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-07T15:40:20.721141",
+  "timestamp": "2026-01-10T20:24:07.626396",
   "tests": {
     "embedding_quality": {
       "dimension": {
@@ -27,18 +27,18 @@
     },
     "fusion_analysis": {
       "gate_statistics": {
-        "mean": 0.5773552111315076,
-        "std": 0.38918720749039165,
-        "min": 0.0013910724082961679,
-        "max": 0.9999988079071045
+        "mean": 0.5260075484593608,
+        "std": 0.42154695666454517,
+        "min": 4.271526904631173e-06,
+        "max": 0.9999982118606567
       },
       "output_normalized": {
         "norm": 1.0,
         "correct": true
       },
       "modality_sensitivity": {
-        "no_image_similarity": 0.6866547465324402,
-        "no_text_similarity": 0.724884033203125
+        "no_image_similarity": 0.01952272281050682,
+        "no_text_similarity": 0.9998899698257446
       }
     },
     "modality_alignment": {

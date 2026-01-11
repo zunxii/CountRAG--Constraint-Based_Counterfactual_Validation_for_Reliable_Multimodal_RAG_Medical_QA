@@ -7,6 +7,6 @@ Embedding Quality:
   Dimension: {'shape': [512], 'expected': [512], 'correct': True}
 
 Fusion Analysis:
-  Gate mean: 0.5774
+  Gate mean: 0.5260
   Output normalized: {'norm': 1.0, 'correct': True}
 

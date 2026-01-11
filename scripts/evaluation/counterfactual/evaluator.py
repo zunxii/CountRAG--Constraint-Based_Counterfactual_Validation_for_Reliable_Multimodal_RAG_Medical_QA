@@ -21,15 +21,15 @@ class CounterfactualEvaluator:
         kb_dir: str, 
         output_dir: str, 
         device: str = "cpu",
-        num_samples: int = None  # If None, use all eval queries
+        num_samples: int = None
     ):
         self.kb_dir = Path(kb_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.device = device
         
-        # Load evaluation queries from correct path
-        eval_csv = "data/processed/eval_queries.csv"
+        # Load evaluation queries
+        eval_csv = "data/processed/splits/eval.csv"
         print(f"Loading evaluation queries from {eval_csv}...")
         self.eval_dataset = EvaluationQueryDataset(eval_csv)
         
@@ -42,11 +42,20 @@ class CounterfactualEvaluator:
         
         print(f"✓ Using {len(self.eval_queries)} evaluation queries")
         
+        # Initialize tester (auto-detects KB mode)
+        self.stability_tester = StabilityTester(kb_dir, device)
+        
+        # NEW: Print KB mode for transparency
+        print(f"✓ KB mode: {self.stability_tester.kb_mode}")
+        
+        self.robustness_analyzer = RobustnessAnalyzer()
+        
         self.results = {
             "timestamp": datetime.now().isoformat(),
             "num_samples": len(self.eval_queries),
             "eval_queries_csv": eval_csv,
             "kb_dir": str(kb_dir),
+            "kb_mode": self.stability_tester.kb_mode,  # NEW: Add to results
             "stability_tests": []
         }
         
