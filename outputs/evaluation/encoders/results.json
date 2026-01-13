@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-10T20:24:07.626396",
+  "timestamp": "2026-01-13T14:32:23.645530",
   "tests": {
     "embedding_quality": {
       "dimension": {
@@ -12,7 +12,7 @@
         "correct": true
       },
       "normalization_check": {
-        "norm": 1.0,
+        "norm": 0.9999999403953552,
         "expected": 1.0,
         "correct": true
       },
@@ -27,33 +27,33 @@
     },
     "fusion_analysis": {
       "gate_statistics": {
-        "mean": 0.5260075484593608,
-        "std": 0.42154695666454517,
-        "min": 4.271526904631173e-06,
-        "max": 0.9999982118606567
+        "mean": 0.47778128028527134,
+        "std": 0.4199917297719815,
+        "min": 0.00033619810710661113,
+        "max": 0.9999997615814209
       },
       "output_normalized": {
         "norm": 1.0,
         "correct": true
       },
       "modality_sensitivity": {
-        "no_image_similarity": 0.01952272281050682,
-        "no_text_similarity": 0.9998899698257446
+        "no_image_similarity": 0.7251921892166138,
+        "no_text_similarity": 0.7632957696914673
       }
     },
     "modality_alignment": {
       "related_similarity": {
-        "mean": 0.1389608308672905,
+        "mean": 0.1389608159661293,
         "values": [
-          0.13233895599842072,
-          0.14558270573616028
+          0.1323389708995819,
+          0.1455826610326767
         ]
       },
       "unrelated_similarity": {
-        "mean": 0.34099727869033813,
+        "mean": 0.34099718928337097,
         "values": [
-          0.3139020502567291,
-          0.36809250712394714
+          0.31390199065208435,
+          0.3680923879146576
         ]
       }
     }

@@ -1,35 +1,35 @@
 COUNTERFACTUAL STABILITY EVALUATION - RESEARCH REPORT
 ======================================================================
 
-Evaluation queries tested: 50
+Evaluation queries tested: 100
 Source: data/processed/splits/eval.csv
-KB: ./outputs/kb/kb_final_concept/
-Timestamp: 2026-01-10T20:32:11.234138
+KB: outputs/kb/kb_final_v2
+Timestamp: 2026-01-13T14:33:15.386101
 
 AVERAGE JS DIVERGENCES:
-  no_text: 0.0735
-  no_image: 0.2925
-  noisy: 0.0762
+  no_text: 0.1006
+  no_image: 0.2101
+  noisy: 0.0444
 
 ROBUSTNESS DISTRIBUTION:
-  low: 17
-  medium: 32
-  high: 1
+  low: 43
+  high: 44
+  medium: 13
 
 
 STATISTICAL SIGNIFICANCE:
 
 Text Modality Effect:
   p-value: 0.0000
-  Cohen's d: -2.1963 (large)
+  Cohen's d: -0.8738 (large)
   Significant: True
 
 Image Modality Effect:
   p-value: 0.0000
-  Cohen's d: -7.5533 (large)
+  Cohen's d: -1.0728 (large)
   Significant: True
 
 
 DIAGNOSTIC STABILITY:
-Most stable: swollen tonsils
-Least stable: lip swelling
+Most stable: dry scalp
+Least stable: swollen tonsils

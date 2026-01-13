@@ -38,12 +38,13 @@ class EvaluationQueryDataset:
         with open(self.csv_path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for idx, row in enumerate(reader):
+                question = row.get('Question', '').strip() or row.get('question', '').strip()
                 query = {
                     'query_id': idx,
                     'image_path': row.get('image_path', '').strip(),
                     'diagnosis_label': row.get('category', '').strip(),
-                    'question': row.get('question', '').strip(),
-                    'combined_text': row.get('question', '').strip(),  # ✅ ONLY QUESTION!
+                    'question': question,
+                    'combined_text': question,  # ✅ ONLY QUESTION!
                     'original_index': idx
                 }
                 queries.append(query)

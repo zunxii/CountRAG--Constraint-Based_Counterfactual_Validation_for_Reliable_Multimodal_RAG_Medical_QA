@@ -38,7 +38,7 @@ PLOTS_DIR = "outputs/plots/lora"
 
 MODEL_NAME = "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
 BATCH_SIZE = 16
 EPOCHS = 15
 LR = 5e-5
@@ -70,7 +70,10 @@ torch.manual_seed(SEED)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(SEED)
 
-print(f"Device: {DEVICE}")
+if DEVICE == "mps":
+    print(f"Device: {DEVICE} (Apple Silicon GPU)")
+else:
+    print(f"Device: {DEVICE}")
 print(f"Model: {MODEL_NAME}")
 print(f"Cycle consistency: {'ON' if USE_CYCLE_CONSISTENCY and USE_CLINICAL_AS_KB else 'OFF'}")
 print(f"Using clinical text as KB: {'YES' if USE_CLINICAL_AS_KB else 'NO'}")

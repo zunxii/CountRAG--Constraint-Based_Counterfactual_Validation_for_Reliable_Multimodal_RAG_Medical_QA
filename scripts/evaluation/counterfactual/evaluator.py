@@ -216,3 +216,24 @@ class CounterfactualEvaluator:
                 f.write(f"\n\nDIAGNOSTIC STABILITY:\n")
                 f.write(f"Most stable: {comp.get('most_stable', 'N/A')}\n")
                 f.write(f"Least stable: {comp.get('least_stable', 'N/A')}\n")
+
+if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Run Counterfactual Evaluation")
+    parser.add_argument("--kb-dir", type=str, default="outputs/kb/kb_final_v2", help="Path to Knowledge Base")
+    parser.add_argument("--output-dir", type=str, default="outputs/evaluation/counterfactual", help="Output directory")
+    parser.add_argument("--device", type=str, default="cpu", help="Device to run on (cpu/cuda)")
+    parser.add_argument("--num-samples", type=int, default=None, help="Number of queries to sample")
+    
+    args = parser.parse_args()
+    
+    evaluator = CounterfactualEvaluator(
+        kb_dir=args.kb_dir,
+        output_dir=args.output_dir,
+        device=args.device,
+        num_samples=args.num_samples
+    )
+    
+    evaluator.run_evaluation()
+    evaluator.save_results()

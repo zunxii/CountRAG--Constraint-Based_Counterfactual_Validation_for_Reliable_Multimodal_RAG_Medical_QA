@@ -133,7 +133,7 @@
       "data/images/swollen tonsils_Image_9.jpg"
     ],
     "num_images": 127,
-    "image_variance": 0.0019529307028278708
+    "image_variance": 0.0019529047422111034
   },
   {
     "concept_id": "neck swelling_c1bdc31b05cb",
@@ -381,7 +381,7 @@
       "data/images/neck swelling_Image_2.jpg"
     ],
     "num_images": 239,
-    "image_variance": 0.0019530339632183313
+    "image_variance": 0.0019512901781126857
   },
   {
     "concept_id": "lip swelling_93a444678457",
@@ -552,7 +552,7 @@
       "data/images/lip swelling_Image_112.jpg"
     ],
     "num_images": 162,
-    "image_variance": 0.0019531103316694498
+    "image_variance": 0.001953086699359119
   },
   {
     "concept_id": "mouth ulcers_d6ff13413872",
@@ -734,7 +734,7 @@
       "data/images/mouth ulcers_Image_66.jpg"
     ],
     "num_images": 173,
-    "image_variance": 0.0019531246507540345
+    "image_variance": 0.0019527702825143933
   },
   {
     "concept_id": "swollen eye_7aa1782fd1dd",
@@ -861,7 +861,7 @@
       "data/images/swollen eye_Image_52.jpg"
     ],
     "num_images": 118,
-    "image_variance": 0.001952161081135273
+    "image_variance": 0.001952364225871861
   },
   {
     "concept_id": "skin rash_264dfb739af3",
@@ -1866,7 +1866,7 @@
       "data/images/skin rash_Image_8.jpg"
     ],
     "num_images": 996,
-    "image_variance": 0.001952828955836594
+    "image_variance": 0.0019506302196532488
   },
   {
     "concept_id": "skin irritation_75da38238b55",
@@ -1916,7 +1916,7 @@
       "data/images/skin irritation_Image_30.jpg"
     ],
     "num_images": 41,
-    "image_variance": 0.0019495522137731314
+    "image_variance": 0.0019485612865537405
   },
   {
     "concept_id": "skin growth_dc0498e19303",
@@ -1966,7 +1966,7 @@
       "data/images/skin growth_Image_160.jpg"
     ],
     "num_images": 41,
-    "image_variance": 0.0019507544348016381
+    "image_variance": 0.0019497661851346493
   },
   {
     "concept_id": "skin dryness_07b85a247a27",
@@ -1987,7 +1987,7 @@
       "data/images/skin dryness_Image_30.jpg"
     ],
     "num_images": 12,
-    "image_variance": 0.0019526589894667268
+    "image_variance": 0.0019523351220414042
   },
   {
     "concept_id": "foot swelling_444fc5418fb3",
@@ -2079,7 +2079,7 @@
       "data/images/foot swelling_Image_84.jpg"
     ],
     "num_images": 83,
-    "image_variance": 0.0019448575330898166
+    "image_variance": 0.0019469271646812558
   },
   {
     "concept_id": "knee swelling_42b9958a3047",
@@ -2166,7 +2166,7 @@
       "data/images/knee swelling_Image_50.jpg"
     ],
     "num_images": 78,
-    "image_variance": 0.0019531247671693563
+    "image_variance": 0.0019530386198312044
   },
   {
     "concept_id": "itichy eyelid_0faf75bde218",
@@ -2183,7 +2183,7 @@
       "data/images/itichy eyelid_Image_5.jpg"
     ],
     "num_images": 8,
-    "image_variance": 0.0019531029975041747
+    "image_variance": 0.0019531092839315534
   },
   {
     "concept_id": "hand lump_d682cb7f7192",
@@ -2324,7 +2324,7 @@
       "data/images/hand lump_Image_18.jpg"
     ],
     "num_images": 132,
-    "image_variance": 0.0019503351068124175
+    "image_variance": 0.0019505687523633242
   },
   {
     "concept_id": "eye redness_6891ad1a72e2",
@@ -2398,7 +2398,7 @@
       "data/images/eye redness_Image_3.jpg"
     ],
     "num_images": 65,
-    "image_variance": 0.0019511518767103553
+    "image_variance": 0.0019526557298377156
   },
   {
     "concept_id": "edema_8e05ad89fe53",
@@ -2493,7 +2493,7 @@
       "data/images/edema_Image_8.jpg"
     ],
     "num_images": 86,
-    "image_variance": 0.0019531126599758863
+    "image_variance": 0.0019528038101270795
   },
   {
     "concept_id": "dry scalp_6948af3fcc49",
@@ -2543,7 +2543,7 @@
       "data/images/dry scalp_Image_5.jpg"
     ],
     "num_images": 41,
-    "image_variance": 0.0019531006691977382
+    "image_variance": 0.001952971681021154
   },
   {
     "concept_id": "cyanosis_abdd59fcab2c",
@@ -2560,7 +2560,7 @@
       "data/images/cyanosis_Image_8.jpg"
     ],
     "num_images": 8,
-    "image_variance": 0.001953114289790392
+    "image_variance": 0.0019530924037098885
   },
   {
     "concept_id": "eye inflamation_25851f52f9d5",
@@ -2587,6 +2587,6 @@
       "data/images/eye inflamation_Image_67.jpg"
     ],
     "num_images": 18,
-    "image_variance": 0.0019521978683769703
+    "image_variance": 0.0019530405988916755
   }
 ]
