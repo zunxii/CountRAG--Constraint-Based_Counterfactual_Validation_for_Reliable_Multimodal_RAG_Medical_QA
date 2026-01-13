@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import open_clip
-from typing import List
+from typing import List, Optional
 from PIL import Image
 from pathlib import Path
 from peft import PeftModel
@@ -20,7 +20,7 @@ class BioMedCLIPEncoder:
         self,
         device: str = "cpu",
         model_name: str = "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
-        lora_path: str | None = None,
+        lora_path: Optional[str] = None,
     ):
         self.device = device
 

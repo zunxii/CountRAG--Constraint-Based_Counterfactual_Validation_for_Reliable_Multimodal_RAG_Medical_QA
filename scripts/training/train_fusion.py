@@ -26,7 +26,7 @@ IMAGE_ROOT = "data/images"
 OUTPUT_PATH = "outputs/models/trained_fusion/fusion.pt"
 PLOTS_DIR = "outputs/plots/fusion"
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
 BATCH_SIZE = 16
 EPOCHS = 10
 LR = 1e-4
@@ -37,7 +37,10 @@ PATIENCE = 3
 os.makedirs(Path(OUTPUT_PATH).parent, exist_ok=True)
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
-print(f"Device: {DEVICE}")
+if DEVICE == "mps":
+    print(f"Device: {DEVICE} (Apple Silicon GPU)")
+else:
+    print(f"Device: {DEVICE}")
 print("✓ FIXED: Using ONLY question + image (no context/description)")
 
 # ============================================================================
