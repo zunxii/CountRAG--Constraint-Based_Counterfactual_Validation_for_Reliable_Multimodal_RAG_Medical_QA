@@ -2,205 +2,181 @@
   "eye redness": {
     "robustness_counts": {
       "high": 2,
-      "medium": 1,
-      "low": 1
+      "medium": 0,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.16870000000000002,
-      "no_image": 0.03275,
-      "noisy": 0.0665
+      "no_text": 0.10395,
+      "no_image": 0.0693,
+      "noisy": 0.0
     }
   },
   "neck swelling": {
     "robustness_counts": {
-      "high": 5,
+      "high": 3,
       "medium": 0,
-      "low": 1
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.0,
-      "no_image": 0.11551666666666667,
+      "no_text": 0.0924,
+      "no_image": 0.1386,
       "noisy": 0.0
     }
   },
   "skin dryness": {
     "robustness_counts": {
-      "high": 0,
-      "medium": 1,
-      "low": 9
+      "high": 5,
+      "medium": 0,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.32049000000000005,
-      "no_image": 0.14942000000000003,
-      "noisy": 0.10234000000000001
+      "no_text": 0.05544,
+      "no_image": 0.09702000000000001,
+      "noisy": 0.0
     }
   },
   "edema": {
     "robustness_counts": {
-      "high": 1,
-      "medium": 0,
-      "low": 5
+      "high": 2,
+      "medium": 1,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.13346666666666668,
-      "no_image": 0.32025000000000003,
-      "noisy": 0.13718333333333335
+      "no_text": 0.0693,
+      "no_image": 0.18483333333333332,
+      "noisy": 0.0231
     }
   },
   "skin irritation": {
     "robustness_counts": {
-      "high": 3,
-      "medium": 2,
-      "low": 3
+      "high": 2,
+      "medium": 3,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.05033749999999999,
-      "no_image": 0.269275,
-      "noisy": 0.0
+      "no_text": 0.12473999999999999,
+      "no_image": 0.15245999999999998,
+      "noisy": 0.01386
     }
   },
   "skin rash": {
     "robustness_counts": {
-      "high": 8,
-      "medium": 1,
-      "low": 2
+      "high": 4,
+      "medium": 2,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.0,
-      "no_image": 0.11634545454545454,
+      "no_text": 0.12705,
+      "no_image": 0.1155,
       "noisy": 0.0
     }
   },
   "knee swelling": {
     "robustness_counts": {
-      "high": 2,
-      "medium": 1,
-      "low": 2
+      "high": 0,
+      "medium": 3,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.04452,
-      "no_image": 0.31722,
+      "no_text": 0.1386,
+      "no_image": 0.20793333333333333,
       "noisy": 0.0
     }
   },
   "itichy eyelid": {
     "robustness_counts": {
-      "high": 0,
-      "medium": 1,
-      "low": 2
+      "high": 2,
+      "medium": 0,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.15636666666666665,
-      "no_image": 0.47413333333333335,
-      "noisy": 0.08923333333333333
+      "no_text": 0.0693,
+      "no_image": 0.0693,
+      "noisy": 0.0
     }
   },
   "mouth ulcers": {
     "robustness_counts": {
-      "high": 6,
-      "medium": 1,
-      "low": 3
+      "high": 3,
+      "medium": 2,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.06931000000000001,
-      "no_image": 0.23198,
-      "noisy": 0.0
+      "no_text": 0.1386,
+      "no_image": 0.1386,
+      "noisy": 0.02772
     }
   },
   "swollen eye": {
     "robustness_counts": {
-      "high": 3,
-      "medium": 1,
+      "high": 1,
+      "medium": 2,
       "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.04435,
-      "no_image": 0.08782499999999999,
-      "noisy": 0.0
+      "no_text": 0.13863333333333333,
+      "no_image": 0.13863333333333336,
+      "noisy": 0.0231
     }
   },
   "skin growth": {
-    "robustness_counts": {
-      "high": 0,
-      "medium": 1,
-      "low": 4
-    },
-    "avg_js_divergences": {
-      "no_text": 0.32238,
-      "no_image": 0.31273999999999996,
-      "noisy": 0.14164
-    }
-  },
-  "lip swelling": {
-    "robustness_counts": {
-      "high": 3,
-      "medium": 0,
-      "low": 2
-    },
-    "avg_js_divergences": {
-      "no_text": 0.0,
-      "no_image": 0.16912,
-      "noisy": 0.0
-    }
-  },
-  "swollen tonsils": {
-    "robustness_counts": {
-      "high": 0,
-      "medium": 0,
-      "low": 4
-    },
-    "avg_js_divergences": {
-      "no_text": 0.173275,
-      "no_image": 0.6512249999999999,
-      "noisy": 0.173275
-    }
-  },
-  "hand lump": {
-    "robustness_counts": {
-      "high": 4,
-      "medium": 0,
-      "low": 0
-    },
-    "avg_js_divergences": {
-      "no_text": 0.018,
-      "no_image": 0.0,
-      "noisy": 0.0
-    }
-  },
-  "foot swelling": {
-    "robustness_counts": {
-      "high": 6,
-      "medium": 3,
-      "low": 4
-    },
-    "avg_js_divergences": {
-      "no_text": 0.07704615384615385,
-      "no_image": 0.2008923076923077,
-      "noisy": 0.002769230769230769
-    }
-  },
-  "dry scalp": {
     "robustness_counts": {
       "high": 1,
       "medium": 0,
       "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.0,
-      "no_image": 0.0,
+      "no_text": 0.0693,
+      "no_image": 0.1386,
       "noisy": 0.0
     }
   },
-  "eye inflamation": {
+  "lip swelling": {
     "robustness_counts": {
-      "high": 0,
-      "medium": 0,
-      "low": 1
+      "high": 2,
+      "medium": 1,
+      "low": 0
     },
     "avg_js_divergences": {
-      "no_text": 0.0361,
-      "no_image": 0.0324,
-      "noisy": 0.6238
+      "no_text": 0.0693,
+      "no_image": 0.1617333333333333,
+      "noisy": 0.0231
+    }
+  },
+  "swollen tonsils": {
+    "robustness_counts": {
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "avg_js_divergences": {
+      "no_text": 0.10395,
+      "no_image": 0.0693,
+      "noisy": 0.0
+    }
+  },
+  "hand lump": {
+    "robustness_counts": {
+      "high": 2,
+      "medium": 1,
+      "low": 0
+    },
+    "avg_js_divergences": {
+      "no_text": 0.1155,
+      "no_image": 0.1155,
+      "noisy": 0.0
+    }
+  },
+  "foot swelling": {
+    "robustness_counts": {
+      "high": 3,
+      "medium": 1,
+      "low": 0
+    },
+    "avg_js_divergences": {
+      "no_text": 0.12127500000000001,
+      "no_image": 0.10395000000000001,
+      "noisy": 0.0
     }
   }
 }
