@@ -7,25 +7,44 @@ from scripts.evaluation.counterfactual.analysis.modality_effects import Modality
 from scripts.evaluation.counterfactual.analysis.statistical import StatisticalAnalyzer
 from scripts.evaluation.counterfactual.analysis.diagnostic_profile import DiagnosticProfiler
 
+# NEW: Import constraints analyzer
+try:
+    from scripts.evaluation.counterfactual.analysis.constraints_analysis import ConstraintsAnalyzer
+except ImportError:
+    ConstraintsAnalyzer = None
+
 
 class RobustnessAnalyzer:
-    """Enhanced robustness analysis orchestrator"""
+    """Enhanced robustness analysis orchestrator with constraints"""
     
     def __init__(self):
         self.perturbation_analyzer = PerturbationAnalyzer()
         self.modality_analyzer = ModalityEffectsAnalyzer()
         self.statistical_analyzer = StatisticalAnalyzer()
         self.diagnostic_profiler = DiagnosticProfiler()
+        
+        # NEW: Add constraints analyzer if available
+        self.constraints_analyzer = ConstraintsAnalyzer() if ConstraintsAnalyzer else None
     
     def analyze(self, stability_tests: List[Dict]) -> Dict:
-        """Comprehensive robustness analysis"""
-        return {
+        """Comprehensive robustness analysis with constraints"""
+        
+        analysis = {
             "basic_metrics": self._compute_basic_metrics(stability_tests),
             "perturbation_analysis": self.perturbation_analyzer.analyze(stability_tests),
             "modality_effects": self.modality_analyzer.analyze(stability_tests),
             "statistical_tests": self.statistical_analyzer.analyze(stability_tests),
             "diagnostic_profiles": self.diagnostic_profiler.analyze(stability_tests)
         }
+        
+        # NEW: Add constraints analysis if available
+        if self.constraints_analyzer is not None:
+            try:
+                analysis["constraints_analysis"] = self.constraints_analyzer.analyze(stability_tests)
+            except Exception as e:
+                analysis["constraints_analysis"] = {"error": str(e)}
+        
+        return analysis
     
     def _compute_basic_metrics(self, tests: List[Dict]) -> Dict:
         """Compute basic stability metrics (backward compatibility)"""
@@ -77,7 +96,7 @@ class RobustnessAnalyzer:
         
         return {
             diag: {
-                "count": int(len(levels)),  # Convert to int
+                "count": int(len(levels)),
                 "high": int(levels.count("high")),
                 "medium": int(levels.count("medium")),
                 "low": int(levels.count("low"))

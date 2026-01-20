@@ -20,7 +20,7 @@
     "avg_js_divergences": {
       "no_text": 0.0924,
       "no_image": 0.1386,
-      "noisy": 0.0
+      "noisy": 0.0231
     }
   },
   "skin dryness": {
@@ -68,7 +68,7 @@
     "avg_js_divergences": {
       "no_text": 0.12705,
       "no_image": 0.1155,
-      "noisy": 0.0
+      "noisy": 0.01155
     }
   },
   "knee swelling": {
@@ -80,7 +80,7 @@
     "avg_js_divergences": {
       "no_text": 0.1386,
       "no_image": 0.20793333333333333,
-      "noisy": 0.0
+      "noisy": 0.0231
     }
   },
   "itichy eyelid": {
@@ -104,7 +104,7 @@
     "avg_js_divergences": {
       "no_text": 0.1386,
       "no_image": 0.1386,
-      "noisy": 0.02772
+      "noisy": 0.01386
     }
   },
   "swollen eye": {
@@ -116,7 +116,7 @@
     "avg_js_divergences": {
       "no_text": 0.13863333333333333,
       "no_image": 0.13863333333333336,
-      "noisy": 0.0231
+      "noisy": 0.0
     }
   },
   "skin growth": {
@@ -140,7 +140,7 @@
     "avg_js_divergences": {
       "no_text": 0.0693,
       "no_image": 0.1617333333333333,
-      "noisy": 0.0231
+      "noisy": 0.0
     }
   },
   "swollen tonsils": {
@@ -176,7 +176,7 @@
     "avg_js_divergences": {
       "no_text": 0.12127500000000001,
       "no_image": 0.10395000000000001,
-      "noisy": 0.0
+      "noisy": 0.017325
     }
   }
 }

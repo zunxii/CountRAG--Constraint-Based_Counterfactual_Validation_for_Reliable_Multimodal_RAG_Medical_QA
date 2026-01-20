@@ -1,5 +1,10 @@
 """
-Stability tester - FIXED to use updated retriever with distinct results
+Stability tester - UPDATED to include constraints in output
+Location: scripts/evaluation/counterfactual/stability_tester.py
+
+Changes:
+1. Return constraints in test results
+2. Maintain backward compatibility
 """
 import sys
 from pathlib import Path
@@ -21,25 +26,23 @@ class StabilityTester:
     
     def __init__(self, kb_dir: str, device: str = "cpu"):
         self.device = device
-        
-        # Load KB using unified retriever (handles both modes!)
         kb_dir = Path(kb_dir)
         
-        # CHANGED: Use KBRetriever which auto-detects mode
+        # Load KB using unified retriever
         from core.retrieval.retriever import KBRetriever
         self.kb_retriever = KBRetriever(str(kb_dir))
-        self.kb_mode = self.kb_retriever.kb_mode  # NEW: Get mode
+        self.kb_mode = self.kb_retriever.kb_mode
         self.kb_metadata = self.kb_retriever.metadata
         
         print(f"✓ Loaded {self.kb_mode} KB")
         
-        # CHANGED: Build image lookup based on KB mode
+        # Build image lookup based on KB mode
         if self.kb_mode == "flat":
             self._build_flat_lookup()
-        else:  # concept mode
+        else:
             self._build_concept_lookup()
         
-        # Load models (unchanged)
+        # Load models
         self.encoder = BioMedCLIPEncoder(device=device)
         self.image_loader = ImageLoader()
         
@@ -50,13 +53,14 @@ class StabilityTester:
         )
         self.fusion.eval()
         
-        # CHANGED: Use KBRetriever instead of raw FAISS
+        # Setup retriever for stability
         from core.reasoning.counterfactuals.stability.retrieval import StabilityRetriever
         self.stability_retriever = StabilityRetriever(
             self.kb_retriever.index, 
             self.kb_metadata
         )
         
+        # Create runner (will auto-detect constraints)
         from core.reasoning.counterfactuals.stability.runner import StabilityRunner
         self.runner = StabilityRunner(self.stability_retriever, self.fusion)
     
@@ -78,10 +82,12 @@ class StabilityTester:
                 img_key = str(Path(img_path).resolve())
                 self.image_to_concept[img_key] = concept_id
     
-    # CHANGED: Update test_query method (lines 80-120)
     def test_query(self, query: dict) -> dict:
-        """Test stability for evaluation query - works for both KB modes"""
+        """
+        Test stability for evaluation query.
         
+        NEW: Returns constraints alongside stability
+        """
         # Load and encode query
         img = self.image_loader.load(query['image_path'])
         
@@ -89,30 +95,30 @@ class StabilityTester:
             img_emb = self.encoder.encode_image(img).unsqueeze(0)
             txt_emb = self.encoder.encode_text(query['combined_text']).unsqueeze(0)
         
-        # NEW: Check if query is in KB and exclude it
-        # (Note: Stability analysis focuses on distribution changes,
-        #  so self-exclusion is less critical but we do it anyway)
-        
-        # Run stability analysis
+        # Run stability analysis (now includes constraints)
         stability_output = self.runner.run(img_emb, txt_emb)
         
-        return {
+        # Build result with constraints
+        result = {
             "query_id": query['query_id'],
             "diagnosis": query['diagnosis_label'],
             "image_path": query['image_path'],
             "stability": stability_output["stability"],
             "baseline_distribution": stability_output["baseline"]
         }
+        
+        # NEW: Include constraints if available
+        if "constraints" in stability_output:
+            result["constraints"] = stability_output["constraints"]
+        
+        return result
     
     def get_metadata(self):
-        """Get KB metadata (for backward compatibility)"""
+        """Get KB metadata"""
         return self.kb_metadata
     
     def test_sample(self, idx: int):
-        """
-        Test KB sample by index (for backward compatibility).
-        This excludes the query index itself from results.
-        """
+        """Test KB sample by index"""
         entry = self.kb_metadata[idx]
         
         img = self.image_loader.load(entry["image_path"])
@@ -123,13 +129,17 @@ class StabilityTester:
                 entry["clinical_text"]["combined"]
             ).unsqueeze(0)
         
-        # Note: For KB self-queries, we should exclude idx from retrieval
-        # This would require updating StabilityRetriever to support exclusions
         stability_output = self.runner.run(img_emb, txt_emb)
         
-        return {
+        result = {
             "case_id": entry["case_id"],
             "diagnosis": entry["diagnosis_label"],
             "stability": stability_output["stability"],
             "baseline_distribution": stability_output["baseline"]
         }
+        
+        # NEW: Include constraints if available
+        if "constraints" in stability_output:
+            result["constraints"] = stability_output["constraints"]
+        
+        return result

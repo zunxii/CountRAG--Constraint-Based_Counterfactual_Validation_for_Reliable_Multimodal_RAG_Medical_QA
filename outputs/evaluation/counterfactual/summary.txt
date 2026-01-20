@@ -4,12 +4,12 @@ COUNTERFACTUAL STABILITY EVALUATION - RESEARCH REPORT
 Evaluation queries tested: 50
 Source: data/processed/splits/eval.csv
 KB: outputs/kb/kb_final_concept
-Timestamp: 2026-01-14T16:14:02.450346
+Timestamp: 2026-01-20T17:34:30.655294
 
 AVERAGE JS DIVERGENCES:
   no_text: 0.1067
   no_image: 0.1289
-  noisy: 0.0083
+  noisy: 0.0097
 
 ROBUSTNESS DISTRIBUTION:
   high: 34

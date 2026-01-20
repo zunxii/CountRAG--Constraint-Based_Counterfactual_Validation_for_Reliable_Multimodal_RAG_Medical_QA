@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-14T16:14:02.450346",
+  "timestamp": "2026-01-20T17:34:30.655294",
   "num_samples": 50,
   "eval_queries_csv": "data/processed/splits/eval.csv",
   "kb_dir": "outputs/kb/kb_final_concept",
@@ -31,6 +31,9 @@
           "lip swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -59,6 +62,9 @@
           "knee swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -87,6 +93,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -115,6 +124,9 @@
           "lip swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -143,6 +155,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -171,6 +186,9 @@
           "neck swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -199,6 +217,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -209,7 +230,7 @@
         "js_divergence": {
           "no_text": 0.0693,
           "no_image": 0.2773,
-          "noisy": 0.0
+          "noisy": 0.0693
         },
         "robustness_level": "medium"
       },
@@ -227,6 +248,9 @@
           "cyanosis": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -255,6 +279,9 @@
           "cyanosis": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -283,6 +310,9 @@
           "lip swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -311,6 +341,9 @@
           "foot swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -339,6 +372,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -367,6 +403,9 @@
           "neck swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -395,6 +434,9 @@
           "skin growth": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -405,7 +447,7 @@
         "js_divergence": {
           "no_text": 0.0,
           "no_image": 0.2773,
-          "noisy": 0.0693
+          "noisy": 0.0
         },
         "robustness_level": "medium"
       },
@@ -423,6 +465,9 @@
           "dry scalp": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -451,6 +496,9 @@
           "neck swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -461,7 +509,7 @@
         "js_divergence": {
           "no_text": 0.0693,
           "no_image": 0.0693,
-          "noisy": 0.0693
+          "noisy": 0.0
         },
         "robustness_level": "high"
       },
@@ -479,6 +527,9 @@
           "swollen tonsils": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -507,6 +558,9 @@
           "eye redness": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -535,6 +589,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -563,6 +620,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -573,7 +633,7 @@
         "js_divergence": {
           "no_text": 0.1386,
           "no_image": 0.1386,
-          "noisy": 0.0693
+          "noisy": 0.0
         },
         "robustness_level": "high"
       },
@@ -591,6 +651,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -601,7 +664,7 @@
         "js_divergence": {
           "no_text": 0.0693,
           "no_image": 0.1386,
-          "noisy": 0.0
+          "noisy": 0.0693
         },
         "robustness_level": "high"
       },
@@ -619,6 +682,9 @@
           "hand lump": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -647,6 +713,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -675,6 +744,9 @@
           "cyanosis": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -703,6 +775,9 @@
           "dry scalp": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -731,6 +806,9 @@
           "knee swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -759,6 +837,9 @@
           "neck swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -769,7 +850,7 @@
         "js_divergence": {
           "no_text": 0.1386,
           "no_image": 0.1386,
-          "noisy": 0.0693
+          "noisy": 0.0
         },
         "robustness_level": "high"
       },
@@ -787,6 +868,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -815,6 +899,9 @@
           "lip swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -843,6 +930,9 @@
           "edema": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -871,6 +961,9 @@
           "swollen tonsils": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -899,6 +992,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -909,7 +1005,7 @@
         "js_divergence": {
           "no_text": 0.1386,
           "no_image": 0.0693,
-          "noisy": 0.0
+          "noisy": 0.0693
         },
         "robustness_level": "high"
       },
@@ -927,6 +1023,9 @@
           "knee swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -955,6 +1054,9 @@
           "neck swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -983,6 +1085,9 @@
           "itichy eyelid": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -993,7 +1098,7 @@
         "js_divergence": {
           "no_text": 0.2079,
           "no_image": 0.0693,
-          "noisy": 0.0
+          "noisy": 0.0693
         },
         "robustness_level": "medium"
       },
@@ -1011,6 +1116,9 @@
           "knee swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1039,6 +1147,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1067,6 +1178,9 @@
           "cyanosis": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1077,7 +1191,7 @@
         "js_divergence": {
           "no_text": 0.0693,
           "no_image": 0.1386,
-          "noisy": 0.0
+          "noisy": 0.0693
         },
         "robustness_level": "high"
       },
@@ -1095,6 +1209,9 @@
           "eye inflamation": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1123,6 +1240,9 @@
           "hand lump": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1151,6 +1271,9 @@
           "hand lump": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1179,6 +1302,9 @@
           "skin irritation": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1207,6 +1333,9 @@
           "edema": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1235,6 +1364,9 @@
           "lip swelling": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1263,6 +1395,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1291,6 +1426,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1319,6 +1457,9 @@
           "hand lump": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1347,6 +1488,9 @@
           "skin rash": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1375,6 +1519,9 @@
           "dry scalp": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     },
     {
@@ -1403,6 +1550,9 @@
           "swollen eye": 0.1
         },
         "num_clusters": 10
+      },
+      "constraints": {
+        "error": "'diagnosis_label'"
       }
     }
   ],
@@ -1411,7 +1561,7 @@
       "avg_divergences": {
         "no_text": 0.10672400000000001,
         "no_image": 0.12890600000000002,
-        "noisy": 0.008316
+        "noisy": 0.009701999999999999
       },
       "robustness_distribution": {
         "high": 34,
@@ -1513,8 +1663,8 @@
     "perturbation_analysis": {
       "scale_analysis": {
         "default": {
-          "mean_divergence": 0.008316,
-          "std_divergence": 0.02251983445765088,
+          "mean_divergence": 0.009701999999999999,
+          "std_divergence": 0.024046201280035897,
           "median_divergence": 0.0,
           "max_divergence": 0.0693,
           "stable_ratio": 1.0
@@ -1523,7 +1673,7 @@
       "degradation_curve": [
         {
           "scale": "default",
-          "divergence": 0.008316
+          "divergence": 0.009701999999999999
         }
       ],
       "robustness_threshold": "default"
@@ -1564,17 +1714,17 @@
       },
       "noise_robustness_test": {
         "modality": "noise",
-        "t_statistic": -2.584921310565987,
-        "t_pvalue": 0.012768331605389087,
+        "t_statistic": -2.824313046750751,
+        "t_pvalue": 0.006833400149570639,
         "significant": true,
         "wilcoxon_statistic": 0.0,
-        "wilcoxon_pvalue": 0.014305878435429648,
-        "cohens_d": -0.5169842621131976,
+        "wilcoxon_pvalue": 0.0081509715935027,
+        "cohens_d": -0.5648626093501502,
         "effect_size_interpretation": "medium",
-        "mean_divergence": 0.008316,
+        "mean_divergence": 0.009701999999999999,
         "confidence_interval_95": {
-          "lower": 0.0018509569042364313,
-          "upper": 0.01478104309576357
+          "lower": 0.00279876419437349,
+          "upper": 0.016605235805626506
         }
       },
       "comparative_tests": {
@@ -1609,8 +1759,8 @@
           "q75": 0.1386
         },
         "noisy": {
-          "mean": 0.008316,
-          "std": 0.02251983445765088,
+          "mean": 0.009701999999999999,
+          "std": 0.024046201280035897,
           "median": 0.0,
           "min": 0.0,
           "max": 0.0693,
@@ -1663,8 +1813,8 @@
             "median": 0.1386
           },
           "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.0231,
+            "std": 0.032668333290818495,
             "median": 0.0
           }
         },
@@ -1676,7 +1826,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 7
+        "stability_rank": 9
       },
       "skin dryness": {
         "sample_count": 5,
@@ -1765,7 +1915,7 @@
           "mean": 3.3219280948873626,
           "std": 4.440892098500626e-16
         },
-        "stability_rank": 12
+        "stability_rank": 13
       },
       "skin rash": {
         "sample_count": 6,
@@ -1781,8 +1931,8 @@
             "median": 0.1386
           },
           "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.01155,
+            "std": 0.025826585140122572,
             "median": 0.0
           }
         },
@@ -1795,7 +1945,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 9
+        "stability_rank": 10
       },
       "knee swelling": {
         "sample_count": 3,
@@ -1811,8 +1961,8 @@
             "median": 0.2079
           },
           "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.0231,
+            "std": 0.032668333290818495,
             "median": 0.0
           }
         },
@@ -1869,8 +2019,8 @@
             "median": 0.1386
           },
           "noisy": {
-            "mean": 0.02772,
-            "std": 0.03394992783497485,
+            "mean": 0.01386,
+            "std": 0.02772,
             "median": 0.0
           }
         },
@@ -1899,8 +2049,8 @@
             "median": 0.0693
           },
           "noisy": {
-            "mean": 0.0231,
-            "std": 0.032668333290818495,
+            "mean": 0.0,
+            "std": 0.0,
             "median": 0.0
           }
         },
@@ -1913,7 +2063,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 13
+        "stability_rank": 12
       },
       "skin growth": {
         "sample_count": 1,
@@ -1958,8 +2108,8 @@
             "median": 0.1386
           },
           "noisy": {
-            "mean": 0.0231,
-            "std": 0.032668333290818495,
+            "mean": 0.0,
+            "std": 0.0,
             "median": 0.0
           }
         },
@@ -1972,7 +2122,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 10
+        "stability_rank": 7
       },
       "swollen tonsils": {
         "sample_count": 2,
@@ -2031,7 +2181,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 8
+        "stability_rank": 6
       },
       "foot swelling": {
         "sample_count": 4,
@@ -2047,8 +2197,8 @@
             "median": 0.0693
           },
           "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.017325,
+            "std": 0.0300077802411308,
             "median": 0.0
           }
         },
@@ -2061,7 +2211,7 @@
           "mean": 3.321928094887362,
           "std": 0.0
         },
-        "stability_rank": 6
+        "stability_rank": 8
       },
       "_comparative": {
         "most_stable": "itichy eyelid",
@@ -2072,19 +2222,22 @@
           "eye redness",
           "swollen tonsils",
           "skin growth",
+          "hand lump",
+          "lip swelling",
           "foot swelling",
           "neck swelling",
-          "hand lump",
           "skin rash",
-          "lip swelling",
           "edema",
-          "skin irritation",
           "swollen eye",
+          "skin irritation",
           "mouth ulcers",
           "knee swelling"
         ],
-        "stability_variance": 0.019532441649966033
+        "stability_variance": 0.019844284862975237
       }
+    },
+    "constraints_analysis": {
+      "status": "no_valid_constraints"
     }
   }
 }
