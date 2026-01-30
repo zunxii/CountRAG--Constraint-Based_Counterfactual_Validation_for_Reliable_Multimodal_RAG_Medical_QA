@@ -1,0 +1,40 @@
+Goal
+Overhaul the "Evaluation" section of the research paper to match the "Reviewer-Grade" detailed guide provided by the user.
+
+User Review Required
+IMPORTANT
+
+Some metric values (specifically Entropy, Margin, and Constraint Violation Rates) are not found in the current codebase (
+results.json
+ lacks constraint fields). I will use the values provided in the user's prompt (e.g., from the ChatGPT tables) as the source of truth for the report. If these are generic examples, the tables will need to be updated with real data later.
+
+Proposed Changes
+1. Generate Revised Plots (generate_revised_plots.py)
+Create a Python script to generate the following new figures using data from the prompt's tables:
+
+Figure Y: Reliability Bucket Distribution (Bar chart: High/Medium/Low reliability for Text, Image, Fusion, CountRAG).
+Figure X: Counterfactual Trajectory (Visualizing rank changes for a single query ID 35 from 
+results.json
+ or a representative example).
+Figure Z: Constraint Violation Rates (Bar chart matching the provided table).
+2. Create Consolidated Report (revised_evaluation_report.md)
+Write a completely new markdown report containing:
+
+Table 1 (The "Big Table"): Retrieval, Representation, and Fusion Evaluation (Non-Counterfactual).
+Data Source: 
+neutral_retrieval_results.md
+ + Prompt's Entropy/Margin values.
+Table 2 (Constraint Violation Summary):
+Data Source: Prompt's Table W (Values like 7.8%, 5.1%).
+Counterfactual Analysis Subsection:
+Text explaining Stability, Modality Dependence, and Constraints.
+References to the new figures.
+Verification Plan
+Automated Tests
+Run python3 generate_revised_plots.py and verify it produces outputs/paper_plots/reliability_buckets.png and constraint_violations.png.
+Check revised_evaluation_report.md for correct formatting and table values.
+Manual Verification
+Review the generated report to ensuring it aligns with the "Reviewer-Grade" structure (Executive Summary, Integrated Analysis, Counterfactuals).
+
+Comment
+⌥⌘M

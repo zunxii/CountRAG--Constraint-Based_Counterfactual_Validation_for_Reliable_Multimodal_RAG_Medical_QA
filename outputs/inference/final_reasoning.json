@@ -56,12 +56,12 @@
         "eye redness": 0.1,
         "eye inflamation": 0.1,
         "itichy eyelid": 0.1,
-        "swollen tonsils": 0.1,
         "skin growth": 0.1,
         "knee swelling": 0.1,
         "edema": 0.1,
-        "lip swelling": 0.1,
-        "neck swelling": 0.1
+        "hand lump": 0.1,
+        "dry scalp": 0.1,
+        "lip swelling": 0.1
       },
       "num_clusters": 10
     },
@@ -5360,10 +5360,10 @@
     },
     {
       "diagnosis": "swollen tonsils",
-      "retention_score": 1.0,
+      "retention_score": 0.75,
       "modality_dependency": "multimodal",
       "base_support": 0.1,
-      "final_score": 0.1
+      "final_score": 0.075
     },
     {
       "diagnosis": "edema",
@@ -5381,59 +5381,38 @@
     },
     {
       "diagnosis": "dry scalp",
-      "retention_score": 0.5,
+      "retention_score": 0.75,
       "modality_dependency": "image_dominant",
       "base_support": 0.1,
-      "final_score": 0.035
+      "final_score": 0.0525
     }
   ],
   "explanation": {
     "primary_hypothesis": "swollen eye",
-    "confidence_level": "low",
+    "confidence_level": "medium",
     "reasoning": [
-      "The hypothesis 'swollen eye' is presented as the top-ranked hypothesis in the provided list. It achieved a high retention score of 1.0, indicating that it consistently maintained its rank across various stability tests. This hypothesis is classified as 'multimodal', suggesting that its support is derived from both text and image data."
+      "The hypothesis 'swollen eye' is supported by the highest final score of 0.1, which it shares with several other hypotheses.",
+      "It demonstrates strong retention with a score of 1.0, indicating its consistent presence in the top results across various stability tests, including scenarios with added noise or missing text modality.",
+      "The 'multimodal' dependency suggests that both textual and image information contribute to its support in the baseline model."
     ],
     "uncertainty_notes": [
-      "Despite a high robustness level, there is low confidence in definitively differentiating the top hypotheses. The analysis indicates that 'swollen eye' is near the decision boundary with 'eye redness', with a narrow margin of 0.0868. This suggests that these two hypotheses are very closely supported and difficult to definitively distinguish.",
-      "The modality consistency is moderate, which implies that the agreement or contribution from different data types (text and image) might not be uniformly strong.",
-      "The evidence diversity is low, based on only 1 unique image and 1 unique case. This limited evidence reduces confidence in the generalizability and strong certainty of the results."
+      "There are multiple hypotheses, specifically 'swollen eye', 'eye redness', 'eye inflamation', 'itichy eyelid', 'knee swelling', 'edema', and 'lip swelling', that all share the highest final score of 0.1. This indicates a very close level of support among these hypotheses.",
+      "The boundary analysis further highlights this proximity, noting that 'swollen eye' and 'eye redness' are near the decision boundary with a margin of 0.0868, implying that the distinction between these two top hypotheses is weak and potentially sensitive to minor input variations.",
+      "While the overall robustness level is 'high', the modality consistency is only 'moderate' (cosine similarity 0.5477). This suggests that the alignment of support from different modalities could be stronger.",
+      "The evidence diversity is 'low', based on only 1 unique image and 1 unique case, which may limit the generalizability and robustness of the evidence supporting the hypotheses."
     ],
     "rejected_hypotheses": [
       {
-        "diagnosis": "eye redness",
-        "reason": "This hypothesis has a final score of 0.1 and a retention score of 1.0, indicating consistent support. However, the analysis explicitly states that it is near the decision boundary with 'swollen eye' with a margin of 0.0868, suggesting it is very closely supported but ranked immediately after the top hypothesis."
-      },
-      {
-        "diagnosis": "eye inflamation",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
-      },
-      {
-        "diagnosis": "itichy eyelid",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
-      },
-      {
-        "diagnosis": "knee swelling",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
+        "diagnosis": "skin growth",
+        "reason": "This hypothesis has a lower final score of 0.0525. Its retention score of 0.75 is also lower than the top hypotheses, suggesting it is not as consistently ranked high across different perturbation scenarios. Its modality dependency is 'image_dominant', indicating a primary reliance on image data for its support."
       },
       {
         "diagnosis": "swollen tonsils",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
-      },
-      {
-        "diagnosis": "edema",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
-      },
-      {
-        "diagnosis": "lip swelling",
-        "reason": "This hypothesis also has a final score of 0.1 and a retention score of 1.0, indicating consistent support across stability tests. It is classified as multimodal."
-      },
-      {
-        "diagnosis": "skin growth",
-        "reason": "This hypothesis has a lower final score of 0.0525 and a retention score of 0.75. The lower retention score suggests it was not consistently ranked as highly as the top hypotheses across all tested conditions. Its classification as 'image_dominant' indicates a stronger reliance on image data for its support."
+        "reason": "This hypothesis has a lower final score of 0.075. Its retention score of 0.75 is lower than the top hypotheses, suggesting less consistent high ranking. Its modality dependency is 'multimodal'."
       },
       {
         "diagnosis": "dry scalp",
-        "reason": "This hypothesis has the lowest final score of 0.035 and a lower retention score of 0.5. This indicates significantly weaker and less consistent support for this hypothesis across the stability tests. Similar to 'skin growth', it is classified as 'image_dominant', suggesting its support is primarily derived from the image modality."
+        "reason": "This hypothesis has a lower final score of 0.0525. Its retention score of 0.75 is lower than the top hypotheses, suggesting it is not as consistently ranked high across different perturbation scenarios. Its modality dependency is 'image_dominant', indicating a primary reliance on image data for its support."
       }
     ]
   }

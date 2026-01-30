@@ -1,5 +1,5 @@
 import json
-from google import genai
+import google.generativeai as genai
 from .prompt import PROMPT
 from .schemas import Explanation
 
@@ -15,19 +15,23 @@ class GeminiCounterfactualExplainer:
         if not api_key:
             raise ValueError("Gemini API key not provided")
 
-        self.client = genai.Client(api_key=api_key)
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel("gemini-2.5-flash")
 
     def explain(self, structured_input: dict) -> Explanation:
         prompt = PROMPT.format(
             input_json=json.dumps(structured_input, indent=2)
         )
 
-        response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
+        response = self.model.generate_content(
+            prompt,
         )
 
         text = response.text.strip()
+        if text.startswith("```json"):
+            text = text[7:-3].strip()
+        elif text.startswith("```"):
+            text = text[3:-3].strip()
 
         try:
             data = json.loads(text)
