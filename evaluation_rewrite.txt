@@ -1,0 +1,67 @@
+# EVALUATION
+
+This section presents a comprehensive experimental evaluation of the proposed Research RAG system. The evaluation is designed to assess three key aspects of the system: retrieval effectiveness, component-level contribution, and robustness under modality perturbations. All experiments are conducted to validate the impact of domain adaptation, multimodal fusion, and concept-based retrieval on diagnostic performance.
+
+## A. Evaluation Methodology
+
+We evaluate the retrieval performance of the system using standard Information Retrieval (IR) metrics commonly employed in multimodal and medical retrieval settings:
+*   Recall@K (R@K): Reported at K=1, 5, and 10.
+*   Mean Reciprocal Rank (MRR).
+*   Jensen–Shannon Divergence (JSD): Computed to quantify the stability of predictions under counterfactual perturbations.
+
+## B. Experimental Setup
+
+The system is evaluated using 587 queries from the held-out test split. Each query consists of a clinical text description and, where available, a corresponding medical image.
+
+### Modes Evaluated
+To analyze the contribution of each modality, we evaluate the system under three retrieval modes:
+1.  **Text Mode**: Retrieval performed using only clinical text embeddings.
+2.  **Image Mode**: Retrieval performed using only medical image embeddings.
+3.  **Fusion Mode**: Retrieval using the proposed adaptive image–text fusion mechanism.
+
+All modes share the same retrieval backend and ranking procedure to ensure a fair comparison.
+
+## C. Quantitative Results
+
+### Overall Retrieval Performance
+Table I presents the retrieval performance across different modes.
+
+**TABLE I: RETRIEVAL PERFORMANCE COMPARISON**
+
+| Mode | R@1 | R@5 | R@10 | MRR |
+| :--- | :--- | :--- | :--- | :--- |
+| Text Mode | 0.59 | 0.59 | 0.59 | 0.59 |
+| Image Mode | 0.75 | 0.75 | 0.78 | 0.76 |
+| Fusion Mode | **0.81** | **0.81** | **0.81** | **0.81** |
+
+The results show that Fusion Mode consistently outperforms both unimodal baselines across all metrics. While Image Mode already provides strong performance, incorporating textual information through adaptive fusion yields a clear improvement, particularly in top-rank accuracy (R@1).
+
+### Diagnosis-Level Performance Analysis
+To further understand system behavior, we analyze retrieval performance on a subset of diagnostically challenging cases. Table II reports R@1 scores for selected diagnoses.
+
+**TABLE II: PERFORMANCE BY DIAGNOSIS (R@1)**
+
+| Diagnosis | Text Mode | Image Mode | Fusion Mode |
+| :--- | :--- | :--- | :--- |
+| Lip Swelling | 0.87 | 1.00 | 1.00 |
+| Knee Swelling | 0.76 | 1.00 | 1.00 |
+| Skin Rash | 0.69 | 0.57 | 0.59 |
+| Edema | 0.50 | 0.50 | 0.85 |
+
+For visually distinctive conditions such as Lip Swelling and Knee Swelling, Image Mode already achieves perfect recall. However, for more ambiguous conditions such as Edema, Fusion Mode significantly outperforms both Text and Image modes (0.85 vs. 0.50), demonstrating the benefit of combining visual patterns with clinical descriptions.
+
+## D. Robustness and Counterfactual Analysis
+
+To strictly evaluate the system's reliance on each modality, we conducted a counterfactual analysis by systematically removing or perturbing input modalities and measuring the Jensen-Shannon Divergence (JSD) from the baseline predictions.
+
+**TABLE III: COUNTERFACTUAL STABILITY ANALYSIS**
+
+| Perturbation | Average JSD | Effect Size (Cohen’s d) |
+| :--- | :--- | :--- |
+| No Text | 0.1214 | -0.8640 (Large) |
+| No Image | 0.2676 | -1.2616 (Large) |
+| Gaussian Noise | 0.0430 | - |
+
+The analysis reveals a significant dependency on both modalities, with a stronger reliance on visual information. The removal of image data results in a higher average divergence (JSD = 0.2676) compared to the removal of text (JSD = 0.1214), confirming that visual cues are the primary driver for many diagnoses. However, the non-negligible impact of removing text indicates that clinical descriptions remain essential for refining retrieval, particularly in cases where visual evidence is ambiguous.
+
+Stability analysis across diagnoses shows that *Dry Scalp* exhibits the highest stability (JSD ≈ 0.0), whereas *Skin Growth* is the least stable, showing high sensitivity to modality perturbations. Notably, for **Edema**, the system shows high sensitivity to image removal (JSD = 0.456), correlating with the significant performance drop observed in the unimodal Text Mode, further validating the necessity of the Fusion Mode for this condition. The overall low divergence under noise injection (0.0430) confirms the system's robustness to minor input variations.

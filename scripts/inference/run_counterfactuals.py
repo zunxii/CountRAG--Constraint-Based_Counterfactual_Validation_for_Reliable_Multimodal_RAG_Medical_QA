@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image
 import sys
 from pathlib import Path
+import os
 import argparse
 
 # Fix imports
@@ -19,6 +20,8 @@ from core.fusion.adaptive_fusion import AdaptiveFusion
 from core.reasoning.counterfactuals.stability.retrieval import StabilityRetriever
 from core.reasoning.counterfactuals.stability.runner import StabilityRunner
 from core.reasoning.counterfactuals.diagnostics.scorer import CounterfactualScorer
+from core.reasoning.counterfactuals.orchestrator import CounterfactualReasoner
+from core.reasoning.counterfactuals.explanation.gemini_explainer import GeminiCounterfactualExplainer
 from configs.inference_config import INFERENCE_CONFIG
 
 
@@ -27,7 +30,13 @@ def main():
     parser.add_argument("--query-text", required=True)
     parser.add_argument("--query-image", required=True)
     parser.add_argument("--kb-dir", default=INFERENCE_CONFIG["kb_dir"])
+    parser.add_argument("--gemini-api-key", default=os.getenv("GEMINI_API_KEY"), help="Gemini API Key for explanation")
+    parser.add_argument("--output", default="outputs/inference/counterfactual_results.json", help="Path to save JSON output")
     args = parser.parse_args()
+
+    # Ensure output directory exists
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     KB_DIR = args.kb_dir
     QUERY_TEXT = args.query_text
@@ -66,21 +75,51 @@ def main():
         txt_emb = encoder.encode_text(QUERY_TEXT).unsqueeze(0)
 
     # ---------------- Level 1: Stability (original) ----------------
-    print("\n✓ Running Level 1: Counterfactual Stability...")
+    # ---------------- Orchestrator Execution ----------------
+    print("\n✓ Initializing Orchestrator...")
+    
+    explainer = None
+    if args.gemini_api_key:
+        print("  + Gemini Explainer enabled")
+        explainer = GeminiCounterfactualExplainer(args.gemini_api_key)
+        
     stability_runner = StabilityRunner(retriever, fusion)
-    stability_output = stability_runner.run(img_emb, txt_emb)
+    scorer = CounterfactualScorer()
+    
+    reasoner = CounterfactualReasoner(
+        stability_runner=stability_runner,
+        scorer=scorer,
+        explainer=explainer
+    )
+
+    print("\n✓ Running Counterfactual Reasoning Chain...")
+    output = reasoner.run(img_emb, txt_emb)
 
     print("\n=== STABILITY OUTPUT ===")
-    print(json.dumps(stability_output, indent=2))
-
-    # ---------------- Level 2: Diagnostic Scoring (original) ----------------
-    print("\n✓ Running Level 2: Diagnostic Scoring...")
-    scorer = CounterfactualScorer()
-    scored = scorer.score(stability_output)
+    print(json.dumps(output["stability"], indent=2))
 
     print("\n=== DIAGNOSTIC SCORES ===")
-    for s in scored:
+    for s in output["ranked_hypotheses"]:
         print(s)
+
+    full_output = {
+        "query": {
+            "text": QUERY_TEXT,
+            "image": QUERY_IMAGE_PATH
+        },
+        "stability": output["stability"],
+        "ranked_hypotheses": output["ranked_hypotheses"],
+        "explanation": output.get("explanation")
+    }
+
+    if "explanation" in output:
+        print("\n=== GEMINI EXPLANATION ===")
+        print(json.dumps(output["explanation"], indent=2))
+
+    # Save to file
+    with open(args.output, "w") as f:
+        json.dump(full_output, f, indent=2)
+    print(f"\n✓ Results saved to {args.output}")
 
 
 if __name__ == "__main__":

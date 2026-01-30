@@ -29,7 +29,10 @@ class StabilityRetriever:
             
             results.append({
                 "diagnosis_label": self.metadata[i]["diagnosis_label"],
+                "image_path": self.metadata[i].get("image_path"),
+                "case_id": self.metadata[i].get("case_id"),
                 "score": float(s),
+                "embedding": self.index.reconstruct(int(i)).tolist()
             })
         
         return results

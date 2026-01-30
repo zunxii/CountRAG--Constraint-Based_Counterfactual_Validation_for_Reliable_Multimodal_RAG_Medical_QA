@@ -1,7 +1,7 @@
 """Configuration for inference scripts."""
 
 INFERENCE_CONFIG = {
-    "kb_dir": "outputs/kb/kb_final_v2",
+    "kb_dir": "outputs/kb/kb_final_concept",
     "device": "cpu",
     "top_k": 10,
     "lora_path": "outputs/models/trained_lora",

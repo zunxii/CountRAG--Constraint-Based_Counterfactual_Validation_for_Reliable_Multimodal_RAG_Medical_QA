@@ -105,6 +105,7 @@ Examples:
     )
     eval_retrieval_parser.add_argument("--kb-dir", default="outputs/kb/kb_final_v2")
     eval_retrieval_parser.add_argument("--output-dir", default="outputs/evaluation/retrieval")
+    eval_retrieval_parser.add_argument("--no-lora", action="store_true", help="Disable LoRA")
     
     eval_encoders_parser = subparsers.add_parser(
         "eval-encoders",
@@ -251,8 +252,10 @@ Examples:
     
     elif args.command == "eval-retrieval":
         print(" Running Retrieval Evaluation")
-        return run_script("scripts/evaluation/retrieval/run_eval.py",
-                         ["--kb-dir", args.kb_dir, "--output-dir", args.output_dir])
+        cmd_args = ["--kb-dir", args.kb_dir, "--output-dir", args.output_dir]
+        if args.no_lora:
+            cmd_args.append("--no-lora")
+        return run_script("scripts/evaluation/retrieval/run_eval.py", cmd_args)
     
     elif args.command == "eval-encoders":
         print(" Running Encoder Evaluation")

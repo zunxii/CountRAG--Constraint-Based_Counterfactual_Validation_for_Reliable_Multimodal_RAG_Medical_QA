@@ -167,7 +167,7 @@ def run_evaluation():
             # RETRIEVE (EXCLUDE SELF)
             # -------------------------------------------------
             _, indices = retriever.search(query_emb, top_k=TOP_K + 1)
-            indices = [idx for idx in indices if idx != i][:TOP_K]
+            indices = [idx for idx in indices[0] if idx != i][:TOP_K]
             retrieved = [metadata[idx] for idx in indices]
 
             # -------------------------------------------------

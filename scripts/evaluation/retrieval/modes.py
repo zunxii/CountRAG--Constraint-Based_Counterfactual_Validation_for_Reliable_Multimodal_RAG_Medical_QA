@@ -22,7 +22,7 @@ from scripts.evaluation.retrieval.metrics import MetricsCalculator
 class ModeEvaluator:
     """Evaluates retrieval modes - supports both flat and concept KBs"""
     
-    def __init__(self, kb_dir: str, eval_dataset, device: str = "cpu"):
+    def __init__(self, kb_dir: str, eval_dataset, device: str = "cpu", use_lora: bool = True):
         self.device = device
         self.retriever = KBRetriever(kb_dir)
         self.kb_metadata = self.retriever.metadata
@@ -41,10 +41,17 @@ class ModeEvaluator:
             # For concept mode, use image_to_concept mapping
             self.image_to_concept = self.retriever.image_to_concept
         
+        # Determine LoRA path
+        lora_path = "outputs/models/trained_lora" if use_lora else None
+        if use_lora:
+            print(f"Loading encoder WITH LoRA from {lora_path}")
+        else:
+            print("Loading encoder WITHOUT LoRA (base model)")
+            
         # Load models
         self.encoder = BioMedCLIPEncoder(
             device=device,
-            lora_path="outputs/models/trained_lora"
+            lora_path=lora_path
         )
         self.image_loader = ImageLoader()
         
@@ -59,8 +66,42 @@ class ModeEvaluator:
         else:
             self.fusion = None
         
+        # Prepare mean embeddings for neutral modes
+        self.mean_image_emb = None
+        self.mean_text_emb = None
+        self._compute_mean_embeddings()
+        
         self.metrics_calc = MetricsCalculator()
     
+    def _compute_mean_embeddings(self):
+        """Compute mean embeddings from evaluation dataset"""
+        print("Computing mean embeddings for neutral modes...")
+        image_embs = []
+        text_embs = []
+        
+        # Use a subset if dataset is large, but here use all since it's small (~600)
+        for query in tqdm(self.eval_dataset, desc="Computing means"):
+            with torch.no_grad():
+                # Text
+                txt_emb = self.encoder.encode_text(query["combined_text"])
+                text_embs.append(txt_emb)
+                
+                # Image
+                try:
+                    img = self.image_loader.load(query["image_path"])
+                    img_emb = self.encoder.encode_image(img)
+                    image_embs.append(img_emb)
+                except Exception as e:
+                    continue
+        
+        if image_embs:
+            self.mean_image_emb = torch.stack(image_embs).mean(dim=0)
+            print("✓ Computed mean image embedding")
+        
+        if text_embs:
+            self.mean_text_emb = torch.stack(text_embs).mean(dim=0)
+            print("✓ Computed mean text embedding")
+
     def evaluate_mode(self, mode: str, top_k: int = 20):
         """Evaluate retrieval for a specific mode"""
         all_metrics = defaultdict(list)
@@ -128,15 +169,25 @@ class ModeEvaluator:
                 return self.encoder.encode_image(img)
             
             elif mode == "fusion":
-                if self.fusion is None:
-                    return None
-                
+                if self.fusion is None: return None
                 img = self.image_loader.load(query["image_path"])
                 img_emb = self.encoder.encode_image(img).unsqueeze(0)
-                txt_emb = self.encoder.encode_text(
-                    query["combined_text"]
-                ).unsqueeze(0)
-                
+                txt_emb = self.encoder.encode_text(query["combined_text"]).unsqueeze(0)
+                return self.fusion(img_emb, txt_emb).squeeze(0)
+
+            elif mode == "neutral_text":
+                # Uses Fusion(Mean_Image, Actual_Text)
+                if self.fusion is None or self.mean_image_emb is None: return None
+                img_emb = self.mean_image_emb.unsqueeze(0) # Use mean image
+                txt_emb = self.encoder.encode_text(query["combined_text"]).unsqueeze(0)
+                return self.fusion(img_emb, txt_emb).squeeze(0)
+
+            elif mode == "neutral_image":
+                # Uses Fusion(Actual_Image, Mean_Text)
+                if self.fusion is None or self.mean_text_emb is None: return None
+                img = self.image_loader.load(query["image_path"])
+                img_emb = self.encoder.encode_image(img).unsqueeze(0)
+                txt_emb = self.mean_text_emb.unsqueeze(0) # Use mean text
                 return self.fusion(img_emb, txt_emb).squeeze(0)
         
         return None

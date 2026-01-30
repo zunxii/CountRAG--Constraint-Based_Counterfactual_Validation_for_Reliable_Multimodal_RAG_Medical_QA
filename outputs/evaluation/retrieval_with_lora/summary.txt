@@ -1,0 +1,35 @@
+RETRIEVAL EVALUATION SUMMARY
+======================================================================
+
+Evaluation queries: 587
+KB directory: outputs/kb/kb_final_v2
+Timestamp: 2026-01-30T00:09:39.581013
+
+TEXT Mode:
+  R@1:  0.6065
+  R@5:  0.6422
+  R@10: 0.6695
+  MRR:  0.6235
+  MAP:  0.6302
+
+IMAGE Mode:
+  R@1:  0.7479
+  R@5:  0.8467
+  R@10: 0.8978
+  MRR:  0.7835
+  MAP:  0.7671
+
+FUSION Mode:
+  R@1:  0.7836
+  R@5:  0.8399
+  R@10: 0.8705
+  MRR:  0.8082
+  MAP:  0.8110
+
+
+Best Modes:
+  R@1: fusion (0.7836)
+  R@5: image (0.8467)
+  R@10: image (0.8978)
+  MRR: fusion (0.8082)
+  MAP: fusion (0.8110)

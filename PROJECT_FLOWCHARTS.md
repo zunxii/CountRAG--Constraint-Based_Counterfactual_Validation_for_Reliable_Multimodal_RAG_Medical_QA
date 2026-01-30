@@ -91,3 +91,44 @@ sequenceDiagram
     
     CLI->>User: Display Top Matches
 ```
+
+---
+
+## 4. Comprehensive Architecture (Detailed)
+
+This diagram consolidates the training and inference flows, correcting the "RAG ONE..." label from earlier diagrams to "Retrieval & Counterfactual Reasoning".
+
+```mermaid
+graph TD
+    %% Phase 1: Offline Training
+    subgraph Training [Phase 1: Offline Training]
+        direction TB
+        LORA_DATA[Training Data] --> LORA_TRAIN[LoRA Training<br/>(Image/Text Encoders)]
+        LORA_TRAIN --> FUSION_TRAIN[Fusion Training]
+        
+        LORA_TRAIN --> KB_BUILD[Concept KB Building]
+        FUSION_TRAIN --> KB_BUILD
+        
+        KB_BUILD --> KB[(Knowledge Base<br/>FAISS Index)]
+    end
+
+    %% Phase 2: Inference
+    subgraph Inference [Phase 2: RAG + Reasoning]
+        direction TB
+        USER[User Query<br/>(Image + Text)] --> ENCODERS[Multimodal Encoders<br/>(with LoRA)]
+        
+        ENCODERS --> FUSION_INF{Adaptive Fusion}
+        
+        FUSION_INF --> RETRIEVE[Retrieve Top K<br/>(Stability Search)]
+        KB --> RETRIEVE
+        
+        RETRIEVE --> REASONING[Counterfactual Reasoning<br/>(Diagnostics & Explanations)]
+        
+        REASONING --> OUTPUT[Final Output<br/>(Diagnosis + Explanation)]
+    end
+    
+    %% Style
+    style KB fill:#f9f,stroke:#333,stroke-width:2px
+    style REASONING fill:#bbf,stroke:#333,stroke-width:2px
+    style FUSION_INF fill:#ff9,stroke:#333,stroke-width:2px
+```

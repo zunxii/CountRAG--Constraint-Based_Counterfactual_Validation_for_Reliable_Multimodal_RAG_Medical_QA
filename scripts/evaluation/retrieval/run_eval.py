@@ -19,12 +19,15 @@ def main():
                        help="Output directory")
     parser.add_argument("--device", default="cpu",
                        help="Device for computation")
+    parser.add_argument("--no-lora", action="store_true",
+                       help="Disable LoRA adapters")
     args = parser.parse_args()
     
     evaluator = RetrievalEvaluator(
         kb_dir=args.kb_dir,
         output_dir=args.output_dir,
-        device=args.device
+        device=args.device,
+        use_lora=not args.no_lora
     )
     
     evaluator.run_all_evaluations()

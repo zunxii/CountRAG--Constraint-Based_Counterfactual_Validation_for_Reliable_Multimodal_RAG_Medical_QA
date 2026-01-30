@@ -21,12 +21,14 @@ class RetrievalEvaluator:
         self, 
         kb_dir: str, 
         output_dir: str, 
-        device: str = "cpu"
+        device: str = "cpu",
+        use_lora: bool = True
     ):
         self.kb_dir = Path(kb_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.device = device
+        self.use_lora = use_lora
         
         # Load evaluation queries from correct path
         eval_csv = "data/processed/splits/eval.csv"
@@ -35,7 +37,7 @@ class RetrievalEvaluator:
         print(f"✓ Loaded {len(self.eval_dataset)} evaluation queries")
         
         # Initialize evaluators
-        self.mode_eval = ModeEvaluator(kb_dir, self.eval_dataset, device)
+        self.mode_eval = ModeEvaluator(kb_dir, self.eval_dataset, device, use_lora=use_lora)
         
         self.results = {
             "timestamp": datetime.now().isoformat(),
@@ -68,7 +70,7 @@ class RetrievalEvaluator:
         print()
         
         # Evaluate each mode with detailed per-diagnosis tracking
-        for mode in ["text", "image", "fusion"]:
+        for mode in ["text", "image", "fusion", "neutral_text", "neutral_image"]:
             print(f"\n📊 Evaluating {mode.upper()} mode...")
             results = self.mode_eval.evaluate_mode(mode)
             self.results["modes"][mode] = results
