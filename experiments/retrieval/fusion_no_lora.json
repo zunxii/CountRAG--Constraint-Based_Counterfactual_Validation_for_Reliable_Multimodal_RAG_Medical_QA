@@ -1,0 +1,35 @@
+{
+  "mode": "fusion_no_lora",
+  "timestamp": "2026-01-30T21:58:05.759050",
+  "top_k": 10,
+  "num_queries": 719,
+  "metrics": {
+    "R@1": 0.8386648122392212,
+    "P@1": 0.8386648122392212,
+    "R@5": 1.0,
+    "P@5": 0.20000000000000054,
+    "R@10": 1.0,
+    "P@10": 0.10000000000000027,
+    "MRR": 0.9091330551692178,
+    "per_label_accuracy": {
+      "swollen tonsils": 1.0,
+      "neck swelling": 1.0,
+      "lip swelling": 1.0,
+      "mouth ulcers": 1.0,
+      "swollen eye": 0.6,
+      "skin rash": 0.98,
+      "skin irritation": 0.5121951219512195,
+      "skin growth": 0.8536585365853658,
+      "skin dryness": 0.6666666666666666,
+      "foot swelling": 1.0,
+      "knee swelling": 1.0,
+      "itichy eyelid": 0.75,
+      "hand lump": 1.0,
+      "eye redness": 0.28,
+      "edema": 0.48,
+      "dry scalp": 1.0,
+      "cyanosis": 0.875,
+      "eye inflamation": 1.0
+    }
+  }
+}

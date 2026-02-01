@@ -1,0 +1,52 @@
+
+\subsection{Qualitative Case Study: Resolution of Modality Conflict}
+\label{subsec:case_study}
+To demonstrate the framework's internal decision-making process under discordance, we trace the inference trajectory of a query exhibiting a deliberate semantic conflict.
+
+\textbf{1. Input Processing:}
+The system receives a composite query with conflicting clinical signals:
+\begin{itemize}
+    \item \textbf{Text ($Q_{txt}$):} ``Hi, I hit the side of my forehead above my eyebrow very hard 2 days ago. It was only a lump at first then the lump went down and the side of my forehead swelled up. Been having head pain and a lot of tingles in my head almost like it itches and now my eyelid is black and swollen...'' (Trauma/Hematoma narrative).
+    \item \textbf{Image ($Q_{img}$):} A dermoscopic image of a \textit{Skin Growth} (seborrheic keratosis).
+\end{itemize}
+
+\textbf{2. Constraint Verification:}
+Before generation, the Constraint Validator evaluates the retrieved set:
+\begin{itemize}
+    \item \textit{Modality Consistency Check:} The cosine similarity between $Q_{txt}$ and $Q_{img}$ is computed as $\mathbf{0.2685}$ (Low).
+    \item \textit{Action:} This violation explicitly flags the query as \textit{"Ambiguous/Conflicting"}, triggering the counterfactual sweep.
+\end{itemize}
+
+\textbf{3. Fusion and Initial Retrieval:}
+The Adaptive Fusion module computes a joint embedding. Due to the high visual feature clarity, the fusion weights heavily incentivize the visual signal, but the strong textual narrative pulls the distribution.
+\begin{itemize}
+    \item \textit{Retrieved Hypotheses:} The system retrieves two competing concept clusters: \textit{Skin Growth} ($Score=0.51$) and \textit{Swollen Eye} ($Score=0.21$).
+    \item \textit{Initial State:} A conventional RAG system would naively output \textit{Skin Growth} as the top-1 prediction.
+\end{itemize}
+
+\textbf{4. Counterfactual Disentanglement:}
+The system isolates the signals to test hypothesis stability:
+\begin{enumerate}
+    \item \textit{Text-Neutralized (Visual-only):} The distribution collapses to \textit{Skin Growth} ($p=1.0$), confirming the image is valid but unrelated to the text.
+    \item \textit{Image-Neutralized (Text-only):} The distribution shifts entirely to \textit{Swollen Eye} ($p=0.85$), confirming the text describes a different pathology.
+\end{enumerate}
+
+\textbf{5. Final Validated Outcome:}
+Instead of hallucinating a forced reconciliation, CountRAG-Clinic outputs a \textbf{Low Robustness} warning (Stability Divergence $= 0.39$) and presents both diagnoses with their respective un-mixed evidence sources. This "Safe Failure" prevents the model from ignoring the patient's description of trauma in favor of the visual finding, prompting clinician review.
+
+\textbf{6. System Output (API Response):}
+\begin{verbatim}
+{
+  "stability": {
+    "robustness": "low", 
+    "divergence": 0.39 
+  },
+  "constraints": { 
+    "modality_consistency": 0.26, 
+    "status": "VIOLATION" 
+  },
+  "outcome": "AMBIGUOUS_CONFLICT"
+}
+\end{verbatim}
+
+\textit{``The visual evidence suggests a skin growth (e.g., keratosis), but the patient's description of recent head trauma and swelling is consistent with a hematoma ('Swollen Eye'). Due to this conflict (Modality Consistency: 0.26), both possibilities are presented. Clinical verification is recommended to rule out trauma complications."}

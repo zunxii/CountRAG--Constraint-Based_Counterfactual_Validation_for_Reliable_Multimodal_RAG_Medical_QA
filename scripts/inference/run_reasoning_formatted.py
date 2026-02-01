@@ -1,6 +1,8 @@
 import json
 import torch
 import faiss
+faiss.omp_set_num_threads(1)
+
 import numpy as np
 from PIL import Image
 import sys
@@ -115,12 +117,13 @@ def main():
 
     stability_runner = StabilityRunner(retriever, fusion)
     scorer = CounterfactualScorer()
-
     stability = stability_runner.run(img_emb, txt_emb)
+    print("wallah habibit")
+    print(stability)
 
     print("✓ Running diagnostic scoring")
     ranked = scorer.score(stability)
-
+    print("print ranks ", ranked )
     explanation = None
     if explainer:
         print("✓ Generating Gemini explanation")

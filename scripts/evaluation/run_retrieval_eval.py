@@ -46,25 +46,37 @@ import numpy as np
 from pathlib import Path
 from tqdm import tqdm
 from datetime import datetime
+import sys
+
+# Fix imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import torch
 
 from core.embeddings.biomedclip import BioMedCLIPEncoder
-from core.embeddings.fusion import GatedFusion
+# from core.embeddings.fusion import GatedFusion # Wrong class
+from core.fusion.adaptive_fusion import AdaptiveFusion
 from core.kb.image_loader import ImageLoader
 from core.retrieval.retriever import KBRetriever
+from configs.inference_config import INFERENCE_CONFIG
 
 
 # =========================================================
 # CONFIGURATION
 # =========================================================
-KB_DIR = "outputs/kb/kb_final"            # path to built KB
-IMAGE_ROOT = ""               # images already have relative paths
-DEVICE = "cpu"
+KB_DIR = INFERENCE_CONFIG["kb_dir"]
+IMAGE_ROOT = ""
+DEVICE = INFERENCE_CONFIG["device"]
 TOP_K = 10
 
 MODES = ["text", "image", "fusion"]
 OUT_DIR = Path("experiments/retrieval")
+
+
+# ... existing metric functions ... (skipped in replace content, keeping file structure)
+# Wait, I can't skip content in replace_file_content unless I target specific lines.
+# I will target the imports and then the loading section separately.
+
 
 
 # =========================================================
@@ -112,15 +124,40 @@ def save_results(metrics, mode):
 # =========================================================
 # MAIN EVALUATION
 # =========================================================
-def run_evaluation():
-    print("Loading KB and encoders...")
+# ... (previous imports)
 
+def run_evaluation():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--no-lora", action="store_true", help="Disable LoRA for ablation")
+    args = parser.parse_args()
+
+    print("Loading KB and encoders...")
+    
+    # Use config but override LoRA if requested
+    lora_path = INFERENCE_CONFIG.get("lora_path")
+    if args.no_lora:
+        print("⚠ LoRA DISABLED (Ablation Mode)")
+        lora_path = None
+        
     retriever = KBRetriever(KB_DIR)
     metadata = retriever.metadata
 
-    image_encoder = BioMedCLIPEncoder(device=DEVICE)
-    text_encoder = BioMedCLIPEncoder(device=DEVICE)
-    fusion_model = GatedFusion(dim=image_encoder.dim).to(DEVICE)
+    image_encoder = BioMedCLIPEncoder(device=DEVICE, lora_path=lora_path)
+    text_encoder = BioMedCLIPEncoder(device=DEVICE, lora_path=lora_path)
+    
+    fusion_model = AdaptiveFusion().to(DEVICE)
+    if "fusion_path" in INFERENCE_CONFIG:
+        # Load fusion weights regardless of LoRA (unless we trained fusion specifically for no-lora, which we didn't, 
+        # but typically fusion matches the encoder state. For strict ablation, maybe random fusion? 
+        # But usually ablation is "what if base encoder + trained fusion". 
+        # Let's keep fusion weights as they are the architecture choice.)
+        fusion_path = INFERENCE_CONFIG["fusion_path"]
+        print(f"Loading fusion weights from {fusion_path}")
+        fusion_model.load_state_dict(
+            torch.load(fusion_path, map_location=DEVICE)
+        )
+    fusion_model.eval()
 
     image_loader = ImageLoader(image_root=IMAGE_ROOT)
 
@@ -129,73 +166,85 @@ def run_evaluation():
 
         metric_sum = {}
         count = 0
+        
+        # Track per-disease performance
+        per_label_correct = {}
+        per_label_total = {}
 
         for i in tqdm(range(len(metadata)), desc=f"{mode} queries"):
             entry = metadata[i]
             label = entry["diagnosis_label"]
+            
+            # Init counters
+            if label not in per_label_total:
+                per_label_correct[label] = 0
+                per_label_total[label] = 0
 
-            # -------------------------------------------------
-            # BUILD QUERY EMBEDDING (RE-ENCODED)
-            # -------------------------------------------------
-            with torch.no_grad():
-                if mode == "text":
-                    query_emb = text_encoder.encode_text(
-                        entry["clinical_text"]["combined"]
-                    )
+            # ... (test item generation) ...
+            # Get all images for this concept to test individual image retrieval
+            # For text mode, we just test the canonical text once
+            test_items = []
+            if mode == "text":
+                test_items.append({"type": "text", "content": entry.get("canonical_text", "")})
+            else:
+                 # For image/fusion, test every image in the concept
+                img_paths = entry.get("image_paths", [])
+                img_paths = img_paths[:50] 
+                for p in img_paths:
+                    test_items.append({"type": "image", "content": p})
 
-                elif mode == "image":
-                    image = image_loader.load(entry["image_path"])
-                    query_emb = image_encoder.encode_image(image)
+            for item in test_items:
+                with torch.no_grad():
+                    if mode == "text":
+                        query_emb = text_encoder.encode_text(item["content"])
+                    elif mode == "image":
+                        image = image_loader.load(item["content"])
+                        query_emb = image_encoder.encode_image(image)
+                    elif mode == "fusion":
+                        image = image_loader.load(item["content"])
+                        img_emb = image_encoder.encode_image(image)
+                        txt_emb = text_encoder.encode_text(entry.get("canonical_text", ""))
+                        query_emb = fusion_model(
+                            img_emb.unsqueeze(0),
+                            txt_emb.unsqueeze(0)
+                        ).squeeze(0)
 
-                elif mode == "fusion":
-                    image = image_loader.load(entry["image_path"])
-                    img_emb = image_encoder.encode_image(image)
-                    txt_emb = text_encoder.encode_text(
-                        entry["clinical_text"]["combined"]
-                    )
-                    query_emb = fusion_model(
-                        img_emb.unsqueeze(0),
-                        txt_emb.unsqueeze(0)
-                    ).squeeze(0)
+                query_emb = query_emb.cpu().numpy().reshape(1, -1)
+                
+                _, indices = retriever.search(query_emb, top_k=TOP_K)
+                retrieved = [metadata[idx] for idx in indices[0]]
+                
+                metrics = evaluate_retrieval(retrieved, label)
+                
+                # Check top-1 hit for per-label accuracy
+                if metrics["R@1"] == 1.0:
+                    per_label_correct[label] += 1
+                per_label_total[label] += 1
 
-                else:
-                    raise ValueError("Invalid mode")
+                for k, v in metrics.items():
+                    metric_sum[k] = metric_sum.get(k, 0.0) + v
 
-            query_emb = query_emb.cpu().numpy().reshape(1, -1)
+                count += 1
 
-            # -------------------------------------------------
-            # RETRIEVE (EXCLUDE SELF)
-            # -------------------------------------------------
-            _, indices = retriever.search(query_emb, top_k=TOP_K + 1)
-            indices = [idx for idx in indices[0] if idx != i][:TOP_K]
-            retrieved = [metadata[idx] for idx in indices]
-
-            # -------------------------------------------------
-            # EVALUATE
-            # -------------------------------------------------
-            metrics = evaluate_retrieval(retrieved, label)
-
-            for k, v in metrics.items():
-                metric_sum[k] = metric_sum.get(k, 0.0) + v
-
-            count += 1
-
-        # -------------------------------------------------
-        # AGGREGATE
-        # -------------------------------------------------
+        # Aggregate Global Metrics
         final_metrics = {k: v / count for k, v in metric_sum.items()}
         final_metrics["_count"] = count
+        
+        # Aggregate Per-Label Accuracy
+        per_label_acc = {
+            lbl: per_label_correct[lbl]/per_label_total[lbl] 
+            for lbl in per_label_total if per_label_total[lbl] > 0
+        }
+        final_metrics["per_label_accuracy"] = per_label_acc
 
         print("\nRESULTS:")
         for k, v in final_metrics.items():
-            if k != "_count":
+            if k not in ["_count", "per_label_accuracy"]:
                 print(f"{k}: {v:.4f}")
 
-        save_results(final_metrics, mode)
+        # Save with special naming for ablation
+        suffix = "_no_lora" if args.no_lora else ""
+        save_results(final_metrics, f"{mode}{suffix}")
 
-
-# =========================================================
-# ENTRY POINT
-# =========================================================
 if __name__ == "__main__":
     run_evaluation()

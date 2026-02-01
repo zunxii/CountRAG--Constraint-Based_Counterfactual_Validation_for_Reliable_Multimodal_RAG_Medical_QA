@@ -1,0 +1,45 @@
+
+\subsection{Qualitative Case Study: Resolution of Modality Conflict}
+\label{subsec:case_study}
+To demonstrate the framework's capability in handling discordant evidence, we analyze a query exhibiting a deliberate semantic conflict between visual and textual modalities.
+
+\textbf{Query Input:}
+\begin{itemize}
+    \item \textbf{Text:} ``Hi I hit the side of my forehead... then the lump went down and the side of my forehead swelled up... now my eyelid is black and swollen...'' (Describes physical trauma/hematoma).
+    \item \textbf{Image:} A dermoscopic image of a \textit{Skin Growth} (seborrheic keratosis).
+\end{itemize}
+
+Arguments from both modalities are clinically distinct: the text strongly indicates a trauma-induced specific condition (\textit{Swollen Eye}), while the visual evidence supports a chronic dermatological condition (\textit{Skin Growth}).
+
+\textbf{System Response Analysis:}
+Table~\ref{tab:case_study} details the counterfactual belief distributions. The framework's behavior reveals three critical safety mechanisms in action:
+
+\begin{enumerate}
+    \item \textbf{Modality Disentanglement:} The \textit{No Image} counterfactual correctly identifies \textit{Swollen Eye} ($p=0.85$) as the primary diagnosis based on narrative symptoms. Conversely, the \textit{No Text} counterfactual pivots entirely to \textit{Skin Growth} ($p=1.0$), confirming that the visual encoder successfully recognizes the pathology despite the distracting narrative.
+    
+    \item \textbf{Conflict Detection:} The \textit{Baseline} distribution reflects this ambiguity, splitting probability mass between \textit{Skin Growth} (0.64) and \textit{Swollen Eye} (0.26). Crucially, the \textbf{Modality Consistency} constraint score is low ($0.26$), explicitly signaling that the two information sources contradict each other.
+    
+    \item \textbf{Safe Failure:} Instead of forcing a high-confidence prediction, the system triggers a ``Low Robustness'' warning (Stability Divergence $= 0.39$) and flags the result as \textit{Near Decision Boundary}.
+\end{enumerate}
+
+This validates that CountRAG-Clinic effectively surfaces diagnostic ambiguity rather than suppressing it, preventing potential misdiagnosis in scenarios where patient-provided history contradicts visual findings.
+
+\begin{table}[h]
+\caption{Counterfactual Belief Shifts under Modality Conflict}
+\label{tab:case_study}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Diagnosis} & \textbf{Baseline} & \textbf{No Text (Image Only)} & \textbf{No Image (Text Only)} \\ 
+\midrule
+Skin Growth & \textbf{0.64} & \textbf{1.00} & - \\
+Swollen Eye & 0.26 & - & \textbf{0.85} \\
+Dry Scalp & 0.10 & - & - \\
+Itchy Eyelid & - & - & 0.15 \\
+\midrule
+\textit{Dominant Signal} & \textit{Conflict} & \textit{Visual} & \textit{Textual} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

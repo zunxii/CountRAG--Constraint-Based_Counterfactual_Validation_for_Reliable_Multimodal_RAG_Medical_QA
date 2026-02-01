@@ -1,0 +1,55 @@
+
+\subsection{Qualitative Case Study: Resolution of Modality Conflict}
+\label{subsec:case_study}
+To demonstrate the framework's internal decision-making process under discordance, we trace the inference trajectory of a query exhibiting a deliberate semantic conflict.
+
+\textbf{1. Input Processing:}
+The system receives a composite query with conflicting clinical signals:
+\begin{itemize}
+    \item \textbf{Text ($Q_{txt}$):} ``Hi I hit the side of my forehead...'' (Trauma/Hematoma narrative).
+    \item \textbf{Image ($Q_{img}$):} A dermoscopic image of a \textit{Skin Growth} (seborrheic keratosis).
+\end{itemize}
+
+\textbf{2. Fusion and Initial Retrieval:}
+The Adaptive Fusion module computes a joint embedding. Due to the high visual feature clarity, the fusion weights heavily incentivize the visual signal, but the strong textual narrative pulls the distribution.
+\begin{itemize}
+    \item \textit{Retrieved Hypotheses:} The system retrieves two competing concept clusters: \textit{Skin Growth} ($Score=0.51$) and \textit{Swollen Eye} ($Score=0.21$).
+    \item \textit{Initial State:} A conventional RAG system would naively output \textit{Skin Growth} as the top-1 prediction.
+\end{itemize}
+
+\textbf{3. Constraint Verification (The "Circuit Breaker"):}
+Before generation, the Constraint Validator evaluates the retrieved set:
+\begin{itemize}
+    \item \textit{Modality Consistency Check:} The cosine similarity between $Q_{txt}$ and $Q_{img}$ is computed as $\mathbf{0.2685}$ (Low).
+    \item \textit{Action:} This violation explicitly flags the query as \textit{"Ambiguous/Conflicting"}, triggering the counterfactual sweep.
+\end{itemize}
+
+\textbf{4. Counterfactual Disentanglement:}
+The system isolates the signals to test hypothesis stability (see Table~\ref{tab:case_study}):
+\begin{enumerate}
+    \item \textit{Text-Neutralized (Visual-only):} The distribution collapses to \textit{Skin Growth} ($p=1.0$), confirming the image is valid but unrelated to the text.
+    \item \textit{Image-Neutralized (Text-only):} The distribution shifts entirely to \textit{Swollen Eye} ($p=0.85$), confirming the text describes a different pathology.
+\end{enumerate}
+
+\textbf{5. Final Validated Outcome:}
+Instead of hallucinating a forced reconciliation, CountRAG-Clinic outputs a \textbf{Low Robustness} warning (Stability Divergence $= 0.39$) and presents both diagnoses with their respective un-mixed evidence sources. This "Safe Failure" prevents the model from ignoring the patient's description of trauma in favor of the visual finding, prompting clinician review.
+
+\begin{table}[h]
+\caption{Counterfactual Belief Shifts under Modality Conflict}
+\label{tab:case_study}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Diagnosis} & \textbf{Baseline} & \textbf{No Text (Visual)} & \textbf{No Image (Textual)} \\ 
+\midrule
+Skin Growth & \textbf{0.64} & \textbf{1.00} & - \\
+Swollen Eye & 0.26 & - & \textbf{0.85} \\
+Dry Scalp & 0.10 & - & - \\
+Itchy Eyelid & - & - & 0.15 \\
+\midrule
+\textit{Signal Source} & \textit{Mixed} & \textit{Image} & \textit{Text} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

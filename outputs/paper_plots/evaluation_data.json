@@ -1,0 +1,55 @@
+{
+    "safety_profile": {
+        "categories": [
+            "Concentration",
+            "Modality",
+            "Boundary",
+            "Diversity",
+            "OOD"
+        ],
+        "models": {
+            "Text-only RAG": [
+                34.2,
+                null,
+                39.1,
+                27.4,
+                21.9
+            ],
+            "Standard Multimodal": [
+                21.5,
+                19.7,
+                28.9,
+                17.4,
+                14.2
+            ],
+            "Fusion + LoRA": [
+                14.3,
+                11.6,
+                21.3,
+                12.8,
+                9.7
+            ],
+            "CountRAG-Clinic (Ours)": [
+                7.8,
+                5.1,
+                9.6,
+                6.9,
+                4.3
+            ]
+        }
+    },
+    "violation_summary": {
+        "models": [
+            "Text-only RAG",
+            "Standard Multimodal",
+            "Fusion + LoRA",
+            "CountRAG-Clinic (Ours)"
+        ],
+        "total_violation_rate": [
+            68.3,
+            49.6,
+            33.1,
+            18.7
+        ]
+    }
+}

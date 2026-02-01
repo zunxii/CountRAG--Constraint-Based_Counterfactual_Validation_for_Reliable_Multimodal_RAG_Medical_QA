@@ -1,0 +1,255 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{booktabs}
+\usepackage{pifont}
+\usepackage{caption}
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+
+% --- LENGTH OPTIMIZATION ---
+\setlength{\textfloatsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\floatsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\intextsep}{6pt plus 1.0pt minus 2.0pt}
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{3pt}
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+\begin{document}
+
+\title{CountRAG-Clinic: Multimodal RAG driven counterfactual validations of clinical queries}
+
+\maketitle
+
+\begin{abstract}
+This work introduces CountRAG-Clinic, a framework transforming multimodal retrieval-augmented generation (RAG) for medical QA by treating retrieval outputs as diagnostic hypotheses subject to systematic validation. Unlike systems collapsing evidence into singular predictions, we employ counterfactual re-retrieval and constraint-based assessment to evaluate stability and robustness. By decoupling validation from generation and operating at the diagnosis-concept level, the framework explicitly surfaces uncertainty and modality conflicts, aligning AI-assisted reasoning with cautious clinical practice.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Multimodal RAG, Medical QA, Counterfactual Validation, Uncertainty Estimation.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Large language models (LLMs) have democratized access to medical information but lack grounding guarantees. In clinical contexts, confident but weakly supported answers pose risks. Retrieval-augmented generation (RAG) grounds responses in external evidence, yet most systems treat retrieval as a preprocessing step, collapsing evidence into single outputs \cite{lewis2020}. This obscures visibility into evidential agreement and robustness, especially when integrating heterogeneous signals like text and images. Overlapping signals and noise complicate robustness assessment, often leading to definitive rather than provisional outputs.
+
+We propose a framework treating multimodal retrieval outputs as \textit{provisional diagnostic hypotheses}. Bridging informal patient queries with a curated knowledge base, we evaluate diagnoses at the concept level. We introduce a validation layer combining counterfactual stability testing with constraint-based reliability assessment (e.g., evidence concentration, modality consistency). Crucially, validation is decoupled from generation: LLMs explain validated outcomes rather than determine diagnoses, explicitly surfacing ambiguity.
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Final-archh.png}
+    \caption{System overview of the CountRAG-Clinic framework.}
+    \label{fig:system_overview}
+    \vspace{-1em}
+\end{figure*}
+
+\section{Related Work}
+\textbf{Medical LLMs & RAG:} LLMs like Med-PaLM improve clinical understanding but exhibit hallucinations \cite{singhal,ji2023}. RAG improves grounding \cite{lewis2020,izacard2022}, yet existing systems often fail to assess reliability under retrieval noise or domain mismatch \cite{gu2023}.
+
+\textbf{Multimodal Fusion:} Vision-language models (e.g., BioMedCLIP) enable multimodal retrieval \cite{biomedclip}. While adaptive fusion strategies exist \cite{tsai2019}, they are rarely integrated into RAG pipelines to handle modality-specific noise explicitly \cite{li2023}. Parameter-efficient methods like LoRA \cite{lora} allow cost-effective domain adaptation.
+
+\textbf{Uncertainty & Robustness:} Concept-level retrieval improves robustness \cite{wang2021}, but few multimodal RAG systems incorporate counterfactual reasoning or explicit uncertainty estimation to validate retrieval stability \cite{schwab2023}.
+
+\section{Methodology}
+
+\subsection{System Overview}
+CountRAG-Clinic (Fig. \ref{fig:system_overview}) elevates retrieval outputs to validated hypotheses. The pipeline consists of: (1) \textbf{Offline Preparation}, where encoders are LoRA-adapted and an adaptive fusion module is trained to construct a concept-oriented knowledge base; and (2) \textbf{Inference}, where patient queries generate diagnostic hypotheses subjected to counterfactual and constraint-based validation.
+
+\subsection{Offline Preparation Phase}
+\subsubsection{Foundation Encoders & LoRA Adaptation}
+We initialize from BioMedCLIP \cite{biomedclip} and apply Low-Rank Adaptation (LoRA) to align patient queries with clinical concepts. For a weight $W_0$, the update is $W = W_0 + \frac{\alpha}{r} BA$, with $r=8, \alpha=16$.
+We employ a \textbf{cycle-consistent training strategy} optimizing:
+\begin{equation}
+\mathcal{L}_{\text{LoRA}} = \mathcal{L}_{\text{contrastive}} + \lambda_{\text{cycle}}\mathcal{L}_{\text{cycle}} + \lambda_{\text{align}}\mathcal{L}_{\text{align}}
+\end{equation}
+This includes image-text grounding $\mathcal{L}_{\text{contrastive}}$, patient-clinical alignment $\mathcal{L}_{\text{align}}$, and significantly, an image-mediated cycle consistency loss $\mathcal{L}_{\text{cycle}}$ to enforce geometric coherence between query $\mathbf{q}$ and detailed clinical text $\mathbf{c}$ relative to image $\mathbf{e}$.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{lora-training.png}
+    \caption{Cyclic LoRA training objectives.}
+    \label{fig:cyclic-lora-loss}
+\end{figure}
+
+\subsubsection{Adaptive Multimodal Fusion}
+We train a gating mechanism $g_i \in [0,1]$ to fuse image and text embeddings: $\mathbf{z}_i = \mathrm{LayerNorm}(\mathbf{e}_i + g_i \cdot \mathbf{q}_i)$. This is trained via $\mathcal{L}_{\text{fusion}} = \mathcal{L}_{\text{con}}(\mathbf{z}, \mathbf{q})$ while keeping encoders frozen, decoupling fusion logic from representation learning.
+
+\subsubsection{Concept-Oriented KB Construction}
+We aggregate cases into diagnosis-level prototypes. For a concept $c$, image embeddings are mean-pooled ($\mathbf{v}^{c}_{\text{img,agg}}$) and fused with the canonical text embedding $\mathbf{v}^{c}_{\text{text}}$ to form prototype $\boldsymbol{\mu}_c$. Retrieval computes $s(\mathbf{q}, \boldsymbol{\mu}_c) = \mathbf{q}^\top \boldsymbol{\mu}_c$, mitigating instance-level noise.
+
+\subsection{Inference-Time Hypothesis Validation}
+Retrieval generates the top-$K$ diagnostic concepts as provisional hypotheses. We normalize similarity scores to form a belief distribution, explicitly representing ambiguity (e.g., Psoriasis 0.82 vs Eczema 0.79). Use of concept prototypes ensures retrieval reflects relative support rather than certainty.
+
+\subsubsection{Counterfactual Stability}
+We probe robustness by generating query variants: \textit{Baseline}, \textit{Text-neutral}, \textit{Image-neutral}, and \textit{Noisy}.
+We quantify \textbf{Stability} via Jensen–Shannon divergence: $\mathrm{JS}(p_{\text{baseline}} \| p_{\text{cf}})$.
+High divergence signals sensitivity. \textbf{Evidence Retention} $r(c)$ measures the fraction of variants where diagnosis $c$ remains in top-$K$.
+
+\subsubsection{Constraint-Based Reliability}
+We compute satisfaction scores $u_i(c) \in [0,1]$ for clinically motivated constraints.
+
+\textbf{A. Evidence Concentration:} Measures belief focus using normalized entropy:
+$u_{\text{conc}}(c) = 1 - {H(p_{\text{baseline}})}/{H_{\max}}$.
+
+\textbf{B. Modality Consistency:} Evaluates text-image agreement via linearly mapped cosine similarity:
+$u_{\text{mod}}(c) = (\alpha_{\text{mod}} - \alpha_{\min})/(\alpha_{\max} - \alpha_{\min})$. Low scores indicate conflict.
+
+\textbf{C. Decision Boundary Proximity:} Captures margin $\Delta$ between top-1 and top-2:
+$u_{\text{margin}} = \sigma(a(\Delta - \tau))$. Small margins signal boundary instability.
+
+\textbf{D. Evidence Diversity:} Penalizes reliance on near-duplicate cases:
+$u_{\text{div}}(c) = \min(1, {D(c)}/{D_{\text{ref}}})$.
+
+\textbf{E. Distribution Validity (OOD):} Uses distance to training centroid:
+$u_{\text{ood}} = 1 - {\min(d_{\text{OOD}}, d_{95})}/{d_{95}}$.
+
+\textbf{Aggregation:} The final reliability score $\mathcal{S}_{\text{constraint}}(c) = \frac{\sum w_i u_i}{\sum w_i}$ modulates confidence. Diagnoses violating constraints are flagged as ambiguous rather than suppressed.
+
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=0.85\textwidth]{count.png}
+    \caption{Full Explained counterfactuals.}
+    \label{fig:counterfactuals}
+    \vspace{-1em}
+\end{figure*}
+
+\section{Evaluation}
+\label{sec:evaluation}
+We assess retrieval effectiveness, representation quality, and system reliability, specifically measuring stability under perturbation.
+
+\subsection{Setup}
+Comparison is against unimodal and static fusion baselines using a dual-encoder architecture.
+\textbf{Config:} BioMedCLIP with LoRA (0.5\% parameters).
+\textbf{Metrics:} R@K, MRR, Entropy, Margin, confusingly Constraint Violation Rate (proxy for reliability).
+
+\subsection{Qualitative Evaluation}
+\textbf{Concept vs. Instance-Level:} Aggregating noisy instances into concepts improves signal-to-noise ratio, maintaining coherent retrieval trajectories even when instance similarities fluctuate.
+
+\textbf{Modality Conflict Resolution:} Adaptive gating outperforms mean fusion by dynamically upweighting confident modalities, suppressing noise in discordant scenarios.
+
+\textbf{Reliability:} The proposed method shifts queries from "Unsafe" to "Safe" buckets. Unlike baselines exhibiting mode collapse, our framework abstains or flags constraints, a characteristic of robust clinical reasoning.
+
+\subsubsection{Case Study: Resolution of Modality Conflict}
+\label{subsec:case_study}
+To demonstrate decision-making under discordance, we trace a query with semantic conflict.
+
+\textbf{1. Input Processing:}
+\begin{itemize}
+    \item \textbf{Text ($Q_{txt}$):} ``Hi, I hit the side of my forehead... then the lump went down and the side of my forehead swelled up...'' (Trauma/Hematoma narrative).
+    \item \textbf{Image ($Q_{img}$):} A dermoscopic image of a \textit{Skin Growth} (seborrheic keratosis).
+\end{itemize}
+
+\textbf{2. Constraint Verification:}
+The Constraint Validator evaluates the retrieved set:
+\begin{itemize}
+    \item \textit{Modality Consistency:} Cosine similarity between $Q_{txt}$ and $Q_{img}$ is $\mathbf{0.2685}$ (Low).
+    \item \textit{Action:} Flags query as \textit{"Ambiguous/Conflicting"}, triggering counterfactual sweep.
+\end{itemize}
+
+\textbf{3. Fusion and Initial Retrieval:}
+Fusion weights incentivize the clear visual signal, but the strong narrative pulls the distribution.
+\begin{itemize}
+    \item \textit{Hypotheses:} \textit{Skin Growth} ($Score=0.51$) vs. \textit{Swollen Eye} ($Score=0.21$).
+    \item \textit{State:} Conventional RAG would naively predict \textit{Skin Growth}.
+\end{itemize}
+
+\textbf{4. Counterfactual Disentanglement:}
+\begin{enumerate}
+    \item \textit{Visual-only:} Collapses to \textit{Skin Growth} ($p=1.0$).
+    \item \textit{Text-only:} Shifts to \textit{Swollen Eye} ($p=0.85$).
+\end{enumerate}
+
+\textbf{5. Final Validated Outcome:}
+CountRAG-Clinic outputs a \textbf{Low Robustness} warning (Stability Divergence $= 0.39$) and presents opposing diagnoses.
+
+\textbf{6. System Output (API Response):}
+\begin{verbatim}
+{
+ "stability": { "robustness": "low", "divergence": 0.39 },
+ "constraints": { "modality_consistency": 0.26, 
+                  "status": "VIOLATION" },
+ "outcome": "AMBIGUOUS_CONFLICT"
+}
+\end{verbatim}
+
+\textit{``The visual evidence suggests a skin growth (e.g., keratosis), but the patient's description of recent head trauma... is consistent with a hematoma... both possibilities are presented."}
+
+\subsection{Quantitative Evaluation}
+
+\textbf{Retrieval Performance:} Table~\ref{tab:retrieval_results} shows concept-level aggregation outperforming instance-level baselines (0.675 vs 0.612 R@1). Adaptive Gated fusion achieves the highest recall (0.784 R@1) and lowest entropy (0.91).
+
+\begin{table}[h]
+\caption{Retrieval & Fusion Evaluation}
+\label{tab:retrieval_results}
+\centering
+\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llccccccc}
+\toprule
+\textbf{Level} & \textbf{Method} & \textbf{R@1} & \textbf{R@5} & \textbf{R@10} & \textbf{MRR} & \textbf{Ent} $\downarrow$ & \textbf{Mar} $\uparrow$ \\ \midrule
+Instance & Base (Mean) & 0.612 & 0.702 & 0.771 & 0.663 & 1.41 & 0.16 \\ \midrule
+Concept & Base (Mean) & 0.675 & 0.739 & 0.763 & 0.704 & 1.29 & 0.18 \\
+Concept & LoRA (Text) & 0.607 & 0.642 & 0.670 & 0.624 & 1.37 & 0.19 \\
+Concept & LoRA (Image) & 0.748 & 0.847 & 0.898 & 0.784 & 1.08 & 0.27 \\
+Concept & LoRA (Mean) & 0.773 & 0.825 & 0.864 & 0.799 & 0.96 & 0.31 \\
+\textbf{Concept} & \textbf{Adaptive} & \textbf{0.784} & \textbf{0.840} & \textbf{0.871} & \textbf{0.808} & \textbf{0.91} & \textbf{0.35} \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{Reliability:} CountRAG-Clinic reduces total constraint violations to 18.7\% (vs 49.6\% for Multimodal RAG). Modality consistency violations drop from 19.7\% to 5.1\% (Fig.~\ref{fig:safety_radar}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.65\columnwidth]{safety_radar_chart.png}
+    \caption{Reductions in safety violations across five axes.}
+    \label{fig:safety_radar}
+    \vspace{-1em}
+\end{figure}
+
+\section{Conclusion}
+CountRAG-Clinic transforms medical RAG by validating retrieval outputs as diagnostic hypotheses. Through counterfactual re-retrieval and concept aggregation, it explicitly surfaces uncertainty and competing interpretations, aligning AI-assisted reasoning with cautious clinical practice.
+
+\bibliographystyle{IEEEtran}
+\small
+\begin{thebibliography}{00}
+\bibitem{singhal} S. Singhal et al., ``Large language models encode clinical knowledge,'' arXiv 2022.
+\bibitem{lee2020} J. Lee et al., ``BioBERT,'' \textit{Bioinformatics}, 2020.
+\bibitem{lewis2020} P. Lewis et al., ``Retrieval-augmented generation,'' \textit{NeurIPS}, 2020.
+\bibitem{biomedclip} S. Zhang et al., ``Biomedical vision-language processing,'' arXiv 2023.
+\bibitem{lora} E. J. Hu et al., ``LoRA,'' \textit{ICLR}, 2022.
+\bibitem{faiss} J. Johnson et al., ``Billion-scale similarity search,'' \textit{IEEE Trans. Big Data}, 2019.
+\bibitem{contrastive} A. van den Oord et al., ``Contrastive predictive coding,'' arXiv 2018.
+\bibitem{pytorch} A. Paszke et al., ``PyTorch,'' \textit{NeurIPS}, 2019.
+\bibitem{scispacy} M. Neumann et al., ``ScispaCy,'' \textit{BioNLP}, 2019.
+\bibitem{transformers} T. Wolf et al., ``Transformers,'' \textit{EMNLP}, 2020.
+\bibitem{alsentzer2019} E. Alsentzer et al., ``Clinical BERT,'' \textit{ClinicalNLP}, 2019.
+\bibitem{ji2023} Z. Ji et al., ``Hallucination in NLG,'' \textit{ACM Comput. Surv.}, 2023.
+\bibitem{zhang2023} Y. Zhang et al., ``Siren's song in the AI ocean,'' arXiv 2023.
+\bibitem{izacard2022} G. Izacard et al., ``Few-shot retrieval augmented LMs,'' arXiv 2022.
+\bibitem{gu2023} Y. Gu et al., ``Domain-specific LM pretraining,'' \textit{ACM Trans. Comput. Healthcare}, 2023.
+\bibitem{thirunavukarasu2023} A. J. Thirunavukarasu et al., ``LLMs in medicine,'' \textit{Nat. Med.}, 2023.
+\bibitem{irvin2019} J. Irvin et al., ``CheXpert,'' \textit{AAAI}, 2019.
+\bibitem{johnson2016} A. Johnson et al., ``MIMIC-III,'' \textit{Sci. Data}, 2016.
+\bibitem{wang2022medclip} Z. Wang et al., ``MedCLIP,'' \textit{EMNLP}, 2022.
+\bibitem{li2023} Y. Li et al., ``Multimodal biomedical retrieval,'' arXiv 2023.
+\bibitem{tu2024} T. Tu et al., ``Towards generalist biomedical AI,'' \textit{NEJM AI}, 2024.
+\bibitem{zhou2023} H. Zhou et al., ``Datamed,'' arXiv 2023.
+\bibitem{ngiam2011} J. Ngiam et al., ``Multimodal deep learning,'' \textit{ICML}, 2011.
+\bibitem{tsai2019} Y.-H. H. Tsai et al., ``Multimodal transformer,'' \textit{ACL}, 2019.
+\bibitem{baltusaitis2019} T. Baltrušaitis et al., ``Multimodal machine learning,'' \textit{IEEE TPAMI}, 2019.
+\bibitem{snell2017} J. Snell et al., ``Prototypical networks,'' \textit{NeurIPS}, 2017.
+\bibitem{wang2021} Z. Wang et al., ``Concept-based retrieval,'' \textit{MICCAI}, 2021.
+\bibitem{chen2022} T. Chen et al., ``Contrastive learning,'' \textit{ICML}, 2020.
+\bibitem{guo2017} C. Guo et al., ``Calibration,'' \textit{ICML}, 2017.
+\bibitem{jiang2021} Z. Jiang et al., ``What LMs know,'' \textit{TACL}, 2020.
+\bibitem{pearl2009} J. Pearl, \textit{Causality}. 2009.
+\bibitem{karimi2021} A.-H. Karimi et al., ``Algorithmic recourse,'' \textit{FAccT}, 2021.
+\bibitem{schwab2023} P. Schwab et al., ``Counterfactual validation,'' arXiv 2023.
+\end{thebibliography}
+
+\end{document}
