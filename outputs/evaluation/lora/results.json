@@ -1,36 +1,26 @@
 {
-  "timestamp": "2026-01-12T00:22:57.393436",
+  "timestamp": "2026-01-27T00:53:39.394385",
   "tests": {
     "embedding_comparison": {
-      "distance_l2": 0.4649987618128459,
-      "cosine_similarity": 0.8918527762095133,
+      "distance_l2": 0.46499871214230853,
+      "cosine_similarity": 0.8918527364730835,
       "per_query": [
         {
-          "distance": 0.453612744808197,
-          "similarity": 0.8971178531646729
+          "distance": 0.45361271500587463,
+          "similarity": 0.8971177339553833
         },
         {
           "distance": 0.4736621081829071,
           "similarity": 0.887822151184082
         },
         {
-          "distance": 0.46772143244743347,
+          "distance": 0.4677213132381439,
           "similarity": 0.8906183242797852
         }
       ]
     },
     "alignment_improvement": {
-      "base_similarity": 0.34534117579460144,
-      "lora_similarity": 0.5015814304351807,
-      "improvement": 0.15624025464057922,
-      "improvement_pct": 45.24228953616184,
-      "per_pair": [
-        {
-          "base": 0.34534117579460144,
-          "lora": 0.5015814304351807,
-          "improvement": 0.15624025464057922
-        }
-      ]
+      "status": "no_test_data"
     }
   }
 }

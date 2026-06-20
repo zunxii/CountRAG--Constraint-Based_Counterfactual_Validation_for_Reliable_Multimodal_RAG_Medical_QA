@@ -5,7 +5,3 @@ Embedding Comparison:
   Distance (L2): 0.4650
   Cosine similarity: 0.8919
 
-Alignment Improvement:
-  Base similarity: 0.3453
-  LoRA similarity: 0.5016
-  Improvement: 0.1562

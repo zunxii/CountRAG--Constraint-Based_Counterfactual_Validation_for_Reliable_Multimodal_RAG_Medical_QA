@@ -1,0 +1,3934 @@
+{
+  "study": "CountRAG-Clinic — Real KB Evaluation",
+  "eval_csv": "data/processed/splits/eval.csv",
+  "kb_dir": "outputs/kb/kb_final_v2",
+  "n_cases": 50,
+  "seed": 42,
+  "systems": {
+    "A": "Baseline — text-query cosine similarity over KB embeddings",
+    "B": "CountRAG — LoRA-adapted BioMedCLIP + adaptive fusion + counterfactual stability"
+  },
+  "aggregate_metrics": {
+    "baseline": {
+      "recall@1": 0.56,
+      "recall@3": 0.86,
+      "mrr": 0.6767,
+      "n_cases": 50,
+      "n_rank1_correct": 28
+    },
+    "countrag": {
+      "recall@1": 0.74,
+      "recall@3": 0.96,
+      "mrr": 0.84,
+      "n_cases": 50,
+      "n_rank1_correct": 37
+    },
+    "delta": {
+      "recall@1": 0.18,
+      "recall@3": 0.1,
+      "mrr": 0.1633
+    }
+  },
+  "countrag_reliability_summary": {
+    "pass_count": 48,
+    "review_count": 2,
+    "pass_rate": 0.96,
+    "avg_R": 0.899,
+    "avg_MSI_T": 0.8642,
+    "avg_MSI_I": 0.78
+  },
+  "per_diagnosis_breakdown": {
+    "edema": {
+      "n_cases": 3,
+      "baseline_recall@1": 0.6667,
+      "countrag_recall@1": 0.0,
+      "delta_recall@1": -0.6667
+    },
+    "eye redness": {
+      "n_cases": 2,
+      "baseline_recall@1": 0.0,
+      "countrag_recall@1": 0.0,
+      "delta_recall@1": 0.0
+    },
+    "foot swelling": {
+      "n_cases": 4,
+      "baseline_recall@1": 0.75,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.25
+    },
+    "hand lump": {
+      "n_cases": 3,
+      "baseline_recall@1": 1.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.0
+    },
+    "itichy eyelid": {
+      "n_cases": 2,
+      "baseline_recall@1": 0.5,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.5
+    },
+    "knee swelling": {
+      "n_cases": 3,
+      "baseline_recall@1": 0.6667,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.3333
+    },
+    "lip swelling": {
+      "n_cases": 3,
+      "baseline_recall@1": 1.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.0
+    },
+    "mouth ulcers": {
+      "n_cases": 5,
+      "baseline_recall@1": 1.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.0
+    },
+    "neck swelling": {
+      "n_cases": 3,
+      "baseline_recall@1": 1.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.0
+    },
+    "skin dryness": {
+      "n_cases": 5,
+      "baseline_recall@1": 0.0,
+      "countrag_recall@1": 0.2,
+      "delta_recall@1": 0.2
+    },
+    "skin growth": {
+      "n_cases": 1,
+      "baseline_recall@1": 0.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 1.0
+    },
+    "skin irritation": {
+      "n_cases": 5,
+      "baseline_recall@1": 0.0,
+      "countrag_recall@1": 0.2,
+      "delta_recall@1": 0.2
+    },
+    "skin rash": {
+      "n_cases": 6,
+      "baseline_recall@1": 0.6667,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.3333
+    },
+    "swollen eye": {
+      "n_cases": 3,
+      "baseline_recall@1": 0.6667,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 0.3333
+    },
+    "swollen tonsils": {
+      "n_cases": 2,
+      "baseline_recall@1": 0.0,
+      "countrag_recall@1": 1.0,
+      "delta_recall@1": 1.0
+    }
+  },
+  "cases": [
+    {
+      "case_id": 1,
+      "ground_truth": "eye redness",
+      "patient_query": "My 6 almost 7 month old son's left eye is red and puffy on both the lid and right below his eye.Please see the current condition below .His eyeball is not red and I have been using warm compresses for 2 days now and it has not gone down..he does not rub it or anything to say that it itches. what could it be.",
+      "image_description": "Eye redness, or conjunctivitis, appears as a visible red or pink discoloration of the white part of the eye (conjunctiva). An image may show the blood vessels in the conjunctiva appearing more prominent. The redness can be localized or widespread and may be accompanied by other symptoms like itching, burning, or discharge.",
+      "image_path": "eye redness_Image_111.jpg",
+      "sys_a_rank1": "eye inflamation",
+      "sys_a_rank2": "swollen eye",
+      "sys_a_rank3": "eye redness",
+      "sys_a_reliability": "Similarity: 0.661",
+      "sys_b_rank1": "swollen eye",
+      "sys_b_rank2": "eye inflamation",
+      "sys_b_rank3": "itichy eyelid",
+      "sys_b_reliability": "MSI-T:0.88 MSI-I:0.99 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "eye inflamation",
+            "score": 0.6615
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.6275
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.5861
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.661",
+          "similarity_score": 0.661
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.7095
+          },
+          {
+            "rank": 2,
+            "diagnosis": "eye inflamation",
+            "score": 0.7065
+          },
+          {
+            "rank": 3,
+            "diagnosis": "itichy eyelid",
+            "score": 0.6654
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.88,
+          "msi_image": 0.99,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.88 MSI-I:0.99 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      }
+    },
+    {
+      "case_id": 2,
+      "ground_truth": "neck swelling",
+      "patient_query": "My husband is 45, very healthy (5' 11\", appx 160 lbs), has recently (the last 2 months) developed hives and facial  in response to high stress. Last night developed a large (diameter appx 1.5-2 inch) hard, painful lump behind his neck.Doctor Please look at the image of patient some issue in my neck   below  .Wondering what the possibilities are.",
+      "image_description": "Neck swelling can manifest in various ways. An image might show a visible bulge or enlargement in the neck area, potentially affecting the throat, lymph nodes, or thyroid gland. The skin may appear stretched and taut. Swelling can be caused by infection, inflammation, or tumors, and may be accompanied by pain, difficulty swallowing, or shortness of breath.",
+      "image_path": "neck swelling_Image_24.jpg",
+      "sys_a_rank1": "neck swelling",
+      "sys_a_rank2": "swollen tonsils",
+      "sys_a_rank3": "hand lump",
+      "sys_a_reliability": "Similarity: 0.716",
+      "sys_b_rank1": "neck swelling",
+      "sys_b_rank2": "swollen tonsils",
+      "sys_b_rank3": "hand lump",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.7164
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2832
+          },
+          {
+            "rank": 3,
+            "diagnosis": "hand lump",
+            "score": 0.1839
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.716",
+          "similarity_score": 0.716
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.7571
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2595
+          },
+          {
+            "rank": 3,
+            "diagnosis": "hand lump",
+            "score": 0.196
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 3,
+      "ground_truth": "skin dryness",
+      "patient_query": "i m a boy if 19 years old suffering from dried skin .Have realised that it usually comes during the winter time.I got burnt all of my body this brought about the dry skin ..Can you please help me out ..The image for that is attached below .",
+      "image_description": "Dry skin, or xerosis, can be seen in an image as rough, flaky, or scaly patches of skin. The skin may appear dull and lack its usual luster. In severe cases, the skin may crack and bleed. Dry skin can affect any part of the body, and is often caused by environmental factors, such as cold weather or low humidity, and may be a sign of underlying medical conditions.",
+      "image_path": "skin dryness_Image_2.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin growth",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.462",
+      "sys_b_rank1": "skin dryness",
+      "sys_b_rank2": "skin growth",
+      "sys_b_rank3": "dry scalp",
+      "sys_b_reliability": "MSI-T:0.64 MSI-I:0.31 R:0.62 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.4621
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.4444
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.4239
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.462",
+          "similarity_score": 0.462
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin dryness",
+            "score": 0.5827
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.5779
+          },
+          {
+            "rank": 3,
+            "diagnosis": "dry scalp",
+            "score": 0.5312
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.64,
+          "msi_image": 0.31,
+          "reliability_score": 0.62,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.64 MSI-I:0.31 R:0.62 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 4,
+      "ground_truth": "edema",
+      "patient_query": "I am 38 years old. I gad hep c genotype3a. Elevated liver enzymes. Normal bilirubin,albumin and INR. USG suggested mildly coarse liver. I took six months course of peg ifn n ribavarin. Viral load decreased five logs after 4 weeks but it is not negative at end of treatment. Now two months after end of treatment i m having pedal .Please doctor see the current condition  below . Please suggest.",
+      "image_description": "Edema, or swelling, is characterized by fluid buildup in body tissues. An image may show puffy, swollen areas, often around the ankles, legs, or face. The skin may appear stretched and taut, possibly with indentations when pressed. Edema can be caused by various factors, including heart conditions, kidney issues, and pregnancy.",
+      "image_path": "edema_Image_5.jpg",
+      "sys_a_rank1": "edema",
+      "sys_a_rank2": "skin rash",
+      "sys_a_rank3": "foot swelling",
+      "sys_a_reliability": "Similarity: 0.464",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "knee swelling",
+      "sys_b_reliability": "MSI-T:0.87 MSI-I:0.93 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "edema",
+            "score": 0.4636
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin rash",
+            "score": 0.3746
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.3624
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.464",
+          "similarity_score": 0.464
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.6503
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.6313
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4477
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.87,
+          "msi_image": 0.93,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.87 MSI-I:0.93 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 5,
+      "ground_truth": "skin irritation",
+      "patient_query": "My 1 month old daughter got a skin infection like red color rough skin. My doctor prescribed diprovate rd. I use that the rashes git cleared but her skin become pale than normal skin. Doctor asked to continue the same till the color get change.Please doctor see the current condition below . I am using it for one month but no effect. Shall I continue the s as me cream. Or what should I do to get normal color",
+      "image_description": "Skin irritation, or dermatitis, may show in an image as redness, swelling, and itching of the skin. The affected area may be dry, scaly, or have small bumps or blisters. The severity of the irritation can vary, and the cause may be due to allergies, contact with irritants, or underlying medical conditions.",
+      "image_path": "skin irritation_Image_31.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin growth",
+      "sys_a_reliability": "Similarity: 0.597",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin growth",
+      "sys_b_reliability": "MSI-T:0.78 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.5967
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.428
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.3844
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.597",
+          "similarity_score": 0.597
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7007
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5953
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.5514
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.78,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.78 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 6,
+      "ground_truth": "skin irritation",
+      "patient_query": "I am 3 weeks in from my mesh repaired herina surgery.. today I had a very shape pain in my right side, going down intothe bottom of my stomach and my belly button. Beside that I have had iching on my hands Doctor the image for that is attached  below  and swelling of feet and hands. Today I found a lump swollen lythm node on the right side of my head.. could his be a reaction.",
+      "image_description": "Skin irritation, or dermatitis, may show in an image as redness, swelling, and itching of the skin. The affected area may be dry, scaly, or have small bumps or blisters. The severity of the irritation can vary, and the cause may be due to allergies, contact with irritants, or underlying medical conditions.",
+      "image_path": "skin irritation_Image_95.jpg",
+      "sys_a_rank1": "edema",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "hand lump",
+      "sys_a_reliability": "Similarity: 0.557",
+      "sys_b_rank1": "hand lump",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "foot swelling",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:0.31 R:0.46 [REVIEW]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "edema",
+            "score": 0.557
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.5491
+          },
+          {
+            "rank": 3,
+            "diagnosis": "hand lump",
+            "score": 0.515
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.557",
+          "similarity_score": 0.557
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.4667
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.4356
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.3901
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 0.31,
+          "reliability_score": 0.46,
+          "verdict": "REVIEW",
+          "raw": "MSI-T:0.31 MSI-I:0.31 R:0.46 [REVIEW]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      }
+    },
+    {
+      "case_id": 7,
+      "ground_truth": "skin rash",
+      "patient_query": "i have an 8moths old baby with some issue in my skin,Please doctor see the current condition below the pead told me that he had aviral infection and gave us Azithral liquid-200 so far its the 2nd day of treatment but no improvement yet, what can i do.could it be measles coz its alot in the area Uganda,but no tempeature,eyes are ok good breast feeding.Victoria",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_7.jpg",
+      "sys_a_rank1": "skin growth",
+      "sys_a_rank2": "skin rash",
+      "sys_a_rank3": "swollen eye",
+      "sys_a_reliability": "Similarity: 0.525",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin growth",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.47 R:0.89 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.5255
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin rash",
+            "score": 0.4943
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen eye",
+            "score": 0.4418
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.525",
+          "similarity_score": 0.525
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6353
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.6106
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.6023
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.47,
+          "reliability_score": 0.89,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.47 R:0.89 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 8,
+      "ground_truth": "knee swelling",
+      "patient_query": "Hello, A couple of hours ago, I fell on concrete while ripsticking around my neighbor hood. I fell on my chin and my right knee,Doctor please look at the image  below  but I am more concered about my chin. There is a large bump, uneven from the right side of my chin, and is not by my jaw. I iced it, and also took ibuprofen. My parents say it is just swelling, and it will go away later. Now, 3 hours later, I notice not so much of a difference. Also, the results are that there is no damage done to my gums, and teeth. But there is a cut and some scrapes under, and on my chin. I can move my jaw perfectly, some with my neck and shoulders. I m getting pretty scared, and confused. What do you think it is, and how can I fix this without going to the doctors.",
+      "image_description": "Knee swelling, or effusion, is a visible increase in size around the knee joint. An image may show a rounded bulge or distention, especially on the front and sides of the knee. The skin may be taut and shiny. Swelling can be caused by injury, inflammation, or fluid buildup, and may limit movement and cause pain.",
+      "image_path": "knee swelling_Image_17.jpg",
+      "sys_a_rank1": "knee swelling",
+      "sys_a_rank2": "neck swelling",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.433",
+      "sys_b_rank1": "knee swelling",
+      "sys_b_rank2": "lip swelling",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.4332
+          },
+          {
+            "rank": 2,
+            "diagnosis": "neck swelling",
+            "score": 0.3469
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.3033
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.433",
+          "similarity_score": 0.433
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.6057
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.36
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.2726
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 9,
+      "ground_truth": "itichy eyelid",
+      "patient_query": "Hi. My 2 yr old suddenly got a strange rash around his eyes, a bit on the cheeks near the eye. They aren't raised bumps, they're under the skin. They started out purple then after a dose of Benadryl, they seem to be more red. They're not very big, tiny, scattered not forming any pattern.Please doctor see the current condition below . He doesn't seem bothered much but he did wake up crying this morning & he's rubbing his eyes a lot...he said \"eyes!!!\" and whimpered a bit out of the blue. Then he was fine all day. Called the nurse who said don't worry yet, bring him in if it doesn't improve. Should I be worried.",
+      "image_description": "An itchy eyelid, or blepharitis, may show in an image as redness, swelling, and flaking of the eyelid margin. The eyelashes may appear clumped or matted. The surrounding skin may be irritated, and there may be a noticeable discharge. Itching can be severe and can be caused by various factors, including allergies, bacterial infections, and mites.",
+      "image_path": "itichy eyelid_Image_36.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.504",
+      "sys_b_rank1": "itichy eyelid",
+      "sys_b_rank2": "swollen eye",
+      "sys_b_rank3": "eye redness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.5042
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.3779
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.3522
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.504",
+          "similarity_score": 0.504
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "itichy eyelid",
+            "score": 0.7207
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.7072
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.6097
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 10,
+      "ground_truth": "skin dryness",
+      "patient_query": "Hello doctor,I have a question about scalp issues and hair loss. I am 17 years old, pretty thin, have celiac. I had dry skin on my face Please doctor see the current condition below . for a while but about nine months ago I immediately started to lose hair, experience uncontrollable dandruff, and my skin became dryer than ever. My individual hairs became thinner (especially towards the roots), dryer, and started to fall out consistently from everywhere on my head except for a small area above my neck.Then came excruciating itchiness and my scalp started to produce a oil with a unpleasant musty smell. Recently, I started to lose more hair in my sideburns and temples but still experience hairloss all over my scalp (I have not had a receding hairline though). Also, in addition to dandruff, my scalp has these strange small yellow substances that are the size of dandruff but don't really resemble it. The hairs that fall out have small, yellow, oily clumps of something toward the roots and I have also gotten several polyester-like thin spirally hairs. Acne has also been bad (even when I've been off sugar, fruits, and grains) and often spreads into my scalp. There is no distinct occurrences of hair loss on my dad's side of the family. My mother's father still has a full head of hair. The only two people who have experienced hairloss in my family are my mother's two brothers. My shower water is iron-rich wellwater and often smells bad gives the skin on my face a burning sensation (even when we use a salt filter). I have had some thyroid issues but I don't think they are severe enough to cause my hairloss. Does anyone know what could be causing my symptoms.",
+      "image_description": "Dry skin, or xerosis, can be seen in an image as rough, flaky, or scaly patches of skin. The skin may appear dull and lack its usual luster. In severe cases, the skin may crack and bleed. Dry skin can affect any part of the body, and is often caused by environmental factors, such as cold weather or low humidity, and may be a sign of underlying medical conditions.",
+      "image_path": "skin dryness_Image_22.jpg",
+      "sys_a_rank1": "dry scalp",
+      "sys_a_rank2": "skin growth",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.806",
+      "sys_b_rank1": "dry scalp",
+      "sys_b_rank2": "skin dryness",
+      "sys_b_rank3": "itichy eyelid",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "dry scalp",
+            "score": 0.8057
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.5538
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.533
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.806",
+          "similarity_score": 0.806
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "dry scalp",
+            "score": 0.7714
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.6069
+          },
+          {
+            "rank": 3,
+            "diagnosis": "itichy eyelid",
+            "score": 0.5944
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 1.0,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 11,
+      "ground_truth": "mouth ulcers",
+      "patient_query": "Hi,I had some issue in my mouths and impatiently tried to get rid of that as fast as I could. I gargled with Bactidol like a madman to get rid of the ulcers quickly. The ulcers have since vanished but I now face a more painful problem. It seems I must have gargled too much with Bactidol and now the tip of my tongue and the area where gum meets (inner) lip is extremely painful and red. Are these signs of chemical burn. Sure feels like a burn. It has been two days with this burning sensation.The affected areas are only on the lower lip (as I only gargled profusely  there were my ulcers were located (which was on my lower lip).Please see the image of the affected area doctor  below .How long will it take until these excruciating pain of mine subsides. I find it extremely difficult to eat, it is very painful.Thanks!",
+      "image_description": "Mouth ulcers, or aphthous ulcers, appear as small, round sores in the mouth. An image may show these sores, typically on the inner cheeks, lips, or tongue, appearing white or yellow, surrounded by a red, inflamed area. They can be painful and may make eating or talking difficult. Mouth ulcers are often caused by stress, trauma, or certain foods.",
+      "image_path": "mouth ulcers_Image_58.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "lip swelling",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.723",
+      "sys_b_rank1": "mouth ulcers",
+      "sys_b_rank2": "swollen tonsils",
+      "sys_b_rank3": "lip swelling",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.7227
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.583
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2378
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.723",
+          "similarity_score": 0.723
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.716
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5004
+          },
+          {
+            "rank": 3,
+            "diagnosis": "lip swelling",
+            "score": 0.4976
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 1.0,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 12,
+      "ground_truth": "mouth ulcers",
+      "patient_query": "Yesterday I noticed the top right side of the roof of my mouth is swollen. My teeth started to hurt my right nostral on the inside hurts and now my right eye is starting to hurt seems like there is pressure building up from my swollen pallet. And the next day the roof of my mouth has swollen even more.Please see the image of the affected area doctor  below  If I push on it it hurts. I'm really worried. What might I have and how to fix it r",
+      "image_description": "Mouth ulcers, or aphthous ulcers, appear as small, round sores in the mouth. An image may show these sores, typically on the inner cheeks, lips, or tongue, appearing white or yellow, surrounded by a red, inflamed area. They can be painful and may make eating or talking difficult. Mouth ulcers are often caused by stress, trauma, or certain foods.",
+      "image_path": "mouth ulcers_Image_58.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "lip swelling",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.602",
+      "sys_b_rank1": "mouth ulcers",
+      "sys_b_rank2": "swollen tonsils",
+      "sys_b_rank3": "lip swelling",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6022
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.4591
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.4024
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.602",
+          "similarity_score": 0.602
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6257
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5723
+          },
+          {
+            "rank": 3,
+            "diagnosis": "lip swelling",
+            "score": 0.3944
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 1.0,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 13,
+      "ground_truth": "skin rash",
+      "patient_query": "My husband and I thought we had the standard flu....body aches, headache, coughing and a fever of 101.+ for three days...fever has subsided and now just dealing with a wracking cough but I broke out with a rash on my chest last night and still have it. Doesn’t itch. He broke out with a rash on his back and it does itch...is that from the flu or are we dealing with something else.Please see the image of the affected area doctor  below",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_7.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.637",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6373
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.3643
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.3629
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.637",
+          "similarity_score": 0.637
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7523
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5722
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.4774
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 14,
+      "ground_truth": "mouth ulcers",
+      "patient_query": "I noticed in my patient a sudden inflammation and hardening of left facial muscles . There is a lump about 1 inch away from the eyes and going down about 2 incles long, about an inch wide..Please see the image of patient mouth  below  There is no redness or warmth on the area but is hard to touch.",
+      "image_description": "Mouth ulcers, or aphthous ulcers, appear as small, round sores in the mouth. An image may show these sores, typically on the inner cheeks, lips, or tongue, appearing white or yellow, surrounded by a red, inflamed area. They can be painful and may make eating or talking difficult. Mouth ulcers are often caused by stress, trauma, or certain foods.",
+      "image_path": "mouth ulcers_Image_60.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "lip swelling",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.526",
+      "sys_b_rank1": "mouth ulcers",
+      "sys_b_rank2": "swollen tonsils",
+      "sys_b_rank3": "lip swelling",
+      "sys_b_reliability": "MSI-T:0.93 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5264
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.4305
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.4226
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.526",
+          "similarity_score": 0.526
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5606
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5213
+          },
+          {
+            "rank": 3,
+            "diagnosis": "lip swelling",
+            "score": 0.4052
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.93,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.93 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 15,
+      "ground_truth": "swollen eye",
+      "patient_query": "I suffer from chronic sinus problems - some issue in my eyess and pain in jaw and teeth on left side. Please see the image of the affected area doctor  below .My dentist says I have fluid under my back molar and need a root canal.  Could the sinus drainage cause this fluid.  I am hesitant to have a root canal done if it is not needed.  I haven't had any pain in the last few months.",
+      "image_description": "A swollen eye is a visible increase in size around the eye area. An image may show puffiness of the eyelids, potentially accompanied by redness, discoloration, or discharge. The swelling can be caused by various factors, including allergies, infections, and injuries, and may be associated with pain, discomfort, or blurred vision.",
+      "image_path": "swollen eye_Image_9.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "swollen tonsils",
+      "sys_a_rank3": "swollen eye",
+      "sys_a_reliability": "Similarity: 0.385",
+      "sys_b_rank1": "swollen eye",
+      "sys_b_rank2": "itichy eyelid",
+      "sys_b_rank3": "eye redness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.3847
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.3608
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen eye",
+            "score": 0.3135
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.385",
+          "similarity_score": 0.385
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.6666
+          },
+          {
+            "rank": 2,
+            "diagnosis": "itichy eyelid",
+            "score": 0.6173
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.5724
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 16,
+      "ground_truth": "skin growth",
+      "patient_query": "I ve got a hard pea size some abnormality in my skin on the bridge of my nose in between my eyes. It hurts when I move my eyebrows or anything like that. Its been there for a week now. I thought it was acne but its not going away and its making my face swollen.please look at the image of patient eyes  below  Now here is the kicker, it s UNDER the skin. Its not even noticable until you touch it. Then you feel the hard lump.",
+      "image_description": "Skin growths, or lesions, are visible abnormalities on the skin. An image may show a bump, nodule, or patch that differs in color, texture, or shape from the surrounding skin. Skin growths can be benign or malignant, and can vary widely in size and appearance. They may be flat or raised, smooth or rough, and can be caused by various factors, including sun exposure, genetics, and viruses.",
+      "image_path": "skin growth_Image_4.jpg",
+      "sys_a_rank1": "itichy eyelid",
+      "sys_a_rank2": "swollen eye",
+      "sys_a_rank3": "skin growth",
+      "sys_a_reliability": "Similarity: 0.634",
+      "sys_b_rank1": "skin growth",
+      "sys_b_rank2": "dry scalp",
+      "sys_b_rank3": "skin rash",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "itichy eyelid",
+            "score": 0.6344
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.6307
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.5191
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.634",
+          "similarity_score": 0.634
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.607
+          },
+          {
+            "rank": 2,
+            "diagnosis": "dry scalp",
+            "score": 0.5178
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin rash",
+            "score": 0.4574
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 17,
+      "ground_truth": "lip swelling",
+      "patient_query": "Hi.  I have something going on in my mouth.  Swollen, sore spot on inner edge of my lower lip..a lesser one on upper lip that sting.  Better today than yesterday, but front gums are swollen, throb, and hurt when I brush.  Have had teeth cleaned recently...go every six months.Please doctor see the current condition below .Only thing new is I started using an all natural powder rather than tooth paste.  Stopped that yesterday.  Can't remember when I was last sick!  \"Feels\" viral and I don't know why I say that.   ...  Thanks so much!",
+      "image_description": "Lip swelling, or angioedema, appears as a noticeable increase in size of the lips. An image may show the lips looking puffy and rounded, potentially affecting one or both lips. The surrounding area may also be swollen. The lips may feel tender and warm, and may be accompanied by itching or pain. Lip swelling can be caused by allergies, infections, or other medical conditions.",
+      "image_path": "lip swelling_Image_72.jpg",
+      "sys_a_rank1": "lip swelling",
+      "sys_a_rank2": "mouth ulcers",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.669",
+      "sys_b_rank1": "lip swelling",
+      "sys_b_rank2": "mouth ulcers",
+      "sys_b_rank3": "swollen tonsils",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.6692
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6072
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2948
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.669",
+          "similarity_score": 0.669
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.7252
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5787
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.3143
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 18,
+      "ground_truth": "mouth ulcers",
+      "patient_query": "Under my tongue there seems to be extra tissue on either side of the skin that connects my tongue to the bottom of my mouth.Please see the image of the affected area doctor  below  Its red swollen and sore and seems like ulcers. Somethingsmake it burn. If I stick my tongue out the \"extra skin\" can touch my bottom teeth. The only way to describe what it looks like is basically comparing it to the inner lips of a vagina. I can actually move the skin back and fourth when I touch it. I have no other symptoms. Nothing has changed in my diet. It started getting irritating yesterday and today is when I noticed what it actually looked like. What could it be.",
+      "image_description": "Mouth ulcers, or aphthous ulcers, appear as small, round sores in the mouth. An image may show these sores, typically on the inner cheeks, lips, or tongue, appearing white or yellow, surrounded by a red, inflamed area. They can be painful and may make eating or talking difficult. Mouth ulcers are often caused by stress, trauma, or certain foods.",
+      "image_path": "mouth ulcers_Image_11.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "lip swelling",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.665",
+      "sys_b_rank1": "mouth ulcers",
+      "sys_b_rank2": "lip swelling",
+      "sys_b_rank3": "swollen tonsils",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6648
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.5365
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.283
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.665",
+          "similarity_score": 0.665
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6606
+          },
+          {
+            "rank": 2,
+            "diagnosis": "lip swelling",
+            "score": 0.4286
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.3788
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 19,
+      "ground_truth": "lip swelling",
+      "patient_query": "hi i have been having a swolen cheek (either right or left never both and just on the cheek bone) and lips Please doctor see the current condition below .(localised not the entire lip) frequently aand the situation is not geting any better as it occurs approx. 4 days a week with the sweling lasting upto 24 hours before subsiding on its own without taking any medicine. kindly assist as i end up looking as if i have been beaten.please help",
+      "image_description": "Lip swelling, or angioedema, appears as a noticeable increase in size of the lips. An image may show the lips looking puffy and rounded, potentially affecting one or both lips. The surrounding area may also be swollen. The lips may feel tender and warm, and may be accompanied by itching or pain. Lip swelling can be caused by allergies, infections, or other medical conditions.",
+      "image_path": "lip swelling_Image_5.jpg",
+      "sys_a_rank1": "lip swelling",
+      "sys_a_rank2": "mouth ulcers",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.709",
+      "sys_b_rank1": "lip swelling",
+      "sys_b_rank2": "mouth ulcers",
+      "sys_b_rank3": "skin irritation",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.7087
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.3688
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.3487
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.709",
+          "similarity_score": 0.709
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.7281
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.381
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.358
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 20,
+      "ground_truth": "skin rash",
+      "patient_query": "Hi, im 34 year old male.I have several symtoms,these are diorea,yellow,black/grey fliude coming out of rectum,losing hair on legs,and ichy,rash,blood in stool,black like pieces of carcoal/ash typ pices in fieces,numness in legs,muscle spasms,blured vision,sores and cuts take ages to heal,and somtimes puss in fieces to.Also getting alot of completly white haires on my head,dizzy spells,shiny skin, ichy rectum.Please see the image of the affected area doctor  below .I had several test and waiting for results from columnoscopy on bowl,and mri.They fond a couple of lumps and an ulcer in bowl.Also bright orange urine each moring and smells to.",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_25.jpg",
+      "sys_a_rank1": "skin growth",
+      "sys_a_rank2": "skin dryness",
+      "sys_a_rank3": "dry scalp",
+      "sys_a_reliability": "Similarity: 0.403",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin growth",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.4034
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.3947
+          },
+          {
+            "rank": 3,
+            "diagnosis": "dry scalp",
+            "score": 0.3937
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.403",
+          "similarity_score": 0.403
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.59
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5312
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.5297
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 21,
+      "ground_truth": "skin irritation",
+      "patient_query": "my son is 5 months old, he has some issue in my skin, which they finally concluded was eczema, and now he is running a fever.Please doctor see the current condition below . We just left the bamc, were he had blood and urine cultures done. One of the results that came back about his wbc is high and said he needed a shot in his thigh, what does this mean.",
+      "image_description": "Skin irritation, or dermatitis, may show in an image as redness, swelling, and itching of the skin. The affected area may be dry, scaly, or have small bumps or blisters. The severity of the irritation can vary, and the cause may be due to allergies, contact with irritants, or underlying medical conditions.",
+      "image_path": "skin irritation_Image_31.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin growth",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.561",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin growth",
+      "sys_b_rank3": "skin irritation",
+      "sys_b_reliability": "MSI-T:0.78 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.561
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.4435
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.4136
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.561",
+          "similarity_score": 0.561
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6464
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.5803
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.5665
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.78,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.78 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      }
+    },
+    {
+      "case_id": 22,
+      "ground_truth": "neck swelling",
+      "patient_query": "I have a guilt (some hard portion) on the back side of my neck for the past 15 to 20 years or probably since birth. I can feel it with hands.Doctor Please look at the image of patient some issue in my neck   below  Lately i am having pain in that area by pressing the same portion. Please tell me what it could be. Can it be a serious problem",
+      "image_description": "Neck swelling can manifest in various ways. An image might show a visible bulge or enlargement in the neck area, potentially affecting the throat, lymph nodes, or thyroid gland. The skin may appear stretched and taut. Swelling can be caused by infection, inflammation, or tumors, and may be accompanied by pain, difficulty swallowing, or shortness of breath.",
+      "image_path": "neck swelling_Image_43.jpg",
+      "sys_a_rank1": "neck swelling",
+      "sys_a_rank2": "hand lump",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.67",
+      "sys_b_rank1": "neck swelling",
+      "sys_b_rank2": "skin growth",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.6703
+          },
+          {
+            "rank": 2,
+            "diagnosis": "hand lump",
+            "score": 0.2764
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.206
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.67",
+          "similarity_score": 0.67
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.625
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.3356
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.3157
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 23,
+      "ground_truth": "skin dryness",
+      "patient_query": "Hello, Actually I tried different body soaps and many bodywashes. But all resulted in dry skin , which causes irritation and feels very uncomfortable. From last week,The image for that is attached below . I have been using Johnson s baby soap and it left my skin very soft, glowing and it feels very good. Now, my question is whether is it okay to use johnson s baby soap, which is meant for babies. I am 18 years old male. Please reply.",
+      "image_description": "Dry skin, or xerosis, can be seen in an image as rough, flaky, or scaly patches of skin. The skin may appear dull and lack its usual luster. In severe cases, the skin may crack and bleed. Dry skin can affect any part of the body, and is often caused by environmental factors, such as cold weather or low humidity, and may be a sign of underlying medical conditions.",
+      "image_path": "skin dryness_Image_2.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin growth",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.515",
+      "sys_b_rank1": "skin growth",
+      "sys_b_rank2": "skin dryness",
+      "sys_b_rank3": "dry scalp",
+      "sys_b_reliability": "MSI-T:0.67 MSI-I:0.59 R:0.78 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.5147
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin growth",
+            "score": 0.5089
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.457
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.515",
+          "similarity_score": 0.515
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.6067
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.5984
+          },
+          {
+            "rank": 3,
+            "diagnosis": "dry scalp",
+            "score": 0.536
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.67,
+          "msi_image": 0.59,
+          "reliability_score": 0.78,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.67 MSI-I:0.59 R:0.78 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 24,
+      "ground_truth": "swollen tonsils",
+      "patient_query": "I have been diagnosed with Epstein Barr virus 2 months ago. The left side of my face hurts with a lot of pressure. My glands are also swollen on the left side. My doctor thinks I have a sinus cold. I woke up this morning with a huge red spot in my eye.Please doctor see the eyes below .",
+      "image_description": "Swollen tonsils appear enlarged and inflamed in the back of the throat. An image may show them as red, bumpy, and possibly covered in white patches. The swelling can make it difficult to swallow or breathe. Swollen tonsils are often caused by infection, such as a viral or bacterial infection.",
+      "image_path": "swollen tonsils_Image_1.jpg",
+      "sys_a_rank1": "swollen eye",
+      "sys_a_rank2": "eye inflamation",
+      "sys_a_rank3": "eye redness",
+      "sys_a_reliability": "Similarity: 0.653",
+      "sys_b_rank1": "swollen tonsils",
+      "sys_b_rank2": "swollen eye",
+      "sys_b_rank3": "eye inflamation",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.6534
+          },
+          {
+            "rank": 2,
+            "diagnosis": "eye inflamation",
+            "score": 0.5859
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.5234
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.653",
+          "similarity_score": 0.653
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen tonsils",
+            "score": 0.7224
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.5851
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye inflamation",
+            "score": 0.4745
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 25,
+      "ground_truth": "itichy eyelid",
+      "patient_query": "Hi I have been diagnosed with HPV2 for several years, I have recently been experiencing swollen, itching and burning eyelids, Please doctor see something happened in my eyes  below It looks like it could be herpetic to me.... I am scared and I don't have any medical insurance, I do not qualify for Medicaid at this point. I don't know who I should see. or how much it will cost. I want to make sure that they know what they are treating. I can see my OB/GYN next week. I am concerned that I can spread it or go blind. what to I do.",
+      "image_description": "An itchy eyelid, or blepharitis, may show in an image as redness, swelling, and flaking of the eyelid margin. The eyelashes may appear clumped or matted. The surrounding skin may be irritated, and there may be a noticeable discharge. Itching can be severe and can be caused by various factors, including allergies, bacterial infections, and mites.",
+      "image_path": "itichy eyelid_Image_7.jpg",
+      "sys_a_rank1": "itichy eyelid",
+      "sys_a_rank2": "swollen eye",
+      "sys_a_rank3": "eye inflamation",
+      "sys_a_reliability": "Similarity: 0.736",
+      "sys_b_rank1": "itichy eyelid",
+      "sys_b_rank2": "swollen eye",
+      "sys_b_rank3": "eye inflamation",
+      "sys_b_reliability": "MSI-T:0.43 MSI-I:0.94 R:0.83 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "itichy eyelid",
+            "score": 0.7364
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.707
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye inflamation",
+            "score": 0.6406
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.736",
+          "similarity_score": 0.736
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "itichy eyelid",
+            "score": 0.8319
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.8115
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye inflamation",
+            "score": 0.7798
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.43,
+          "msi_image": 0.94,
+          "reliability_score": 0.83,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.43 MSI-I:0.94 R:0.83 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 26,
+      "ground_truth": "hand lump",
+      "patient_query": "Hi, may I answer your health queries right now . Please type your query here...lump on inside forearm above elbow crease . Doctor the image for that is attached  below  its right on tendon in arm deep inside. i now have pain and swelling in arm and hands. going to see ortho doc in a week. but i would like to get some info now on this so i dont have to worry.",
+      "image_description": "A hand lump is a noticeable bump or swelling on the hand. An image may show a localized or widespread lump, appearing on the back of the hand, palm, fingers, or wrist. The lump can be soft or firm, and may be accompanied by pain, redness, or tenderness. The cause of the lump can vary widely, ranging from benign cysts to more serious conditions, requiring medical evaluation.",
+      "image_path": "hand lump_Image_39.jpg",
+      "sys_a_rank1": "hand lump",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "knee swelling",
+      "sys_a_reliability": "Similarity: 0.671",
+      "sys_b_rank1": "hand lump",
+      "sys_b_rank2": "foot swelling",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.6715
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.4561
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4437
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.671",
+          "similarity_score": 0.671
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.7041
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.5335
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.5235
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 27,
+      "ground_truth": "swollen eye",
+      "patient_query": "My 9 months son is falling from the bed on marble floir and immediately his eys is swollen.Please doctor see the eyes below . Then turn black.. Now swelling , marks everything is ok but his eye is smaller then other eye and very little swelling is coming when he get up.. Now its been 3 weaks i am so much worried",
+      "image_description": "A swollen eye is a visible increase in size around the eye area. An image may show puffiness of the eyelids, potentially accompanied by redness, discoloration, or discharge. The swelling can be caused by various factors, including allergies, infections, and injuries, and may be associated with pain, discomfort, or blurred vision.",
+      "image_path": "swollen eye_Image_65.jpg",
+      "sys_a_rank1": "swollen eye",
+      "sys_a_rank2": "eye inflamation",
+      "sys_a_rank3": "eye redness",
+      "sys_a_reliability": "Similarity: 0.694",
+      "sys_b_rank1": "swollen eye",
+      "sys_b_rank2": "itichy eyelid",
+      "sys_b_rank3": "eye redness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.6943
+          },
+          {
+            "rank": 2,
+            "diagnosis": "eye inflamation",
+            "score": 0.6436
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.6138
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.694",
+          "similarity_score": 0.694
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.8511
+          },
+          {
+            "rank": 2,
+            "diagnosis": "itichy eyelid",
+            "score": 0.7506
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.7193
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 28,
+      "ground_truth": "mouth ulcers",
+      "patient_query": "2 days ago i started with swollen gum around 1 tooth the day after my gums are swollen everywhere and i am beginning to feel cold but i am burning hot and also have a red soar on the tip of my tongue.. i brushed the soar on the tongue.. it is white now but bugger and still swollen gums (bleeding a little bit)and i notticed a small red or white spot (like on my tongue) but on my gum between 1 toothand my neck is soar where my tonsils or glands are.Please doctor see the mouth below .plus i am starting to have a small discomfort when i swallowi am starting to worry",
+      "image_description": "Mouth ulcers, or aphthous ulcers, appear as small, round sores in the mouth. An image may show these sores, typically on the inner cheeks, lips, or tongue, appearing white or yellow, surrounded by a red, inflamed area. They can be painful and may make eating or talking difficult. Mouth ulcers are often caused by stress, trauma, or certain foods.",
+      "image_path": "mouth ulcers_Image_60.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "swollen tonsils",
+      "sys_a_rank3": "lip swelling",
+      "sys_a_reliability": "Similarity: 0.602",
+      "sys_b_rank1": "mouth ulcers",
+      "sys_b_rank2": "swollen tonsils",
+      "sys_b_rank3": "lip swelling",
+      "sys_b_reliability": "MSI-T:0.93 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.6018
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5585
+          },
+          {
+            "rank": 3,
+            "diagnosis": "lip swelling",
+            "score": 0.4308
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.602",
+          "similarity_score": 0.602
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.596
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5797
+          },
+          {
+            "rank": 3,
+            "diagnosis": "lip swelling",
+            "score": 0.4171
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.93,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.93 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 29,
+      "ground_truth": "knee swelling",
+      "patient_query": "Hi I m trying to get info on behalf of my mom...she s 55yrs old now and for the past 10 yrs if not more she has this strange lumps with swelling around the effected area forming after a small injury e.g. knocking her foot against the bedside table or picking up a bruise on her hand after a small knock ect. After an injury like that, she gets like an almost hardened lump which she finds very painful and which sometimes last for months before going away. A few years ago she had one of these lumps removed by a doctor and she can only describe it as dried, hardened blood being almost crumbly . The doctors never found a reason for this happening and as a result this still happens quite regularly. Doctor please look at the image  below After time she ended up drinking loads of pain killers. She did come across some tablets which she reckoned helped quite a lot, but then after a recent serious ulcer, the doctors recommended she doesn t use these tablets anymore. Do you have any idea of what the cause of these lumps might be. I apologise for being vague, but this is the only info I have. Me and my mother lives in different countries and I m just trying to get some more info on the subject. Any help will be appreciated.",
+      "image_description": "Knee swelling, or effusion, is a visible increase in size around the knee joint. An image may show a rounded bulge or distention, especially on the front and sides of the knee. The skin may be taut and shiny. Swelling can be caused by injury, inflammation, or fluid buildup, and may limit movement and cause pain.",
+      "image_path": "knee swelling_Image_39.jpg",
+      "sys_a_rank1": "foot swelling",
+      "sys_a_rank2": "hand lump",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.52",
+      "sys_b_rank1": "knee swelling",
+      "sys_b_rank2": "foot swelling",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.5198
+          },
+          {
+            "rank": 2,
+            "diagnosis": "hand lump",
+            "score": 0.512
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.4614
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.52",
+          "similarity_score": 0.52
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.7582
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.5839
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.5797
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 30,
+      "ground_truth": "skin rash",
+      "patient_query": "my daughter has high blood pressure and has a recurring rash that lasts a day or two sometimes has a slight fever...doc checked heart with an xray was fine and echo was fine the she went for a cranial ultrasound and kidney as well been almost two weeks no feed back from last test assume they turned out fine so im lost...is she ok.. seeing a cadiologist at the end of the month.Please see the image of the affected area doctor  below",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_7.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin dryness",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.642",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6421
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.3783
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.3703
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.642",
+          "similarity_score": 0.642
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7241
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5612
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.5164
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 31,
+      "ground_truth": "neck swelling",
+      "patient_query": "Hi was diagnosed with Proteinuria 4 years back and was treated with cartico steroid for around 1 year. Proteinuria disappeared just within couple of weeks but the treatment was continued for around 8 months.My all reports are consistently normal (Urine routine , spot test, 24 Hrs urine test, blood tests ..etc) since then but I have a swelling/edima  around neck, Please see something happened on neck below .abdomen and lower part of legs.What could be the problem.",
+      "image_description": "Neck swelling can manifest in various ways. An image might show a visible bulge or enlargement in the neck area, potentially affecting the throat, lymph nodes, or thyroid gland. The skin may appear stretched and taut. Swelling can be caused by infection, inflammation, or tumors, and may be accompanied by pain, difficulty swallowing, or shortness of breath.",
+      "image_path": "neck swelling_Image_10.jpg",
+      "sys_a_rank1": "neck swelling",
+      "sys_a_rank2": "edema",
+      "sys_a_rank3": "foot swelling",
+      "sys_a_reliability": "Similarity: 0.592",
+      "sys_b_rank1": "neck swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "swollen tonsils",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.592
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.4223
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.3338
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.592",
+          "similarity_score": 0.592
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "neck swelling",
+            "score": 0.7446
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.3323
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2707
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 32,
+      "ground_truth": "skin rash",
+      "patient_query": "My bedmate has a severe red blotchy itchy rash on his entire arms which he claims is from mechanics oil and harsh soap to clean.Please see the image of the affected area doctor  below .Therefore causing this brutal infection. This irritant has spread now ALL over his body. Lil red bumps , flakey dry peeling skin cover most of his body now. Is this contagious. I wake up in the morning to find a bed full of yuck!",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_7.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.633",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6331
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.4446
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.4192
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.633",
+          "similarity_score": 0.633
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7545
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.6206
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.532
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 33,
+      "ground_truth": "foot swelling",
+      "patient_query": "I have CRPS of the upper right extremity.  I have red mottling on both arms and legs.  Now there is swelling in both of my calves, ankles, and feet. Please see something happened on foot below . On my ankles and feet there is blue to purple discoloration.  I take nine medications and I don't know if they're affecting my kidney function or what.  I'm quite nervous about the whole issue.  Do you have any idea what might be causing the  and mottling.",
+      "image_description": "Foot swelling, or edema, is a visible increase in size of the foot due to fluid buildup. An image may show the foot appearing larger than usual, with the skin stretched taut and potentially showing indentations when pressed. The ankles and lower legs may also be swollen. This can be caused by various factors, including poor circulation, prolonged standing, and underlying medical conditions.",
+      "image_path": "foot swelling_Image_40.jpg",
+      "sys_a_rank1": "foot swelling",
+      "sys_a_rank2": "edema",
+      "sys_a_rank3": "knee swelling",
+      "sys_a_reliability": "Similarity: 0.654",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "cyanosis",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.6536
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.5445
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.3986
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.654",
+          "similarity_score": 0.654
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.7326
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.6402
+          },
+          {
+            "rank": 3,
+            "diagnosis": "cyanosis",
+            "score": 0.4381
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 34,
+      "ground_truth": "hand lump",
+      "patient_query": "I had a car accident a few years back and I have nerve damage in my arm still, which I guess is normal. the concern I have is a soft mass on the outer part of my forearm. it s squishy but about the size of 1/2 a medium egg sticking out.Doctor the image for that is attached  below  it doesn t always hurt there to touch but it s hypersensitive today, just brushing my finger on it brings localized pain to the lump.",
+      "image_description": "A hand lump is a noticeable bump or swelling on the hand. An image may show a localized or widespread lump, appearing on the back of the hand, palm, fingers, or wrist. The lump can be soft or firm, and may be accompanied by pain, redness, or tenderness. The cause of the lump can vary widely, ranging from benign cysts to more serious conditions, requiring medical evaluation.",
+      "image_path": "hand lump_Image_39.jpg",
+      "sys_a_rank1": "hand lump",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "skin growth",
+      "sys_a_reliability": "Similarity: 0.584",
+      "sys_b_rank1": "hand lump",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "foot swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.5837
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.3614
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.3424
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.584",
+          "similarity_score": 0.584
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.6671
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.5073
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.5073
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 35,
+      "ground_truth": "skin dryness",
+      "patient_query": "Hi dorian my left butt cheeks has sign of bleeding after suddenly realize by my girlfriend. There's no sign of a lump but theres deep bleeding and sign of dryness of the skin. (Very dry) The image for that is attached below .. I do not feel any pain whatsoever even itchiness as well .. im truly worried what might it be, I can't find the correct explanation for it to be like that,  no accidents , didn't scratch and etc. Thanks so much",
+      "image_description": "Dry skin, or xerosis, can be seen in an image as rough, flaky, or scaly patches of skin. The skin may appear dull and lack its usual luster. In severe cases, the skin may crack and bleed. Dry skin can affect any part of the body, and is often caused by environmental factors, such as cold weather or low humidity, and may be a sign of underlying medical conditions.",
+      "image_path": "skin dryness_Image_2.jpg",
+      "sys_a_rank1": "skin growth",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.447",
+      "sys_b_rank1": "skin growth",
+      "sys_b_rank2": "skin dryness",
+      "sys_b_rank3": "dry scalp",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.4472
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.3379
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.3372
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.447",
+          "similarity_score": 0.447
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.5367
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.5151
+          },
+          {
+            "rank": 3,
+            "diagnosis": "dry scalp",
+            "score": 0.4809
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 1.0,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.31 MSI-I:1.0 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 36,
+      "ground_truth": "skin irritation",
+      "patient_query": "i have sjogren s syndromme and have been suffering with shakinss, weak, tingling, burning skin, trouble walking sometimes.Please doctor see the current condition below  hav had sjoren s for 30 years and it wasn t bad at all just dryness. now i movedfrom fl to boone nc this year and everything has gone downhill fast. can my moving here cause sjogren s to flare...",
+      "image_description": "Skin irritation, or dermatitis, may show in an image as redness, swelling, and itching of the skin. The affected area may be dry, scaly, or have small bumps or blisters. The severity of the irritation can vary, and the cause may be due to allergies, contact with irritants, or underlying medical conditions.",
+      "image_path": "skin irritation_Image_5.jpg",
+      "sys_a_rank1": "skin growth",
+      "sys_a_rank2": "skin dryness",
+      "sys_a_rank3": "skin irritation",
+      "sys_a_reliability": "Similarity: 0.587",
+      "sys_b_rank1": "skin irritation",
+      "sys_b_rank2": "skin dryness",
+      "sys_b_rank3": "skin growth",
+      "sys_b_reliability": "MSI-T:0.78 MSI-I:0.31 R:0.7 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.5871
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.575
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.5727
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.587",
+          "similarity_score": 0.587
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin irritation",
+            "score": 0.6087
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin dryness",
+            "score": 0.6021
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.5541
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.78,
+          "msi_image": 0.31,
+          "reliability_score": 0.7,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.78 MSI-I:0.31 R:0.7 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 37,
+      "ground_truth": "foot swelling",
+      "patient_query": "For the last two days things have been swollen up. Two days ago I woke up and I had pain with itchiness on the bottom of my right foot after an couple hours it went away then it was my left foot. The next day I woke up with a boil looking thing on my bottom lip after a couple hours it went down and then my right had started to swolle up and itch. What is wrong with me.Please see the image of the affected area doctor  below",
+      "image_description": "Foot swelling, or edema, is a visible increase in size of the foot due to fluid buildup. An image may show the foot appearing larger than usual, with the skin stretched taut and potentially showing indentations when pressed. The ankles and lower legs may also be swollen. This can be caused by various factors, including poor circulation, prolonged standing, and underlying medical conditions.",
+      "image_path": "foot swelling_Image_1.jpg",
+      "sys_a_rank1": "lip swelling",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "cyanosis",
+      "sys_a_reliability": "Similarity: 0.505",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "knee swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.5054
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.4837
+          },
+          {
+            "rank": 3,
+            "diagnosis": "cyanosis",
+            "score": 0.3306
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.505",
+          "similarity_score": 0.505
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.8017
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.5917
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4671
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 38,
+      "ground_truth": "eye redness",
+      "patient_query": "Background: 14 days ago I suffered from severe dry mouth.  In the past 4 days I have had swollen tongue with deep ridges along the sides and top.  It has a burning feeling and is red in color.  I do suffer from red eyes, fatigue. Please doctor see the eyes below . This is not a medicine allergies as I have been on the same meds for 2  years.  It has become quite uncomfortable.  It did bleed in one spot on top this evening when I touched it with my toothbrush.  Do you have any Ideas as to what is causing this.  I am a 56 yr. old female.",
+      "image_description": "Eye redness, or conjunctivitis, appears as a visible red or pink discoloration of the white part of the eye (conjunctiva). An image may show the blood vessels in the conjunctiva appearing more prominent. The redness can be localized or widespread and may be accompanied by other symptoms like itching, burning, or discharge.",
+      "image_path": "eye redness_Image_4.jpg",
+      "sys_a_rank1": "mouth ulcers",
+      "sys_a_rank2": "swollen tonsils",
+      "sys_a_rank3": "eye redness",
+      "sys_a_reliability": "Similarity: 0.578",
+      "sys_b_rank1": "eye inflamation",
+      "sys_b_rank2": "swollen eye",
+      "sys_b_rank3": "eye redness",
+      "sys_b_reliability": "MSI-T:0.74 MSI-I:0.31 R:0.68 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5784
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen tonsils",
+            "score": 0.4599
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.4234
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.578",
+          "similarity_score": 0.578
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "eye inflamation",
+            "score": 0.7034
+          },
+          {
+            "rank": 2,
+            "diagnosis": "swollen eye",
+            "score": 0.6953
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.6919
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.74,
+          "msi_image": 0.31,
+          "reliability_score": 0.68,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.74 MSI-I:0.31 R:0.68 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      }
+    },
+    {
+      "case_id": 39,
+      "ground_truth": "skin rash",
+      "patient_query": "I recently went to the hair salon and was wearing a low cut shirt at the back, I had my hair dyed and I think I got a rash Please doctor see the current condition below  from the cape they put around your neck it was rubbing against my back as I was moving back and forth to the wash station and pressing it against myself as I was sitting. A couple days later I noticed a bumpy rash on the same spot my shirt has an opening exposing my skin. Any help on what this could be would be helpful.. It is red, and feels hot and sore... I am worried because in this area where the salon is located has been an outbreak of measles. Not sure if it could be transmitted through the drape they at the salon.",
+      "image_description": "A skin rash is a visible change in the skin's appearance, often characterized by redness, bumps, or patches. An image may show a variety of patterns, including raised bumps, flat patches, or blisters, which can be itchy, painful, or both. The rash can be localized or widespread, and may be caused by allergies, infections, or other factors.",
+      "image_path": "skin rash_Image_21.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.554",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.5545
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.4527
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.427
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.554",
+          "similarity_score": 0.554
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.6641
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5323
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.4758
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 40,
+      "ground_truth": "knee swelling",
+      "patient_query": "Hi doctor,I am a 40 year old female. My height is 5'4\" and my weight is 64 kg. I am suffering from left knee painÂ with some swelling and stiffness for the past three years.Please doctor see the current condition below . I am taking Sazo 2000 and OXC 200 for two months, but had no relief. I have ANA 48.5 and CRP 7.9. My MRI showed no tears, but some fluid or effusion.",
+      "image_description": "Knee swelling, or effusion, is a visible increase in size around the knee joint. An image may show a rounded bulge or distention, especially on the front and sides of the knee. The skin may be taut and shiny. Swelling can be caused by injury, inflammation, or fluid buildup, and may limit movement and cause pain.",
+      "image_path": "knee swelling_Image_13.jpg",
+      "sys_a_rank1": "knee swelling",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.735",
+      "sys_b_rank1": "knee swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "foot swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.735
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.4194
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.4109
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.735",
+          "similarity_score": 0.735
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.7969
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.534
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.4871
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 41,
+      "ground_truth": "edema",
+      "patient_query": "My grandfather is 75 yeras old with ESRD. he is undergoing dialysis for the last 3 years. recently he had 3 episodes of pulmonery  with heart failure. Please doctor see the current condition  below .he has haemodialysis 4 days a week now. is there a possibility for kidney transplantation. he has been a chronia diabetes typeII patiend for over 30 years.",
+      "image_description": "Edema, or swelling, is characterized by fluid buildup in body tissues. An image may show puffy, swollen areas, often around the ankles, legs, or face. The skin may appear stretched and taut, possibly with indentations when pressed. Edema can be caused by various factors, including heart conditions, kidney issues, and pregnancy.",
+      "image_path": "edema_Image_9.jpg",
+      "sys_a_rank1": "edema",
+      "sys_a_rank2": "knee swelling",
+      "sys_a_rank3": "foot swelling",
+      "sys_a_reliability": "Similarity: 0.535",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "cyanosis",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "edema",
+            "score": 0.5349
+          },
+          {
+            "rank": 2,
+            "diagnosis": "knee swelling",
+            "score": 0.3822
+          },
+          {
+            "rank": 3,
+            "diagnosis": "foot swelling",
+            "score": 0.3708
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.535",
+          "similarity_score": 0.535
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.6425
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.6137
+          },
+          {
+            "rank": 3,
+            "diagnosis": "cyanosis",
+            "score": 0.4237
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 42,
+      "ground_truth": "swollen eye",
+      "patient_query": "Hi, my 4 yr old son has experienced fever, tiredness,runny nose and watery eyes for the past 1-2 days. Earlier today he looked to have dark circles around his eyes however the skin has now become quite red. Please see the image of  below .I have been giving him panadol and neurofen intimitantly. I am right to think he is experiencing cold or flu symptoms. He is generally a healthy, active boy with a weight of approx 18kg.",
+      "image_description": "A swollen eye is a visible increase in size around the eye area. An image may show puffiness of the eyelids, potentially accompanied by redness, discoloration, or discharge. The swelling can be caused by various factors, including allergies, infections, and injuries, and may be associated with pain, discomfort, or blurred vision.",
+      "image_path": "swollen eye_Image_12.jpg",
+      "sys_a_rank1": "swollen eye",
+      "sys_a_rank2": "eye inflamation",
+      "sys_a_rank3": "eye redness",
+      "sys_a_reliability": "Similarity: 0.441",
+      "sys_b_rank1": "swollen eye",
+      "sys_b_rank2": "itichy eyelid",
+      "sys_b_rank3": "eye redness",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.96 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.4406
+          },
+          {
+            "rank": 2,
+            "diagnosis": "eye inflamation",
+            "score": 0.4323
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.3839
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.441",
+          "similarity_score": 0.441
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen eye",
+            "score": 0.7647
+          },
+          {
+            "rank": 2,
+            "diagnosis": "itichy eyelid",
+            "score": 0.6422
+          },
+          {
+            "rank": 3,
+            "diagnosis": "eye redness",
+            "score": 0.6336
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.96,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.96 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 43,
+      "ground_truth": "swollen tonsils",
+      "patient_query": "11YR old daughter diagnosed MRSA+ 13 days ago started having high fever 5 days ago which we keep down with Advil cause also feeling unwell and severe fatigue. Noticed bad breath and very  with white spots all over them.Please doctor see the current condition below . Tonight goes to bed with fever and a bit of Advil. Later got rwally bad cold sweats cold body temp 94,9 and was shaking so kuch had to wake her was scaring me! Had to change her to dry pjs. Back to bed with again cold sweats and low body temp. Snoring. What should I do pls.",
+      "image_description": "Swollen tonsils appear enlarged and inflamed in the back of the throat. An image may show them as red, bumpy, and possibly covered in white patches. The swelling can make it difficult to swallow or breathe. Swollen tonsils are often caused by infection, such as a viral or bacterial infection.",
+      "image_path": "swollen tonsils_Image_2.jpg",
+      "sys_a_rank1": "edema",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.445",
+      "sys_b_rank1": "swollen tonsils",
+      "sys_b_rank2": "mouth ulcers",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "edema",
+            "score": 0.4446
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.2958
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.2954
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.445",
+          "similarity_score": 0.445
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "swollen tonsils",
+            "score": 0.5762
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.4058
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.3669
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 0.31,
+          "reliability_score": 0.81,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:0.31 R:0.81 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 44,
+      "ground_truth": "foot swelling",
+      "patient_query": "Hi, I am 25 years old and I recently had a bump along my lower back that seems tense sometimes. Along with episodes of swelling in my left foot Doctor You can give a look at patient some issue in my legs  below and shin and my penis and groin area also experience swelling but no pain on either. I recently stopped working out, but prior I did do exercises that consisted of heavy dead lifts. Do you know what this could be a result of.",
+      "image_description": "Foot swelling, or edema, is a visible increase in size of the foot due to fluid buildup. An image may show the foot appearing larger than usual, with the skin stretched taut and potentially showing indentations when pressed. The ankles and lower legs may also be swollen. This can be caused by various factors, including poor circulation, prolonged standing, and underlying medical conditions.",
+      "image_path": "foot swelling_Image_40.jpg",
+      "sys_a_rank1": "foot swelling",
+      "sys_a_rank2": "knee swelling",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.757",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "knee swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.7567
+          },
+          {
+            "rank": 2,
+            "diagnosis": "knee swelling",
+            "score": 0.6163
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.5259
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.757",
+          "similarity_score": 0.757
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.816
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.6507
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4942
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 45,
+      "ground_truth": "lip swelling",
+      "patient_query": "Hi I had stomach upset two days ago and I took Norflox-tz at jight time. When I woke up in the morning I noticed swelling on my upper lip from the inside of my mouth. Please see the image of the affected area doctor  below .I also suferred from headache. I stoped taking the medicine immediately. The headcahe was gown by afternoon but swelling of lips was still there. Now since yesterday I have developed some issue in my mouth and the lining of my mouth is very dry and red. Any suggestions or advice on this.",
+      "image_description": "Lip swelling, or angioedema, appears as a noticeable increase in size of the lips. An image may show the lips looking puffy and rounded, potentially affecting one or both lips. The surrounding area may also be swollen. The lips may feel tender and warm, and may be accompanied by itching or pain. Lip swelling can be caused by allergies, infections, or other medical conditions.",
+      "image_path": "lip swelling_Image_5.jpg",
+      "sys_a_rank1": "lip swelling",
+      "sys_a_rank2": "mouth ulcers",
+      "sys_a_rank3": "swollen tonsils",
+      "sys_a_reliability": "Similarity: 0.636",
+      "sys_b_rank1": "lip swelling",
+      "sys_b_rank2": "mouth ulcers",
+      "sys_b_rank3": "skin irritation",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.6356
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5889
+          },
+          {
+            "rank": 3,
+            "diagnosis": "swollen tonsils",
+            "score": 0.3442
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.636",
+          "similarity_score": 0.636
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "lip swelling",
+            "score": 0.7081
+          },
+          {
+            "rank": 2,
+            "diagnosis": "mouth ulcers",
+            "score": 0.5115
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin irritation",
+            "score": 0.2213
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 46,
+      "ground_truth": "hand lump",
+      "patient_query": "I have a condition in one hand that caused pain in my thumb, back of hand and wrist. I also have lumps of cartilage in the palm of my hand .Doctor the image for that is attached  below  and have lost some ability to stretch my hand. Now also have aching forearms. It s especially bad in the morning. Yikes, I don t want to pay for this. Bye",
+      "image_description": "A hand lump is a noticeable bump or swelling on the hand. An image may show a localized or widespread lump, appearing on the back of the hand, palm, fingers, or wrist. The lump can be soft or firm, and may be accompanied by pain, redness, or tenderness. The cause of the lump can vary widely, ranging from benign cysts to more serious conditions, requiring medical evaluation.",
+      "image_path": "hand lump_Image_19.jpg",
+      "sys_a_rank1": "hand lump",
+      "sys_a_rank2": "foot swelling",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.709",
+      "sys_b_rank1": "hand lump",
+      "sys_b_rank2": "foot swelling",
+      "sys_b_rank3": "edema",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.7091
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.4888
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.3504
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.709",
+          "similarity_score": 0.709
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "hand lump",
+            "score": 0.6964
+          },
+          {
+            "rank": 2,
+            "diagnosis": "foot swelling",
+            "score": 0.4462
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.4438
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 47,
+      "ground_truth": "skin irritation",
+      "patient_query": "gud eveng dr...m 4rm m'bai,(resident), bt my aunt resides in assam,silchar,her son is suffering 4rm a skin diesease where it is in d form of rashes n spreading all over his body,he is having this rashes from 5th aug,bt the dr has assisted him to take these medicines(1-lotion-dermocalm 3times a day, 2- desonide 2 times a day,) dose-betnesole 5days morng only. and cyrup-polycrol,3 times a day,but there is no progress,please suggest with gud medicine remedies plzzz... i hope u'll fulfil r needy.. gud eveng dr...m 4rm m bai,(resident), bt my aunt resides in assam,silchar,her son is suffering 4rm a skin diesease where it is in d form of rashes n spreading all over his body,he is having this rashes from 5th aug,bt the dr has assisted him to take these medicines(1-lotion-dermocalm 3times a day, 2- desonide 2 times a day,) dose-betnesole 5days morng only. and cyrup-polycrol,3 times a day,but there is no progress,please suggest with gud medicine remedies plzzz... i hope u ll fulfil r needy..The image for that is attached below .",
+      "image_description": "Skin irritation, or dermatitis, may show in an image as redness, swelling, and itching of the skin. The affected area may be dry, scaly, or have small bumps or blisters. The severity of the irritation can vary, and the cause may be due to allergies, contact with irritants, or underlying medical conditions.",
+      "image_path": "skin irritation_Image_5.jpg",
+      "sys_a_rank1": "skin rash",
+      "sys_a_rank2": "skin irritation",
+      "sys_a_rank3": "skin dryness",
+      "sys_a_reliability": "Similarity: 0.714",
+      "sys_b_rank1": "skin rash",
+      "sys_b_rank2": "skin irritation",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:0.92 MSI-I:0.78 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7138
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.5204
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.4818
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.714",
+          "similarity_score": 0.714
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin rash",
+            "score": 0.7294
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin irritation",
+            "score": 0.599
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.5839
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.92,
+          "msi_image": 0.78,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:0.92 MSI-I:0.78 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    },
+    {
+      "case_id": 48,
+      "ground_truth": "foot swelling",
+      "patient_query": "I have two moveBle lumps one on each side of my lower back they are painful to the touch! The one on my right lower back has grown in size and is causing dibilitating pain radiating into my pelvis and down my leg! I hVe had low back pain for years along with these lumps but it s gotten to the point where I can barely move or walk! My hands and feet have also been going numb.Doctor You can give a look at patient some issue in my legs  below  Please help!",
+      "image_description": "Foot swelling, or edema, is a visible increase in size of the foot due to fluid buildup. An image may show the foot appearing larger than usual, with the skin stretched taut and potentially showing indentations when pressed. The ankles and lower legs may also be swollen. This can be caused by various factors, including poor circulation, prolonged standing, and underlying medical conditions.",
+      "image_path": "foot swelling_Image_19.jpg",
+      "sys_a_rank1": "foot swelling",
+      "sys_a_rank2": "knee swelling",
+      "sys_a_rank3": "edema",
+      "sys_a_reliability": "Similarity: 0.595",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "knee swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.595
+          },
+          {
+            "rank": 2,
+            "diagnosis": "knee swelling",
+            "score": 0.5461
+          },
+          {
+            "rank": 3,
+            "diagnosis": "edema",
+            "score": 0.5296
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.595",
+          "similarity_score": 0.595
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.8171
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.7218
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.5682
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 1,
+          "hit@3": 1,
+          "mrr": 1.0
+        }
+      }
+    },
+    {
+      "case_id": 49,
+      "ground_truth": "skin dryness",
+      "patient_query": "my husband's left leg is extremely swollen from the knee down and it has a rash similar to hives,  The rash is raised and now there are blisters on the back of his leg.  He has had a hip replacement and fell on his leg 3 days ago.  The swelling is so bad it looks like the skin may start splitting.  the skin is beginning to look scalely.  Any idea.The image for that is attached below .",
+      "image_description": "Dry skin, or xerosis, can be seen in an image as rough, flaky, or scaly patches of skin. The skin may appear dull and lack its usual luster. In severe cases, the skin may crack and bleed. Dry skin can affect any part of the body, and is often caused by environmental factors, such as cold weather or low humidity, and may be a sign of underlying medical conditions.",
+      "image_path": "skin dryness_Image_2.jpg",
+      "sys_a_rank1": "knee swelling",
+      "sys_a_rank2": "skin rash",
+      "sys_a_rank3": "skin growth",
+      "sys_a_reliability": "Similarity: 0.423",
+      "sys_b_rank1": "skin growth",
+      "sys_b_rank2": "skin rash",
+      "sys_b_rank3": "skin dryness",
+      "sys_b_reliability": "MSI-T:0.31 MSI-I:0.31 R:0.46 [REVIEW]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "knee swelling",
+            "score": 0.4231
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin rash",
+            "score": 0.3553
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin growth",
+            "score": 0.2933
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.423",
+          "similarity_score": 0.423
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 0,
+          "mrr": 0.0
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "skin growth",
+            "score": 0.4823
+          },
+          {
+            "rank": 2,
+            "diagnosis": "skin rash",
+            "score": 0.4803
+          },
+          {
+            "rank": 3,
+            "diagnosis": "skin dryness",
+            "score": 0.4545
+          }
+        ],
+        "reliability": {
+          "msi_text": 0.31,
+          "msi_image": 0.31,
+          "reliability_score": 0.46,
+          "verdict": "REVIEW",
+          "raw": "MSI-T:0.31 MSI-I:0.31 R:0.46 [REVIEW]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.3333
+        }
+      }
+    },
+    {
+      "case_id": 50,
+      "ground_truth": "edema",
+      "patient_query": "Hello: I ve had a splenectomy 3 years ago. Part of that surgery also removed the tail of my pancreas . Lately, I ve been having problems with Edema .Please doctor see the current condition  below . My ankles are very swollen. I ve gone to my accupuncturist and says that since I don t have a spleen , my kidneys are overtaxed. Is there anything that can be done naturally or will I need to see a regular MD.",
+      "image_description": "Edema, or swelling, is characterized by fluid buildup in body tissues. An image may show puffy, swollen areas, often around the ankles, legs, or face. The skin may appear stretched and taut, possibly with indentations when pressed. Edema can be caused by various factors, including heart conditions, kidney issues, and pregnancy.",
+      "image_path": "edema_Image_9.jpg",
+      "sys_a_rank1": "foot swelling",
+      "sys_a_rank2": "edema",
+      "sys_a_rank3": "knee swelling",
+      "sys_a_reliability": "Similarity: 0.663",
+      "sys_b_rank1": "foot swelling",
+      "sys_b_rank2": "edema",
+      "sys_b_rank3": "knee swelling",
+      "sys_b_reliability": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]",
+      "baseline": {
+        "system": "System A (Baseline — text cosine similarity)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.6627
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.5067
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4484
+          }
+        ],
+        "reliability": {
+          "raw": "Similarity: 0.663",
+          "similarity_score": 0.663
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      },
+      "countrag": {
+        "system": "System B (CountRAG — multimodal + counterfactual)",
+        "top_k_results": [
+          {
+            "rank": 1,
+            "diagnosis": "foot swelling",
+            "score": 0.7847
+          },
+          {
+            "rank": 2,
+            "diagnosis": "edema",
+            "score": 0.6357
+          },
+          {
+            "rank": 3,
+            "diagnosis": "knee swelling",
+            "score": 0.4027
+          }
+        ],
+        "reliability": {
+          "msi_text": 1.0,
+          "msi_image": 1.0,
+          "reliability_score": 1.0,
+          "verdict": "PASS",
+          "raw": "MSI-T:1.0 MSI-I:1.0 R:1.0 [PASS]"
+        },
+        "metrics": {
+          "hit@1": 0,
+          "hit@3": 1,
+          "mrr": 0.5
+        }
+      }
+    }
+  ]
+}
