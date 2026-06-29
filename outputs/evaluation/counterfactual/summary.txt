@@ -3,32 +3,33 @@ COUNTERFACTUAL STABILITY EVALUATION - RESEARCH REPORT
 
 Evaluation queries tested: 50
 Source: data/processed/splits/eval.csv
-KB: outputs/kb/kb_final_concept
-Timestamp: 2026-01-20T17:34:30.655294
+KB: outputs/kb/kb_final_v2
+Timestamp: 2026-06-23T23:51:30.983084
 
 AVERAGE JS DIVERGENCES:
-  no_text: 0.1067
-  no_image: 0.1289
-  noisy: 0.0097
+  no_text: 0.0817
+  no_image: 0.2803
+  noisy: 0.0009
 
 ROBUSTNESS DISTRIBUTION:
-  high: 34
-  medium: 16
+  low: 25
+  high: 18
+  medium: 7
 
 
 STATISTICAL SIGNIFICANCE:
 
 Text Modality Effect:
-  p-value: 0.0000
-  Cohen's d: -2.5260 (large)
+  p-value: 0.0002
+  Cohen's d: -0.8071 (large)
   Significant: True
 
 Image Modality Effect:
   p-value: 0.0000
-  Cohen's d: -2.6030 (large)
+  Cohen's d: -1.3463 (large)
   Significant: True
 
 
 DIAGNOSTIC STABILITY:
-Most stable: itichy eyelid
-Least stable: knee swelling
+Most stable: hand lump
+Least stable: skin growth

@@ -1,32 +1,29 @@
-"""
-Entry point for retrieval evaluation - FIXED
-"""
+import argparse
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
+from configs.eval_contract import load_eval_contract
 from scripts.evaluation.retrieval.evaluator import RetrievalEvaluator
-import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Retrieval evaluation using eval queries"
-    )
-    parser.add_argument("--kb-dir", default="outputs/kb/kb_final_v2",
-                       help="Path to knowledge base")
-    parser.add_argument("--output-dir", default="outputs/evaluation/retrieval",
-                       help="Output directory")
-    parser.add_argument("--device", default="cpu",
-                       help="Device for computation")
+    parser = argparse.ArgumentParser(description="Retrieval evaluation using locked contract")
+    parser.add_argument("--contract", default="configs/evaluation_contract.yaml")
+    parser.add_argument("--output-dir", default=None)
+    parser.add_argument("--device", default=None)
     args = parser.parse_args()
-    
+
+    contract = load_eval_contract(args.contract)
+    output_dir = args.output_dir or contract["paths"]["retrieval_eval_dir"]
+    device = args.device or contract["environment"]["device"]
+
     evaluator = RetrievalEvaluator(
-        kb_dir=args.kb_dir,
-        output_dir=args.output_dir,
-        device=args.device
+        contract=contract,
+        output_dir=output_dir,
+        device=device,
     )
-    
     evaluator.run_all_evaluations()
     evaluator.save_results()
 

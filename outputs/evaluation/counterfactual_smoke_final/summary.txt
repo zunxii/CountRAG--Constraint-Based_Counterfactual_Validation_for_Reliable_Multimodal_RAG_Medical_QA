@@ -1,0 +1,53 @@
+================================================================================
+COUNTERFACTUAL / CONSTRAINT EVALUATION SUMMARY
+================================================================================
+
+Timestamp        : 2026-06-28T13:57:01.324006
+Eval samples     : 20
+KB mode          : concept
+KB directory     : outputs/kb/kb_final_concept
+Contract         : configs/evaluation_contract.yaml
+
+ROBUSTNESS
+--------------------------------------------------------------------------------
+Mean JS divergence (no_text) : 0.1089
+Mean JS divergence (no_image): 0.1051
+Mean JS divergence (noisy)   : 0.0187
+Robustness distribution      : {'high': 12, 'low': 6, 'medium': 2}
+
+MODALITY EFFECTS
+--------------------------------------------------------------------------------
+Text contribution mean  : 0.1089
+Image contribution mean : 0.1051
+Interaction strength    : 0.1409
+Dominant modalities     : {'image': 11, 'text': 9}
+
+PERTURBATION ANALYSIS
+--------------------------------------------------------------------------------
+Robustness threshold    : 0.1
+Scale analysis          : {'0.01': {'mean_divergence': 0.000335, 'std_divergence': 0.0004650537603331469, 'median_divergence': 0.0001, 'max_divergence': 0.0016, 'stable_ratio': 1.0}, '0.05': {'mean_divergence': 0.01872, 'std_divergence': 0.015744065548644035, 'median_divergence': 0.01375, 'max_divergence': 0.0533, 'stable_ratio': 1.0}, '0.1': {'mean_divergence': 0.096275, 'std_divergence': 0.06756111215040794, 'median_divergence': 0.07465, 'max_divergence': 0.2756, 'stable_ratio': 0.8}}
+
+STATISTICAL TESTS
+--------------------------------------------------------------------------------
+text_modality_test: p=0.0113, d=0.6272
+image_modality_test: p=0.005376, d=0.7024
+noise_robustness_test: p=5.294e-05, d=1.1589
+Comparative tests: {'text_vs_image_ttest': {'t_statistic': 0.06702548589697682, 'p_value': 0.9472617023586045, 'more_important': 'text'}, 'mann_whitney_u': {'u_statistic': 194.0, 'p_value': 0.8817307917391243}, 'paired_mean_difference': 0.0037149999999999987}
+
+CONSTRAINTS
+--------------------------------------------------------------------------------
+Overall violation rate : 0.3000
+evidence_concentration: mean=0.8072, violation_rate=0.0000
+modality_consistency: mean=0.6483, violation_rate=0.0000
+decision_boundary_proximity: mean=0.9359, violation_rate=0.0500
+evidence_diversity: mean=0.8481, violation_rate=0.0500
+ood_validity: mean=0.5555, violation_rate=0.3000
+Reliability correlations: {'aggregate_vs_mean_js': {'rho': -0.4421052631578947, 'p_value': 0.05096470340964167}, 'aggregate_vs_overall_violation': {'rho': -0.09460945407607455, 'p_value': 0.6915483228265678}, 'aggregate_vs_robustness_level': {'rho': 0.26428063396864715, 'p_value': 0.260181508665409}}
+
+DIAGNOSTIC PROFILES
+--------------------------------------------------------------------------------
+Most stable diagnosis : neck swelling
+Least stable diagnosis: skin growth
+Stability variance    : 0.0586
+
+================================================================================

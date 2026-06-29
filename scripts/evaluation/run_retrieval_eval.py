@@ -58,7 +58,7 @@ from core.retrieval.retriever import KBRetriever
 # =========================================================
 # CONFIGURATION
 # =========================================================
-KB_DIR = "outputs/kb/kb_final"            # path to built KB
+KB_DIR = "outputs/kb/kb_final_v2"            # path to built KB
 IMAGE_ROOT = ""               # images already have relative paths
 DEVICE = "cpu"
 TOP_K = 10

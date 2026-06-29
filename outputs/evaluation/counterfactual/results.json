@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-01-20T17:34:30.655294",
+  "timestamp": "2026-06-23T23:51:30.983084",
   "num_samples": 50,
   "eval_queries_csv": "data/processed/splits/eval.csv",
-  "kb_dir": "outputs/kb/kb_final_concept",
-  "kb_mode": "concept",
+  "kb_dir": "outputs/kb/kb_final_v2",
+  "kb_mode": "flat",
   "stability_tests": [
     {
       "query_id": 114,
@@ -11,26 +11,18 @@
       "image_path": "eye redness_Image_111.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0,
-          "noisy": 0.0
+          "no_text": 0.342,
+          "no_image": 0.0067,
+          "noisy": 0.0067
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "swollen eye": 0.1,
-          "itichy eyelid": 0.1,
-          "skin growth": 0.1,
-          "skin rash": 0.1,
-          "dry scalp": 0.1,
-          "skin irritation": 0.1,
-          "skin dryness": 0.1,
-          "lip swelling": 0.1
+          "eye inflamation": 0.3,
+          "swollen eye": 0.7
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -42,26 +34,17 @@
       "image_path": "neck swelling_Image_24.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "neck swelling": 0.1,
-          "lip swelling": 0.1,
-          "cyanosis": 0.1,
-          "swollen eye": 0.1,
-          "swollen tonsils": 0.1,
-          "edema": 0.1,
-          "hand lump": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "knee swelling": 0.1
+          "neck swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -73,26 +56,18 @@
       "image_path": "skin dryness_Image_2.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.0693,
+          "no_text": 0.1799,
+          "no_image": 0.0,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin dryness": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "edema": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 0.8,
+          "skin dryness": 0.2
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -104,26 +79,18 @@
       "image_path": "edema_Image_5.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.1386,
+          "no_text": 0.342,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "edema": 0.1,
-          "foot swelling": 0.1,
-          "knee swelling": 0.1,
-          "cyanosis": 0.1,
-          "skin dryness": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "hand lump": 0.1,
-          "skin growth": 0.1,
-          "lip swelling": 0.1
+          "foot swelling": 0.3,
+          "edema": 0.7
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -135,26 +102,17 @@
       "image_path": "skin irritation_Image_31.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "eye inflamation": 0.1,
-          "mouth ulcers": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -166,26 +124,17 @@
       "image_path": "skin irritation_Image_95.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "skin dryness": 0.1,
-          "skin growth": 0.1,
-          "hand lump": 0.1,
-          "edema": 0.1,
-          "cyanosis": 0.1,
-          "dry scalp": 0.1,
-          "knee swelling": 0.1,
-          "neck swelling": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -197,26 +146,17 @@
       "image_path": "skin rash_Image_7.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.4228,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "eye inflamation": 0.1,
-          "dry scalp": 0.1,
-          "cyanosis": 0.1,
-          "eye redness": 0.1,
-          "itichy eyelid": 0.1,
-          "swollen eye": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -228,26 +168,18 @@
       "image_path": "knee swelling_Image_17.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.2773,
-          "noisy": 0.0693
+          "no_text": 0.2226,
+          "no_image": 0.6931,
+          "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "knee swelling": 0.1,
-          "hand lump": 0.1,
-          "neck swelling": 0.1,
-          "edema": 0.1,
-          "swollen eye": 0.1,
-          "lip swelling": 0.1,
           "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1
+          "knee swelling": 0.9
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -259,26 +191,18 @@
       "image_path": "itichy eyelid_Image_36.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0693,
+          "no_text": 0.0756,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "swollen eye": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1,
-          "eye redness": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "lip swelling": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "cyanosis": 0.1
+          "swollen eye": 0.9,
+          "eye inflamation": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -290,26 +214,19 @@
       "image_path": "skin dryness_Image_22.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0,
-          "noisy": 0.0
+          "no_text": 0.6238,
+          "no_image": 0.0749,
+          "noisy": 0.0361
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
           "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin rash": 0.1,
-          "dry scalp": 0.1,
-          "itichy eyelid": 0.1,
-          "skin growth": 0.1,
-          "eye inflamation": 0.1,
-          "swollen eye": 0.1,
-          "eye redness": 0.1,
-          "lip swelling": 0.1
+          "dry scalp": 0.8,
+          "skin rash": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 3
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -321,26 +238,17 @@
       "image_path": "mouth ulcers_Image_58.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2079,
-          "noisy": 0.0693
+          "no_text": 0.0,
+          "no_image": 0.0749,
+          "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "lip swelling": 0.1,
-          "swollen tonsils": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "eye inflamation": 0.1,
-          "knee swelling": 0.1,
-          "skin rash": 0.1,
-          "neck swelling": 0.1,
-          "foot swelling": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -352,26 +260,17 @@
       "image_path": "mouth ulcers_Image_58.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.5256,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "lip swelling": 0.1,
-          "swollen tonsils": 0.1,
-          "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "swollen eye": 0.1,
-          "itichy eyelid": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -383,26 +282,17 @@
       "image_path": "skin rash_Image_7.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1,
-          "cyanosis": 0.1,
-          "eye redness": 0.1,
-          "neck swelling": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -414,26 +304,17 @@
       "image_path": "mouth ulcers_Image_60.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.2158,
           "noisy": 0.0
         },
         "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "lip swelling": 0.1,
-          "swollen tonsils": 0.1,
-          "neck swelling": 0.1,
-          "skin rash": 0.1,
-          "eye inflamation": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "swollen eye": 0.1,
-          "skin growth": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -445,26 +326,18 @@
       "image_path": "swollen eye_Image_9.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.2773,
+          "no_text": 0.1054,
+          "no_image": 0.2433,
           "noisy": 0.0
         },
         "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "swollen eye": 0.1,
-          "itichy eyelid": 0.1,
-          "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "lip swelling": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "skin dryness": 0.1,
-          "dry scalp": 0.1
+          "swollen eye": 0.9,
+          "eye inflamation": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -476,26 +349,18 @@
       "image_path": "skin growth_Image_4.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
+          "no_text": 0.2754,
+          "no_image": 0.5306,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
           "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin rash": 0.1,
-          "eye inflamation": 0.1,
-          "dry scalp": 0.1,
-          "itichy eyelid": 0.1,
-          "eye redness": 0.1,
-          "swollen eye": 0.1,
-          "neck swelling": 0.1
+          "skin rash": 0.9
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -507,26 +372,17 @@
       "image_path": "lip swelling_Image_72.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.4228,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "lip swelling": 0.1,
-          "mouth ulcers": 0.1,
-          "cyanosis": 0.1,
-          "neck swelling": 0.1,
-          "swollen eye": 0.1,
-          "skin irritation": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1,
-          "skin growth": 0.1,
-          "swollen tonsils": 0.1
+          "lip swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -538,26 +394,17 @@
       "image_path": "mouth ulcers_Image_11.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "lip swelling": 0.1,
-          "swollen tonsils": 0.1,
-          "neck swelling": 0.1,
-          "skin irritation": 0.1,
-          "skin rash": 0.1,
-          "eye inflamation": 0.1,
-          "skin growth": 0.1,
-          "swollen eye": 0.1,
-          "eye redness": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -569,26 +416,17 @@
       "image_path": "lip swelling_Image_5.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "lip swelling": 0.1,
-          "mouth ulcers": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "dry scalp": 0.1,
-          "skin rash": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1
+          "lip swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -600,26 +438,17 @@
       "image_path": "skin rash_Image_25.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.2079,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.1639,
           "noisy": 0.0
         },
         "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "eye inflamation": 0.1,
-          "edema": 0.1,
-          "eye redness": 0.1,
-          "cyanosis": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -631,26 +460,17 @@
       "image_path": "skin irritation_Image_31.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "eye inflamation": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "eye redness": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -662,26 +482,17 @@
       "image_path": "neck swelling_Image_43.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
-          "noisy": 0.0693
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "neck swelling": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "skin dryness": 0.1,
-          "skin rash": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "dry scalp": 0.1,
-          "lip swelling": 0.1,
-          "hand lump": 0.1
+          "neck swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -693,26 +504,17 @@
       "image_path": "skin dryness_Image_2.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0,
-          "no_image": 0.1386,
+          "no_text": 0.342,
+          "no_image": 0.0,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin dryness": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "hand lump": 0.1,
-          "edema": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -724,26 +526,17 @@
       "image_path": "swollen tonsils_Image_1.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "swollen tonsils": 0.1,
-          "mouth ulcers": 0.1,
-          "swollen eye": 0.1,
-          "eye inflamation": 0.1,
-          "neck swelling": 0.1,
-          "eye redness": 0.1,
-          "lip swelling": 0.1,
-          "itichy eyelid": 0.1,
-          "skin rash": 0.1,
-          "cyanosis": 0.1
+          "swollen tonsils": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -755,26 +548,19 @@
       "image_path": "itichy eyelid_Image_7.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0693,
+          "no_text": 0.2744,
+          "no_image": 0.4541,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1,
-          "swollen eye": 0.1,
-          "eye redness": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "lip swelling": 0.1,
-          "skin dryness": 0.1,
-          "skin rash": 0.1,
-          "dry scalp": 0.1
+          "swollen eye": 0.3,
+          "eye inflamation": 0.4,
+          "itichy eyelid": 0.3
         },
-        "num_clusters": 10
+        "num_clusters": 3
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -786,26 +572,17 @@
       "image_path": "hand lump_Image_39.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.2079,
-          "no_image": 0.1386,
+          "no_text": 0.036,
+          "no_image": 0.0,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "hand lump": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "edema": 0.1,
-          "skin irritation": 0.1,
-          "swollen eye": 0.1,
-          "neck swelling": 0.1,
-          "cyanosis": 0.1,
-          "foot swelling": 0.1,
-          "knee swelling": 0.1
+          "hand lump": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -817,26 +594,17 @@
       "image_path": "swollen eye_Image_65.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.036,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "swollen eye": 0.1,
-          "itichy eyelid": 0.1,
-          "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "lip swelling": 0.1,
-          "skin rash": 0.1,
-          "neck swelling": 0.1
+          "swollen eye": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -848,26 +616,17 @@
       "image_path": "mouth ulcers_Image_60.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "lip swelling": 0.1,
-          "swollen tonsils": 0.1,
-          "neck swelling": 0.1,
-          "cyanosis": 0.1,
-          "eye inflamation": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "hand lump": 0.1,
-          "swollen eye": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -879,26 +638,17 @@
       "image_path": "knee swelling_Image_39.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.2079,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "knee swelling": 0.1,
-          "edema": 0.1,
-          "foot swelling": 0.1,
-          "skin growth": 0.1,
-          "swollen eye": 0.1,
-          "neck swelling": 0.1,
-          "skin dryness": 0.1,
-          "hand lump": 0.1,
-          "skin rash": 0.1,
-          "lip swelling": 0.1
+          "knee swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -910,26 +660,17 @@
       "image_path": "skin rash_Image_7.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "cyanosis": 0.1,
-          "itichy eyelid": 0.1,
-          "hand lump": 0.1,
-          "edema": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -941,26 +682,17 @@
       "image_path": "neck swelling_Image_10.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "neck swelling": 0.1,
-          "edema": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "swollen eye": 0.1,
-          "knee swelling": 0.1,
-          "dry scalp": 0.1,
-          "swollen tonsils": 0.1
+          "neck swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -972,7 +704,7 @@
       "image_path": "skin rash_Image_7.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
+          "no_text": 0.0,
           "no_image": 0.0,
           "noisy": 0.0
         },
@@ -980,18 +712,9 @@
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "eye inflamation": 0.1,
-          "cyanosis": 0.1,
-          "eye redness": 0.1,
-          "hand lump": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1003,26 +726,18 @@
       "image_path": "foot swelling_Image_40.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
-          "noisy": 0.0693
+          "no_text": 0.2369,
+          "no_image": 0.205,
+          "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "skin rash": 0.1,
-          "hand lump": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "eye inflamation": 0.1,
-          "knee swelling": 0.1
+          "foot swelling": 0.9,
+          "skin rash": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1034,26 +749,17 @@
       "image_path": "hand lump_Image_39.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.036,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "hand lump": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "edema": 0.1,
-          "skin irritation": 0.1,
-          "cyanosis": 0.1,
-          "skin rash": 0.1,
-          "foot swelling": 0.1,
-          "swollen eye": 0.1,
-          "neck swelling": 0.1
+          "hand lump": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1065,26 +771,17 @@
       "image_path": "skin dryness_Image_2.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
+          "no_text": 0.342,
+          "no_image": 0.0,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "lip swelling": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1096,26 +793,17 @@
       "image_path": "skin irritation_Image_5.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.2079,
-          "no_image": 0.0693,
-          "noisy": 0.0693
+          "no_text": 0.0,
+          "no_image": 0.6931,
+          "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin irritation": 0.1,
-          "lip swelling": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "neck swelling": 0.1,
-          "skin rash": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "foot swelling": 0.1,
-          "knee swelling": 0.1
+          "skin irritation": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1127,26 +815,17 @@
       "image_path": "foot swelling_Image_1.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "hand lump": 0.1,
-          "lip swelling": 0.1,
-          "skin growth": 0.1,
-          "skin dryness": 0.1,
-          "neck swelling": 0.1,
-          "knee swelling": 0.1,
-          "swollen eye": 0.1
+          "foot swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1158,26 +837,18 @@
       "image_path": "eye redness_Image_4.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0929,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
           "eye inflamation": 0.1,
-          "eye redness": 0.1,
-          "swollen eye": 0.1,
-          "itichy eyelid": 0.1,
-          "lip swelling": 0.1,
-          "mouth ulcers": 0.1,
-          "swollen tonsils": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "cyanosis": 0.1
+          "swollen eye": 0.9
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1189,26 +860,17 @@
       "image_path": "skin rash_Image_21.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
-          "noisy": 0.0693
+          "no_text": 0.0,
+          "no_image": 0.0,
+          "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "dry scalp": 0.1,
-          "edema": 0.1,
-          "cyanosis": 0.1,
-          "itichy eyelid": 0.1,
-          "neck swelling": 0.1,
-          "eye inflamation": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1220,26 +882,18 @@
       "image_path": "knee swelling_Image_13.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2079,
+          "no_text": 0.0,
+          "no_image": 0.036,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "knee swelling": 0.1,
-          "edema": 0.1,
-          "skin rash": 0.1,
-          "foot swelling": 0.1,
-          "swollen eye": 0.1,
-          "skin dryness": 0.1,
-          "eye inflamation": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "hand lump": 0.1
+          "knee swelling": 0.9,
+          "skin rash": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1251,26 +905,17 @@
       "image_path": "edema_Image_9.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.2773,
-          "noisy": 0.0693
+          "no_text": 0.0,
+          "no_image": 0.6931,
+          "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "edema": 0.1,
-          "knee swelling": 0.1,
-          "neck swelling": 0.1,
-          "swollen eye": 0.1,
-          "cyanosis": 0.1,
-          "skin dryness": 0.1,
-          "lip swelling": 0.1,
-          "skin rash": 0.1,
-          "hand lump": 0.1
+          "foot swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1282,26 +927,18 @@
       "image_path": "swollen eye_Image_12.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.2773,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.2864,
           "noisy": 0.0
         },
         "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "eye inflamation": 0.1,
-          "swollen eye": 0.1,
-          "eye redness": 0.1,
-          "itichy eyelid": 0.1,
-          "skin growth": 0.1,
-          "lip swelling": 0.1,
-          "skin rash": 0.1,
-          "dry scalp": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1
+          "swollen eye": 0.9,
+          "eye inflamation": 0.1
         },
-        "num_clusters": 10
+        "num_clusters": 2
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1313,26 +950,17 @@
       "image_path": "swollen tonsils_Image_2.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "mouth ulcers": 0.1,
-          "swollen tonsils": 0.1,
-          "lip swelling": 0.1,
-          "neck swelling": 0.1,
-          "cyanosis": 0.1,
-          "swollen eye": 0.1,
-          "skin irritation": 0.1,
-          "foot swelling": 0.1,
-          "eye inflamation": 0.1,
-          "edema": 0.1
+          "mouth ulcers": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1344,26 +972,17 @@
       "image_path": "foot swelling_Image_40.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.0693,
+          "no_text": 0.2158,
+          "no_image": 0.036,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "medium"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "edema": 0.1,
-          "skin dryness": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "skin rash": 0.1,
-          "skin growth": 0.1,
-          "skin irritation": 0.1,
-          "knee swelling": 0.1,
-          "lip swelling": 0.1
+          "foot swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1375,26 +994,17 @@
       "image_path": "lip swelling_Image_5.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.2773,
+          "no_text": 0.0,
+          "no_image": 0.4228,
           "noisy": 0.0
         },
-        "robustness_level": "medium"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "lip swelling": 0.1,
-          "mouth ulcers": 0.1,
-          "skin irritation": 0.1,
-          "skin rash": 0.1,
-          "cyanosis": 0.1,
-          "skin growth": 0.1,
-          "eye inflamation": 0.1,
-          "skin dryness": 0.1,
-          "eye redness": 0.1,
-          "swollen eye": 0.1
+          "lip swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1407,25 +1017,16 @@
       "stability": {
         "js_divergence": {
           "no_text": 0.0,
-          "no_image": 0.0693,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "hand lump": 0.1,
-          "cyanosis": 0.1,
-          "edema": 0.1,
-          "skin dryness": 0.1,
-          "foot swelling": 0.1,
-          "skin growth": 0.1,
-          "skin rash": 0.1,
-          "skin irritation": 0.1,
-          "neck swelling": 0.1,
-          "swollen eye": 0.1
+          "hand lump": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1437,26 +1038,17 @@
       "image_path": "skin irritation_Image_5.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.6931,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "eye inflamation": 0.1,
-          "itichy eyelid": 0.1,
-          "swollen eye": 0.1,
-          "lip swelling": 0.1,
-          "neck swelling": 0.1,
-          "hand lump": 0.1
+          "skin irritation": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1468,26 +1060,17 @@
       "image_path": "foot swelling_Image_19.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.0693,
+          "no_text": 0.0,
+          "no_image": 0.0,
           "noisy": 0.0
         },
         "robustness_level": "high"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "edema": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "knee swelling": 0.1,
-          "neck swelling": 0.1,
-          "skin growth": 0.1,
-          "lip swelling": 0.1,
-          "skin dryness": 0.1,
-          "skin rash": 0.1
+          "foot swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1499,26 +1082,17 @@
       "image_path": "skin dryness_Image_2.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.1386,
-          "no_image": 0.1386,
+          "no_text": 0.342,
+          "no_image": 0.4228,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "skin rash": 0.1,
-          "skin dryness": 0.1,
-          "skin irritation": 0.1,
-          "skin growth": 0.1,
-          "foot swelling": 0.1,
-          "edema": 0.1,
-          "knee swelling": 0.1,
-          "cyanosis": 0.1,
-          "hand lump": 0.1,
-          "dry scalp": 0.1
+          "skin rash": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1530,26 +1104,17 @@
       "image_path": "edema_Image_9.jpg",
       "stability": {
         "js_divergence": {
-          "no_text": 0.0693,
-          "no_image": 0.1386,
+          "no_text": 0.0,
+          "no_image": 0.4228,
           "noisy": 0.0
         },
-        "robustness_level": "high"
+        "robustness_level": "low"
       },
       "baseline_distribution": {
         "distribution": {
-          "foot swelling": 0.1,
-          "edema": 0.1,
-          "skin dryness": 0.1,
-          "skin growth": 0.1,
-          "cyanosis": 0.1,
-          "knee swelling": 0.1,
-          "neck swelling": 0.1,
-          "hand lump": 0.1,
-          "skin rash": 0.1,
-          "swollen eye": 0.1
+          "foot swelling": 1.0
         },
-        "num_clusters": 10
+        "num_clusters": 1
       },
       "constraints": {
         "error": "'diagnosis_label'"
@@ -1559,68 +1124,69 @@
   "analysis": {
     "basic_metrics": {
       "avg_divergences": {
-        "no_text": 0.10672400000000001,
-        "no_image": 0.12890600000000002,
-        "noisy": 0.009701999999999999
+        "no_text": 0.08169399999999999,
+        "no_image": 0.28027,
+        "noisy": 0.000856
       },
       "robustness_distribution": {
-        "high": 34,
-        "medium": 16
+        "low": 25,
+        "high": 18,
+        "medium": 7
       },
       "per_diagnosis_stability": {
         "eye redness": {
           "count": 2,
-          "high": 2,
+          "high": 0,
           "medium": 0,
-          "low": 0
+          "low": 2
         },
         "neck swelling": {
           "count": 3,
-          "high": 3,
+          "high": 2,
           "medium": 0,
-          "low": 0
+          "low": 1
         },
         "skin dryness": {
           "count": 5,
-          "high": 5,
-          "medium": 0,
-          "low": 0
+          "high": 0,
+          "medium": 1,
+          "low": 4
         },
         "edema": {
           "count": 3,
-          "high": 2,
-          "medium": 1,
-          "low": 0
+          "high": 0,
+          "medium": 0,
+          "low": 3
         },
         "skin irritation": {
           "count": 5,
           "high": 2,
-          "medium": 3,
-          "low": 0
+          "medium": 0,
+          "low": 3
         },
         "skin rash": {
           "count": 6,
           "high": 4,
-          "medium": 2,
-          "low": 0
+          "medium": 1,
+          "low": 1
         },
         "knee swelling": {
           "count": 3,
-          "high": 0,
-          "medium": 3,
-          "low": 0
+          "high": 1,
+          "medium": 0,
+          "low": 2
         },
         "itichy eyelid": {
           "count": 2,
-          "high": 2,
+          "high": 0,
           "medium": 0,
-          "low": 0
+          "low": 2
         },
         "mouth ulcers": {
           "count": 5,
           "high": 3,
-          "medium": 2,
-          "low": 0
+          "medium": 1,
+          "low": 1
         },
         "swollen eye": {
           "count": 3,
@@ -1630,50 +1196,50 @@
         },
         "skin growth": {
           "count": 1,
-          "high": 1,
+          "high": 0,
           "medium": 0,
-          "low": 0
+          "low": 1
         },
         "lip swelling": {
           "count": 3,
-          "high": 2,
-          "medium": 1,
-          "low": 0
+          "high": 1,
+          "medium": 0,
+          "low": 2
         },
         "swollen tonsils": {
           "count": 2,
-          "high": 2,
+          "high": 0,
           "medium": 0,
-          "low": 0
+          "low": 2
         },
         "hand lump": {
           "count": 3,
-          "high": 2,
-          "medium": 1,
+          "high": 3,
+          "medium": 0,
           "low": 0
         },
         "foot swelling": {
           "count": 4,
-          "high": 3,
-          "medium": 1,
-          "low": 0
+          "high": 1,
+          "medium": 2,
+          "low": 1
         }
       }
     },
     "perturbation_analysis": {
       "scale_analysis": {
         "default": {
-          "mean_divergence": 0.009701999999999999,
-          "std_divergence": 0.024046201280035897,
+          "mean_divergence": 0.000856,
+          "std_divergence": 0.005121451356793305,
           "median_divergence": 0.0,
-          "max_divergence": 0.0693,
+          "max_divergence": 0.0361,
           "stable_ratio": 1.0
         }
       },
       "degradation_curve": [
         {
           "scale": "default",
-          "divergence": 0.009701999999999999
+          "divergence": 0.000856
         }
       ],
       "robustness_threshold": "default"
@@ -1684,86 +1250,86 @@
     "statistical_tests": {
       "text_modality_test": {
         "modality": "text",
-        "t_statistic": -12.629890729535903,
-        "t_pvalue": 5.025731357894783e-17,
+        "t_statistic": -4.035494297918296,
+        "t_pvalue": 0.00019065515878706205,
         "significant": true,
         "wilcoxon_statistic": 0.0,
-        "wilcoxon_pvalue": 2.363799532779355e-09,
-        "cohens_d": -2.525978145907181,
+        "wilcoxon_pvalue": 0.00028116394417908416,
+        "cohens_d": -0.8070988595836593,
         "effect_size_interpretation": "large",
-        "mean_divergence": 0.10672400000000001,
+        "mean_divergence": 0.08169399999999999,
         "confidence_interval_95": {
-          "lower": 0.08974286277560362,
-          "upper": 0.12370513722439641
+          "lower": 0.041012431076281504,
+          "upper": 0.12237556892371848
         }
       },
       "image_modality_test": {
         "modality": "image",
-        "t_statistic": -13.014990138642778,
-        "t_pvalue": 1.6068348700069095e-17,
+        "t_statistic": -6.731521340935244,
+        "t_pvalue": 1.728923282090789e-08,
         "significant": true,
         "wilcoxon_statistic": 0.0,
-        "wilcoxon_pvalue": 1.386900910837451e-09,
-        "cohens_d": -2.602998027728556,
+        "wilcoxon_pvalue": 6.390451537372163e-07,
+        "cohens_d": -1.346304268187049,
         "effect_size_interpretation": "large",
-        "mean_divergence": 0.12890600000000002,
+        "mean_divergence": 0.28027,
         "confidence_interval_95": {
-          "lower": 0.10900231180985319,
-          "upper": 0.14880968819014687
+          "lower": 0.19660040687471692,
+          "upper": 0.3639395931252831
         }
       },
       "noise_robustness_test": {
         "modality": "noise",
-        "t_statistic": -2.824313046750751,
-        "t_pvalue": 0.006833400149570639,
-        "significant": true,
+        "t_statistic": -1.1699808477243396,
+        "t_pvalue": 0.2476680332394905,
+        "significant": false,
         "wilcoxon_statistic": 0.0,
-        "wilcoxon_pvalue": 0.0081509715935027,
-        "cohens_d": -0.5648626093501502,
-        "effect_size_interpretation": "medium",
-        "mean_divergence": 0.009701999999999999,
+        "wilcoxon_pvalue": 0.17971249487899976,
+        "cohens_d": -0.23399616954486796,
+        "effect_size_interpretation": "small",
+        "mean_divergence": 0.000856,
         "confidence_interval_95": {
-          "lower": 0.00279876419437349,
-          "upper": 0.016605235805626506
+          "lower": -0.00061427740353911,
+          "upper": 0.00232627740353911
         }
       },
       "comparative_tests": {
         "text_vs_image_ttest": {
-          "t_statistic": -1.6801555404420967,
-          "p_value": 0.09929252615842138,
+          "t_statistic": -4.21728641238398,
+          "p_value": 0.00010617634354884125,
           "more_important": "image"
         },
         "mann_whitney_u": {
-          "u_statistic": 1043.5,
-          "p_value": 0.13143955144888353
+          "u_statistic": 753.5,
+          "p_value": 0.0002361302214065906
         }
       },
       "sample_statistics": {
         "sample_size": 50,
         "no_text": {
-          "mean": 0.10672400000000001,
-          "std": 0.05915078887047916,
-          "median": 0.1386,
-          "min": 0.0,
-          "max": 0.2773,
-          "q25": 0.0693,
-          "q75": 0.1386
-        },
-        "no_image": {
-          "mean": 0.12890600000000002,
-          "std": 0.06933097838628847,
-          "median": 0.1386,
-          "min": 0.0,
-          "max": 0.2773,
-          "q25": 0.0693,
-          "q75": 0.1386
-        },
-        "noisy": {
-          "mean": 0.009701999999999999,
-          "std": 0.024046201280035897,
+          "mean": 0.08169399999999999,
+          "std": 0.14170705192050254,
           "median": 0.0,
           "min": 0.0,
-          "max": 0.0693,
+          "max": 0.6238,
+          "q25": 0.0,
+          "q75": 0.10227499999999999
+        },
+        "no_image": {
+          "mean": 0.28027,
+          "std": 0.291448232967709,
+          "median": 0.18445,
+          "min": 0.0,
+          "max": 0.6931,
+          "q25": 0.0,
+          "q75": 0.652475
+        },
+        "noisy": {
+          "mean": 0.000856,
+          "std": 0.005121451356793305,
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0361,
           "q25": 0.0,
           "q75": 0.0
         }
@@ -1774,466 +1340,470 @@
         "sample_count": 2,
         "stability_scores": {
           "no_text": {
-            "mean": 0.10395,
-            "std": 0.03465,
-            "median": 0.10395
+            "mean": 0.21745,
+            "std": 0.12455000000000001,
+            "median": 0.21745
           },
           "no_image": {
-            "mean": 0.0693,
-            "std": 0.0693,
-            "median": 0.0693
+            "mean": 0.34990000000000004,
+            "std": 0.3432,
+            "median": 0.34990000000000004
           },
           "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
+            "mean": 0.00335,
+            "std": 0.00335,
+            "median": 0.00335
           }
         },
         "robustness_distribution": {
-          "high": 2
+          "low": 2
         },
-        "predominant_robustness": "high",
+        "predominant_robustness": "low",
         "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
+          "mean": 0.6751432464099869,
+          "std": 0.20614765282070574
         },
-        "stability_rank": 3
+        "stability_rank": 11
       },
       "neck swelling": {
         "sample_count": 3,
         "stability_scores": {
           "no_text": {
-            "mean": 0.0924,
-            "std": 0.032668333290818495,
-            "median": 0.0693
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
           },
           "no_image": {
-            "mean": 0.1386,
-            "std": 0.0,
-            "median": 0.1386
+            "mean": 0.23103333333333334,
+            "std": 0.32673047336026406,
+            "median": 0.0
           },
           "noisy": {
-            "mean": 0.0231,
-            "std": 0.032668333290818495,
+            "mean": 0.0,
+            "std": 0.0,
             "median": 0.0
           }
         },
         "robustness_distribution": {
-          "high": 3
+          "high": 2,
+          "low": 1
         },
         "predominant_robustness": "high",
         "entropy_stats": {
-          "mean": 3.321928094887362,
+          "mean": 0.0,
           "std": 0.0
         },
-        "stability_rank": 9
+        "stability_rank": 5
       },
       "skin dryness": {
         "sample_count": 5,
         "stability_scores": {
           "no_text": {
-            "mean": 0.05544,
-            "std": 0.05185937138068683,
-            "median": 0.0693
+            "mean": 0.36594000000000004,
+            "std": 0.1434029511551279,
+            "median": 0.342
           },
           "no_image": {
-            "mean": 0.09702000000000001,
-            "std": 0.055439999999999996,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.09954,
+            "std": 0.16421254032503121,
             "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 5
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.3219280948873626,
-          "std": 4.440892098500626e-16
-        },
-        "stability_rank": 2
-      },
-      "edema": {
-        "sample_count": 3,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.0693,
-            "std": 0.056583213058291414,
-            "median": 0.0693
-          },
-          "no_image": {
-            "mean": 0.18483333333333332,
-            "std": 0.06538380703371609,
-            "median": 0.1386
           },
           "noisy": {
-            "mean": 0.0231,
-            "std": 0.032668333290818495,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 2,
-          "medium": 1
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 11
-      },
-      "skin irritation": {
-        "sample_count": 5,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.12473999999999999,
-            "std": 0.05185937138068683,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.15245999999999998,
-            "std": 0.05185937138068683,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.01386,
-            "std": 0.02772,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "medium": 3,
-          "high": 2
-        },
-        "predominant_robustness": "medium",
-        "entropy_stats": {
-          "mean": 3.3219280948873626,
-          "std": 4.440892098500626e-16
-        },
-        "stability_rank": 13
-      },
-      "skin rash": {
-        "sample_count": 6,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.12705,
-            "std": 0.04762186997588398,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.1155,
-            "std": 0.06533666658163699,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.01155,
-            "std": 0.025826585140122572,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "medium": 2,
-          "high": 4
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 10
-      },
-      "knee swelling": {
-        "sample_count": 3,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.1386,
-            "std": 0.056583213058291414,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.20793333333333333,
-            "std": 0.05662404279298875,
-            "median": 0.2079
-          },
-          "noisy": {
-            "mean": 0.0231,
-            "std": 0.032668333290818495,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "medium": 3
-        },
-        "predominant_robustness": "medium",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 15
-      },
-      "itichy eyelid": {
-        "sample_count": 2,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.0693,
-            "std": 0.0,
-            "median": 0.0693
-          },
-          "no_image": {
-            "mean": 0.0693,
-            "std": 0.0,
-            "median": 0.0693
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 2
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 1
-      },
-      "mouth ulcers": {
-        "sample_count": 5,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.1386,
-            "std": 0.0,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.1386,
-            "std": 0.06198380433629417,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.01386,
-            "std": 0.02772,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "medium": 2,
-          "high": 3
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.3219280948873626,
-          "std": 4.440892098500626e-16
-        },
-        "stability_rank": 14
-      },
-      "swollen eye": {
-        "sample_count": 3,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.13863333333333333,
-            "std": 0.1132072533993393,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.13863333333333336,
-            "std": 0.09805214032453458,
-            "median": 0.0693
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "medium": 2,
-          "high": 1
-        },
-        "predominant_robustness": "medium",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 12
-      },
-      "skin growth": {
-        "sample_count": 1,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.0693,
-            "std": 0.0,
-            "median": 0.0693
-          },
-          "no_image": {
-            "mean": 0.1386,
-            "std": 0.0,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 1
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 5
-      },
-      "lip swelling": {
-        "sample_count": 3,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.0693,
-            "std": 0.0,
-            "median": 0.0693
-          },
-          "no_image": {
-            "mean": 0.1617333333333333,
-            "std": 0.08647683055143858,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 2,
-          "medium": 1
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 7
-      },
-      "swollen tonsils": {
-        "sample_count": 2,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.10395,
-            "std": 0.03465,
-            "median": 0.10395
-          },
-          "no_image": {
-            "mean": 0.0693,
-            "std": 0.0,
-            "median": 0.0693
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
-            "median": 0.0
-          }
-        },
-        "robustness_distribution": {
-          "high": 2
-        },
-        "predominant_robustness": "high",
-        "entropy_stats": {
-          "mean": 3.321928094887362,
-          "std": 0.0
-        },
-        "stability_rank": 4
-      },
-      "hand lump": {
-        "sample_count": 3,
-        "stability_scores": {
-          "no_text": {
-            "mean": 0.1155,
-            "std": 0.08643228563447805,
-            "median": 0.1386
-          },
-          "no_image": {
-            "mean": 0.1155,
-            "std": 0.032668333290818495,
-            "median": 0.1386
-          },
-          "noisy": {
-            "mean": 0.0,
-            "std": 0.0,
+            "mean": 0.00722,
+            "std": 0.014439999999999998,
             "median": 0.0
           }
         },
         "robustness_distribution": {
           "medium": 1,
-          "high": 2
+          "low": 4
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.3287712379549449,
+          "std": 0.4075975838491201
+        },
+        "stability_rank": 9
+      },
+      "edema": {
+        "sample_count": 3,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.114,
+            "std": 0.16122034611053285,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.6030000000000001,
+            "std": 0.12742064196981587,
+            "median": 0.6931
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 3
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.29376363307689757,
+          "std": 0.4154445140293421
+        },
+        "stability_rank": 13
+      },
+      "skin irritation": {
+        "sample_count": 5,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.41586,
+            "std": 0.33954826814460415,
+            "median": 0.6931
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "high": 2,
+          "low": 3
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "stability_rank": 8
+      },
+      "skin rash": {
+        "sample_count": 6,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.09778333333333333,
+            "std": 0.15719073781732676,
+            "median": 0.0
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 1,
+          "high": 4,
+          "medium": 1
         },
         "predominant_robustness": "high",
         "entropy_stats": {
-          "mean": 3.321928094887362,
+          "mean": 0.0,
           "std": 0.0
         },
-        "stability_rank": 6
+        "stability_rank": 2
       },
-      "foot swelling": {
-        "sample_count": 4,
+      "knee swelling": {
+        "sample_count": 3,
         "stability_scores": {
           "no_text": {
-            "mean": 0.12127500000000001,
-            "std": 0.030007780241130797,
-            "median": 0.1386
+            "mean": 0.0742,
+            "std": 0.10493464632808365,
+            "median": 0.0
           },
           "no_image": {
-            "mean": 0.10395000000000001,
-            "std": 0.0600155604822616,
-            "median": 0.0693
+            "mean": 0.4740666666666667,
+            "std": 0.3097599106117869,
+            "median": 0.6931
           },
           "noisy": {
-            "mean": 0.017325,
-            "std": 0.0300077802411308,
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 2,
+          "high": 1
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.31266372905952083,
+          "std": 0.22108664304906056
+        },
+        "stability_rank": 10
+      },
+      "itichy eyelid": {
+        "sample_count": 2,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.175,
+            "std": 0.09939999999999999,
+            "median": 0.175
+          },
+          "no_image": {
+            "mean": 0.5736,
+            "std": 0.11950000000000002,
+            "median": 0.5736
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 2
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 1.019973094021975,
+          "std": 0.5509775004326937
+        },
+        "stability_rank": 14
+      },
+      "mouth ulcers": {
+        "sample_count": 5,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.16326,
+            "std": 0.1975681512795015,
+            "median": 0.0749
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
             "median": 0.0
           }
         },
         "robustness_distribution": {
           "high": 3,
+          "low": 1,
           "medium": 1
         },
         "predominant_robustness": "high",
         "entropy_stats": {
-          "mean": 3.321928094887362,
+          "mean": 0.0,
           "std": 0.0
         },
-        "stability_rank": 8
+        "stability_rank": 3
+      },
+      "swollen eye": {
+        "sample_count": 3,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.03513333333333333,
+            "std": 0.049686036491374735,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.18856666666666666,
+            "std": 0.10930642961672271,
+            "median": 0.2433
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "medium": 2,
+          "high": 1
+        },
+        "predominant_robustness": "medium",
+        "entropy_stats": {
+          "mean": 0.31266372905952083,
+          "std": 0.22108664304906056
+        },
+        "stability_rank": 4
+      },
+      "skin growth": {
+        "sample_count": 1,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.2754,
+            "std": 0.0,
+            "median": 0.2754
+          },
+          "no_image": {
+            "mean": 0.5306,
+            "std": 0.0,
+            "median": 0.5306
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 1
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.4689955935892812,
+          "std": 0.0
+        },
+        "stability_rank": 15
+      },
+      "lip swelling": {
+        "sample_count": 3,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.28186666666666665,
+            "std": 0.1993098313904482,
+            "median": 0.4228
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 2,
+          "high": 1
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "stability_rank": 6
+      },
+      "swollen tonsils": {
+        "sample_count": 2,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "no_image": {
+            "mean": 0.6931,
+            "std": 0.0,
+            "median": 0.6931
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "low": 2
+        },
+        "predominant_robustness": "low",
+        "entropy_stats": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "stability_rank": 12
+      },
+      "hand lump": {
+        "sample_count": 3,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.023999999999999997,
+            "std": 0.01697056274847714,
+            "median": 0.036
+          },
+          "no_image": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "high": 3
+        },
+        "predominant_robustness": "high",
+        "entropy_stats": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "stability_rank": 1
+      },
+      "foot swelling": {
+        "sample_count": 4,
+        "stability_scores": {
+          "no_text": {
+            "mean": 0.113175,
+            "std": 0.11342059722554806,
+            "median": 0.1079
+          },
+          "no_image": {
+            "mean": 0.233525,
+            "std": 0.27639324679702293,
+            "median": 0.1205
+          },
+          "noisy": {
+            "mean": 0.0,
+            "std": 0.0,
+            "median": 0.0
+          }
+        },
+        "robustness_distribution": {
+          "medium": 2,
+          "low": 1,
+          "high": 1
+        },
+        "predominant_robustness": "medium",
+        "entropy_stats": {
+          "mean": 0.1172488983973203,
+          "std": 0.20308104915563988
+        },
+        "stability_rank": 7
       },
       "_comparative": {
-        "most_stable": "itichy eyelid",
-        "least_stable": "knee swelling",
+        "most_stable": "hand lump",
+        "least_stable": "skin growth",
         "stability_ranking": [
-          "itichy eyelid",
-          "skin dryness",
-          "eye redness",
-          "swollen tonsils",
-          "skin growth",
           "hand lump",
+          "skin rash",
+          "mouth ulcers",
+          "swollen eye",
+          "neck swelling",
           "lip swelling",
           "foot swelling",
-          "neck swelling",
-          "skin rash",
-          "edema",
-          "swollen eye",
           "skin irritation",
-          "mouth ulcers",
-          "knee swelling"
+          "skin dryness",
+          "knee swelling",
+          "eye redness",
+          "swollen tonsils",
+          "edema",
+          "itichy eyelid",
+          "skin growth"
         ],
-        "stability_variance": 0.019844284862975237
+        "stability_variance": 0.08105164818018372
       }
     },
     "constraints_analysis": {

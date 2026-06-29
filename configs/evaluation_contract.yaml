@@ -1,0 +1,348 @@
+# evaluation_contract.yaml
+# Locked evaluation contract for CountRAG-Clinic
+# This file is the single source of truth for all evaluation, inference,
+# counterfactual, constraint, and case-study exports.
+#
+# Policy:
+# - All reported results must come from this contract.
+# - Do not hardcode evaluation defaults in downstream scripts.
+# - Non-baseline runs must load LoRA adapters + trained fusion + concept KB.
+# - Baselines must declare their baseline_mode explicitly.
+# - Any change to this file requires re-running every evaluation artifact.
+
+contract_version: "1.0"
+project_name: "CountRAG-Clinic"
+status: "locked"
+locked_on: null  # fill once finalized, e.g. "2026-06-23"
+owner: "Junaid"
+notes:
+  - "Single source of truth for all eval scripts"
+  - "Keep manuscript tables/figures generated only from results produced under this contract"
+  - "Do not edit evaluation logic outside this file without updating version"
+
+environment:
+  device: "cpu"
+  seed: 42
+  deterministic: true
+  cudnn_benchmark: false
+  mixed_precision: false
+  num_workers: 4
+
+paths:
+  data_root: "data"
+  raw_csv: "data/raw/clipsyntel.csv"
+  train_split_csv: "data/processed/splits/train.csv"
+  eval_split_csv: "data/processed/splits/eval.csv"
+  eval_queries_csv: "data/processed/splits/eval.csv"  # alias; keep identical to eval_split_csv
+  image_root: "data/images"
+
+  outputs_root: "outputs"
+  kb_flat_dir: outputs/kb/kb_final_v2
+  kb_concept_dir: outputs/kb/kb_final_concept
+  kb_dir: outputs/kb/kb_final_concept
+  retrieval_eval_dir: "outputs/evaluation/retrieval"
+  counterfactual_eval_dir: "outputs/evaluation/counterfactual"
+  lora_eval_dir: "outputs/evaluation/lora"
+  encoder_eval_dir: "outputs/evaluation/encoders"
+  case_study_dir: "outputs/evaluation/case_studies"
+  figures_dir: "outputs/figures"
+  tables_dir: "outputs/tables"
+
+  models:
+    lora_dir: "outputs/models/trained_lora"
+    lora_adapter_file: "outputs/models/trained_lora/adapter_model.safetensors"
+    lora_config_file: "outputs/models/trained_lora/adapter_config.json"
+    fusion_dir: "outputs/models/trained_fusion"
+    fusion_model_file: "outputs/models/trained_fusion/fusion.pt"
+    fusion_history_file: "outputs/models/trained_fusion/training_history.json"
+
+models:
+  base_encoder: "BioMedCLIP"
+  backbone:
+    text_encoder: "PubMedBERT"
+    image_encoder: "ViT-B/16"
+    embedding_dim: 512
+    normalize_embeddings: true
+
+  lora:
+    enabled: true
+    required_for_non_baseline: true
+    path: "outputs/models/trained_lora"
+    rank: 8
+    alpha: 16
+    target_modules:
+      - "text_attention_q"
+      - "text_attention_k"
+      - "text_attention_v"
+      - "text_attention_o"
+      - "image_attention_q"
+      - "image_attention_k"
+      - "image_attention_v"
+      - "image_attention_o"
+    load_fails_if_missing: true
+
+  fusion:
+    enabled: true
+    required_for_non_baseline: true
+    path: "outputs/models/trained_fusion/fusion.pt"
+    architecture: "adaptive_gated_residual"
+    gate_range: [0.0, 1.0]
+    anchor_modality: "image"
+    load_fails_if_missing: true
+
+  kb:
+    enabled: true
+    path: "outputs/kb/kb_final_v2"
+    type: "concept_level"
+    index_file: "concept_index.faiss"
+    embeddings_file: "embeddings.npy"
+    metadata_file: "metadata.json"
+    config_file: "kb_config.json"
+    use_training_split_only: true
+    no_eval_leakage: true
+
+evaluation_policy:
+  # This section controls which model stack is allowed for each run type.
+  default_run_type: "full"
+  allowed_run_types:
+    - "full"        # LoRA + fusion + concept KB
+    - "baseline"    # explicit baseline only
+    - "ablation"    # explicit component removal
+    - "sanity"      # smoke tests only
+  baseline_mode:
+    # If run_type == baseline, one of these must be explicitly selected.
+    allowed:
+      - "base_text_only"
+      - "base_image_only"
+      - "base_mean_fusion"
+      - "concept_base_mean"
+      - "concept_lora_text_only"
+      - "concept_lora_image_only"
+      - "concept_lora_mean"
+      - "standard_mm_rag"
+    require_explicit_choice: true
+  non_baseline_must_load:
+    - "lora"
+    - "fusion"
+    - "kb"
+
+retrieval:
+  enabled: true
+  modes:
+    - "text"
+    - "image"
+    - "fusion"
+  top_k_values:
+    - 1
+    - 5
+    - 10
+  top_k_for_inference: 10
+  top_k_for_case_study: 3
+  include_rank_lists: true
+  include_scores: true
+  include_entropy: true
+  include_margin: true
+  score_type: "cosine"
+  similarity_normalization: "softmax_over_concepts"
+
+counterfactual:
+  enabled: true
+  num_samples: 200
+  perturbation_scales:
+    - 0.01
+    - 0.05
+    - 0.1
+  neutral_embedding:
+    method: "normalized_mean_of_concept_prototypes"
+    validate_on_manifold: true
+    text_neutral: true
+    image_neutral: true
+  interventions:
+    - "baseline"
+    - "text_neutral"
+    - "image_neutral"
+    - "noisy_query"
+  divergence_metric: "jensen_shannon"
+  evidence_retention:
+    enabled: true
+    topk_match_threshold: true
+    count_all_interventions: true
+  modality_sensitivity:
+    compute_msi_t: true
+    compute_msi_i: true
+    symmetric_reporting: false
+
+neutrality_validation:
+  enabled: true
+  metrics:
+    - "nearest_neighbor_entropy"
+    - "similarity_distribution_uniformity"
+    - "tsne_centroid_distance"
+    - "retrieval_entropy_comparison"
+  statistical_test: "paired_bootstrap"
+  confidence_level: 0.95
+  bootstrap_samples: 1000
+  significance_threshold: 0.001
+  report_bits: true
+
+constraints:
+  enabled: true
+  axes:
+    evidence_concentration:
+      enabled: true
+      metric: "normalized_entropy"
+      threshold: 0.5
+      direction: "higher_is_better"
+    modality_consistency:
+      enabled: true
+      metric: "cosine_between_image_and_text_embeddings"
+      gate_signal: true
+      threshold: 0.5
+      direction: "higher_is_better"
+    decision_boundary_proximity:
+      enabled: true
+      metric: "top1_minus_top2_margin"
+      calibration_policy: "train_percentile_20"
+      threshold: 0.5
+      direction: "higher_is_better"
+    evidence_diversity:
+      enabled: true
+      metric: "prototype_support_diversity"
+      threshold: 0.5
+      direction: "higher_is_better"
+    ood_validity:
+      enabled: true
+      metric: "centroid_distance"
+      calibration_policy: "train_percentile_95"
+      threshold: 0.5
+      direction: "higher_is_better"
+
+  aggregation:
+    enabled: true
+    weights:
+      evidence_concentration: 0.25
+      modality_consistency: 0.25
+      decision_boundary_proximity: 0.20
+      evidence_diversity: 0.15
+      ood_validity: 0.15
+    method: "weighted_mean"
+    overall_violation_threshold: 0.5
+
+metrics:
+  retrieval:
+    - "r@1"
+    - "r@5"
+    - "r@10"
+    - "mrr"
+    - "entropy"
+    - "margin"
+  counterfactual:
+    - "msi_t"
+    - "msi_i"
+    - "evidence_retention"
+  neutrality:
+    - "max_concept_similarity"
+    - "similarity_entropy"
+    - "similarity_variance"
+    - "tsne_centroid_distance"
+  safety:
+    - "evidence_concentration_violation"
+    - "modality_consistency_violation"
+    - "decision_boundary_violation"
+    - "evidence_diversity_violation"
+    - "ood_validity_violation"
+    - "overall_violation_rate"
+
+statistics:
+  seeds:
+    - 42
+    - 43
+    - 44
+  summary:
+    report_mean: true
+    report_std: true
+    report_ci95: true
+    bootstrap_samples: 1000
+    paired_tests: true
+    significance_level: 0.05
+  per_class_breakdown: true
+  per_diagnosis_breakdown: true
+
+case_studies:
+  enabled: true
+  export_count: 12
+  buckets:
+    - "correct_high_confidence"
+    - "correct_low_confidence"
+    - "wrong_high_confidence"
+    - "high_msi"
+    - "high_ood"
+    - "low_modality_consistency"
+    - "high_evidence_concentration"
+    - "diffuse_support"
+    - "baseline_wrong_lora_correct"
+    - "countRAG_uncertain"
+  export_fields:
+    - "query_id"
+    - "query_text"
+    - "image_path"
+    - "ground_truth"
+    - "top1_prediction"
+    - "top3_predictions"
+    - "retrieval_scores"
+    - "entropy"
+    - "margin"
+    - "gate_value"
+    - "msi_t"
+    - "msi_i"
+    - "evidence_retention"
+    - "constraint_scores"
+    - "overall_reliability"
+    - "notes"
+
+artifacts:
+  write_results_json: true
+  write_summary_txt: true
+  write_case_studies_json: true
+  write_per_query_csv: true
+  write_plots: true
+  write_tables: true
+  overwrite_existing: true
+  filenames:
+    results_json: "results.json"
+    summary_txt: "summary.txt"
+    per_query_csv: "per_query.csv"
+    failure_cases_json: "failure_cases.json"
+    case_studies_json: "case_studies.json"
+    metrics_json: "metrics.json"
+
+validation_rules:
+  fail_if_missing:
+    - "train_split_csv"
+    - "eval_split_csv"
+    - "kb_dir"
+    - "lora.path"
+    - "fusion.path"
+  fail_if_lora_missing_for_full_run: true
+  fail_if_kb_missing: true
+  fail_if_split_overlap: true
+  fail_if_outputs_not_versioned: true
+  fail_if_eval_csv_changes_without_version_bump: true
+
+compatibility:
+  allow_legacy_paths: false
+  allow_legacy_index_file: false
+  allow_hardcoded_eval_csv: false
+  allow_hardcoded_kb_dir: false
+  allow_hardcoded_model_paths: false
+
+rebuild_policy:
+  rerun_required_when_changed:
+    - "paths.train_split_csv"
+    - "paths.eval_split_csv"
+    - "paths.kb_dir"
+    - "models.lora.path"
+    - "models.fusion.path"
+    - "counterfactual.perturbation_scales"
+    - "constraints.aggregation.weights"
+    - "evaluation_policy.baseline_mode"

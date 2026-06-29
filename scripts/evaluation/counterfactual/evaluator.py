@@ -1,10 +1,14 @@
 """
-Counterfactual evaluator - FIXED to use eval queries and save complete metadata
+Counterfactual evaluator for stability, modality effects, and constraint safety.
 """
+from __future__ import annotations
+
 from pathlib import Path
 from datetime import datetime
+from collections import Counter, defaultdict
 import json
 import sys
+from typing import Any, Dict, List
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
@@ -14,94 +18,76 @@ from scripts.utils.eval_query_loader import EvaluationQueryDataset
 
 
 class CounterfactualEvaluator:
-    """Research-grade counterfactual evaluation using reserved queries"""
-    
     def __init__(
-        self, 
-        kb_dir: str, 
-        output_dir: str, 
+        self,
+        contract: dict,
+        kb_dir: str,
+        output_dir: str,
         device: str = "cpu",
-        num_samples: int = None
+        num_samples: int | None = None,
     ):
+        self.contract = contract
         self.kb_dir = Path(kb_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.device = device
-        
-        # Load evaluation queries
-        eval_csv = "data/processed/splits/eval.csv"
+
+        eval_csv = contract["paths"]["eval_split_csv"]
         print(f"Loading evaluation queries from {eval_csv}...")
         self.eval_dataset = EvaluationQueryDataset(eval_csv)
-        
-        # Sample if requested
+
         if num_samples is not None and num_samples < len(self.eval_dataset):
-            print(f"Sampling {num_samples} queries from {len(self.eval_dataset)} available...")
-            self.eval_queries = self.eval_dataset.sample(num_samples, seed=42)
+            self.eval_queries = self.eval_dataset.sample(
+                num_samples,
+                seed=contract["environment"]["seed"],
+            )
         else:
             self.eval_queries = list(self.eval_dataset)
-        
-        print(f"✓ Using {len(self.eval_queries)} evaluation queries")
-        
-        # Initialize tester (auto-detects KB mode)
-        self.stability_tester = StabilityTester(kb_dir, device)
-        
-        # NEW: Print KB mode for transparency
-        print(f"✓ KB mode: {self.stability_tester.kb_mode}")
-        
+
+        self.stability_tester = StabilityTester(str(self.kb_dir), contract, device)
         self.robustness_analyzer = RobustnessAnalyzer()
-        
+
         self.results = {
             "timestamp": datetime.now().isoformat(),
             "num_samples": len(self.eval_queries),
             "eval_queries_csv": eval_csv,
             "kb_dir": str(kb_dir),
-            "kb_mode": self.stability_tester.kb_mode,  # NEW: Add to results
-            "stability_tests": []
+            "kb_mode": self.stability_tester.kb_mode,
+            "stability_tests": [],
+            "analysis": {},
         }
-        
-        self.stability_tester = StabilityTester(kb_dir, device)
-        self.robustness_analyzer = RobustnessAnalyzer()
-    
+
     def run_evaluation(self):
-        """Run comprehensive counterfactual evaluation"""
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("COUNTERFACTUAL STABILITY EVALUATION")
         print(f"Using {len(self.eval_queries)} reserved evaluation queries")
-        print("="*70 + "\n")
-        
-        # Print dataset statistics
-        from collections import Counter
-        diagnosis_counts = Counter([q['diagnosis_label'] for q in self.eval_queries])
-        
-        print(f"Evaluation set statistics:")
+        print("=" * 70 + "\n")
+
+        diagnosis_counts = Counter([q.get("diagnosis_label", "unknown") for q in self.eval_queries])
+        print("Evaluation set statistics:")
         print(f"  Total queries: {len(self.eval_queries)}")
         print(f"  Unique diagnoses: {len(diagnosis_counts)}")
-        print(f"\nDiagnosis distribution (top 10):")
+        print("\nDiagnosis distribution (top 10):")
         for diag, count in diagnosis_counts.most_common(10):
             print(f"  {diag}: {count}")
         print()
-        
+
         print("[1/2] Running stability tests on evaluation queries...")
-        
-        # Test all evaluation queries
         from tqdm import tqdm
         for query in tqdm(self.eval_queries, desc="Testing stability"):
             result = self.stability_tester.test_query(query)
             self.results["stability_tests"].append(result)
-        
+
         print(f"\n✓ Completed {len(self.results['stability_tests'])} stability tests")
-        
+
         print("\n[2/2] Analyzing results...")
-        self.results["analysis"] = self.robustness_analyzer.analyze(
-            self.results["stability_tests"]
-        )
-        
+        self.results["analysis"] = self.robustness_analyzer.analyze(self.results["stability_tests"])
+
         print("\n✓ Evaluation complete")
-    
+
     def _convert_to_json_serializable(self, obj):
-        """Convert numpy types to Python native types"""
         import numpy as np
-        
+
         if isinstance(obj, dict):
             return {k: self._convert_to_json_serializable(v) for k, v in obj.items()}
         elif isinstance(obj, list):
@@ -116,124 +102,173 @@ class CounterfactualEvaluator:
             return bool(obj)
         else:
             return obj
-    
+
     def save_results(self):
-        """Save evaluation results with complete metadata"""
         serializable_results = self._convert_to_json_serializable(self.results)
-        
+
         results_path = self.output_dir / "results.json"
-        with open(results_path, 'w') as f:
+        with open(results_path, "w", encoding="utf-8") as f:
             json.dump(serializable_results, f, indent=2)
         print(f"\n✓ Results saved to {results_path}")
-        
+
         summary_path = self.output_dir / "summary.txt"
         self._save_summary(summary_path)
         print(f"✓ Summary saved to {summary_path}")
-        
-        # Save per-diagnosis breakdown for plotting
+
         self._save_per_diagnosis_breakdown()
-    
+
     def _save_per_diagnosis_breakdown(self):
-        """Save detailed per-diagnosis stability for plotting"""
-        from collections import defaultdict
-        
-        per_diag = defaultdict(lambda: {
-            'high': 0, 'medium': 0, 'low': 0,
-            'js_divergences': {'no_text': [], 'no_image': [], 'noisy': []}
-        })
-        
-        for test in self.results["stability_tests"]:
-            diag = test["diagnosis"]
-            robustness = test["stability"]["robustness_level"]
-            js_div = test["stability"]["js_divergence"]
-            
-            per_diag[diag][robustness] += 1
-            for key in ['no_text', 'no_image', 'noisy']:
-                per_diag[diag]['js_divergences'][key].append(js_div[key])
-        
-        # Convert to serializable format and compute averages
-        per_diag_serializable = {}
-        for diag, data in per_diag.items():
-            per_diag_serializable[diag] = {
-                'robustness_counts': {
-                    'high': data['high'],
-                    'medium': data['medium'],
-                    'low': data['low']
+        """
+        Save per-diagnosis summary metrics for plotting / manuscript tables.
+        """
+        by_diag: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+        for test in self.results.get("stability_tests", []):
+            diag = test.get("diagnosis", "unknown")
+            by_diag[diag].append(test)
+
+        breakdown = {}
+        for diag, tests in by_diag.items():
+            stability_levels = [t.get("stability", {}).get("robustness_level", "unknown") for t in tests]
+            js_no_text = [t.get("stability", {}).get("js_divergence", {}).get("no_text", 0.0) for t in tests]
+            js_no_image = [t.get("stability", {}).get("js_divergence", {}).get("no_image", 0.0) for t in tests]
+            js_noisy = [t.get("stability", {}).get("js_divergence", {}).get("noisy", 0.0) for t in tests]
+            aggregate_scores = [t.get("constraints", {}).get("aggregate_score", 0.0) for t in tests if "constraints" in t]
+            violations = [bool(t.get("constraints", {}).get("overall_violation", False)) for t in tests if "constraints" in t]
+
+            breakdown[diag] = {
+                "count": len(tests),
+                "robustness_distribution": {
+                    "high": int(stability_levels.count("high")),
+                    "medium": int(stability_levels.count("medium")),
+                    "low": int(stability_levels.count("low")),
                 },
-                'avg_js_divergences': {
-                    key: sum(vals) / len(vals) if vals else 0.0
-                    for key, vals in data['js_divergences'].items()
-                }
+                "js_divergence_mean": {
+                    "no_text": float(sum(js_no_text) / len(js_no_text)) if js_no_text else 0.0,
+                    "no_image": float(sum(js_no_image) / len(js_no_image)) if js_no_image else 0.0,
+                    "noisy": float(sum(js_noisy) / len(js_noisy)) if js_noisy else 0.0,
+                },
+                "constraint_summary": {
+                    "mean_aggregate_score": float(sum(aggregate_scores) / len(aggregate_scores)) if aggregate_scores else 0.0,
+                    "overall_violation_rate": float(sum(violations) / len(violations)) if violations else 0.0,
+                },
             }
-        
-        breakdown_path = self.output_dir / "per_diagnosis_stability.json"
-        with open(breakdown_path, 'w') as f:
-            json.dump(per_diag_serializable, f, indent=2)
-        print(f"✓ Per-diagnosis stability saved to {breakdown_path}")
-    
+
+        if breakdown:
+            breakdown_path = self.output_dir / "per_diagnosis_metrics.json"
+            with open(breakdown_path, "w", encoding="utf-8") as f:
+                json.dump(self._convert_to_json_serializable(breakdown), f, indent=2)
+            print(f"✓ Per-diagnosis metrics saved to {breakdown_path}")
+
     def _save_summary(self, path: Path):
-        """Save human-readable summary"""
-        analysis = self.results["analysis"]
-        
-        with open(path, 'w') as f:
-            f.write("COUNTERFACTUAL STABILITY EVALUATION - RESEARCH REPORT\n")
-            f.write("="*70 + "\n\n")
-            
-            f.write(f"Evaluation queries tested: {self.results['num_samples']}\n")
-            f.write(f"Source: {self.results['eval_queries_csv']}\n")
-            f.write(f"KB: {self.results['kb_dir']}\n")
-            f.write(f"Timestamp: {self.results['timestamp']}\n\n")
-            
-            basic = analysis.get("basic_metrics", {})
-            f.write("AVERAGE JS DIVERGENCES:\n")
-            for pert, div in basic.get("avg_divergences", {}).items():
-                f.write(f"  {pert}: {div:.4f}\n")
-            
-            f.write(f"\nROBUSTNESS DISTRIBUTION:\n")
-            for level, count in basic.get("robustness_distribution", {}).items():
-                f.write(f"  {level}: {count}\n")
-            
-            stats = analysis.get("statistical_tests", {})
-            if stats and stats.get("status") != "insufficient_samples":
-                f.write(f"\n\nSTATISTICAL SIGNIFICANCE:\n")
-                
-                text_test = stats.get("text_modality_test", {})
-                f.write(f"\nText Modality Effect:\n")
-                f.write(f"  p-value: {text_test.get('t_pvalue', 0):.4f}\n")
-                f.write(f"  Cohen's d: {text_test.get('cohens_d', 0):.4f} ({text_test.get('effect_size_interpretation', 'unknown')})\n")
-                f.write(f"  Significant: {text_test.get('significant', False)}\n")
-                
-                image_test = stats.get("image_modality_test", {})
-                f.write(f"\nImage Modality Effect:\n")
-                f.write(f"  p-value: {image_test.get('t_pvalue', 0):.4f}\n")
-                f.write(f"  Cohen's d: {image_test.get('cohens_d', 0):.4f} ({image_test.get('effect_size_interpretation', 'unknown')})\n")
-                f.write(f"  Significant: {image_test.get('significant', False)}\n")
-            
-            # Add top stable/unstable diagnoses
-            profiles = analysis.get("diagnostic_profiles", {})
-            if "_comparative" in profiles:
-                comp = profiles["_comparative"]
-                f.write(f"\n\nDIAGNOSTIC STABILITY:\n")
-                f.write(f"Most stable: {comp.get('most_stable', 'N/A')}\n")
-                f.write(f"Least stable: {comp.get('least_stable', 'N/A')}\n")
+        analysis = self.results.get("analysis", {})
+        basic = analysis.get("basic_metrics", {})
+        perturb = analysis.get("perturbation_analysis", {})
+        modality = analysis.get("modality_effects", {})
+        stats = analysis.get("statistical_tests", {})
+        diagnostic = analysis.get("diagnostic_profiles", {})
+        constraints = analysis.get("constraints_analysis", {})
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("=" * 80 + "\n")
+            f.write("COUNTERFACTUAL / CONSTRAINT EVALUATION SUMMARY\n")
+            f.write("=" * 80 + "\n\n")
+            f.write(f"Timestamp        : {self.results.get('timestamp', 'N/A')}\n")
+            f.write(f"Eval samples     : {self.results.get('num_samples', 'N/A')}\n")
+            f.write(f"KB mode          : {self.results.get('kb_mode', 'N/A')}\n")
+            f.write(f"KB directory     : {self.results.get('kb_dir', 'N/A')}\n")
+            f.write(f"Contract         : {self.contract.get('_contract_path', 'N/A')}\n\n")
+
+            f.write("ROBUSTNESS\n")
+            f.write("-" * 80 + "\n")
+            avg_div = basic.get("avg_divergences", {})
+            f.write(f"Mean JS divergence (no_text) : {avg_div.get('no_text', 0.0):.4f}\n")
+            f.write(f"Mean JS divergence (no_image): {avg_div.get('no_image', 0.0):.4f}\n")
+            f.write(f"Mean JS divergence (noisy)   : {avg_div.get('noisy', 0.0):.4f}\n")
+            f.write(f"Robustness distribution      : {basic.get('robustness_distribution', {})}\n\n")
+
+            f.write("MODALITY EFFECTS\n")
+            f.write("-" * 80 + "\n")
+            if isinstance(modality, dict) and "attribution_summary" in modality:
+                attr = modality["attribution_summary"]
+                f.write(f"Text contribution mean  : {attr['text_contribution']['mean']:.4f}\n")
+                f.write(f"Image contribution mean : {attr['image_contribution']['mean']:.4f}\n")
+                f.write(f"Interaction strength    : {attr['interaction_strength']['mean']:.4f}\n")
+                f.write(f"Dominant modalities     : {attr.get('dominant_modality_distribution', {})}\n")
+            else:
+                f.write(f"{modality}\n")
+            f.write("\n")
+
+            f.write("PERTURBATION ANALYSIS\n")
+            f.write("-" * 80 + "\n")
+            if isinstance(perturb, dict):
+                f.write(f"Robustness threshold    : {perturb.get('robustness_threshold', None)}\n")
+                f.write(f"Scale analysis          : {perturb.get('scale_analysis', {})}\n")
+            else:
+                f.write(f"{perturb}\n")
+            f.write("\n")
+
+            f.write("STATISTICAL TESTS\n")
+            f.write("-" * 80 + "\n")
+            if isinstance(stats, dict):
+                for k in ("text_modality_test", "image_modality_test", "noise_robustness_test"):
+                    if k in stats and isinstance(stats[k], dict):
+                        f.write(f"{k}: p={stats[k].get('t_pvalue', 1.0):.4g}, d={stats[k].get('cohens_d', 0.0):.4f}\n")
+                if "comparative_tests" in stats:
+                    f.write(f"Comparative tests: {stats['comparative_tests']}\n")
+            else:
+                f.write(f"{stats}\n")
+            f.write("\n")
+
+            f.write("CONSTRAINTS\n")
+            f.write("-" * 80 + "\n")
+            if isinstance(constraints, dict) and "axis_summary" in constraints:
+                f.write(f"Overall violation rate : {constraints.get('overall_violation_rate', 0.0):.4f}\n")
+                for axis, vals in constraints["axis_summary"].items():
+                    f.write(
+                        f"{axis}: mean={vals['mean_score']:.4f}, "
+                        f"violation_rate={vals['violation_rate']:.4f}\n"
+                    )
+                if "reliability_correlations" in constraints:
+                    f.write(f"Reliability correlations: {constraints['reliability_correlations']}\n")
+            else:
+                f.write(f"{constraints}\n")
+            f.write("\n")
+
+            f.write("DIAGNOSTIC PROFILES\n")
+            f.write("-" * 80 + "\n")
+            if isinstance(diagnostic, dict) and "_comparative" in diagnostic:
+                comp = diagnostic["_comparative"]
+                f.write(f"Most stable diagnosis : {comp.get('most_stable', 'N/A')}\n")
+                f.write(f"Least stable diagnosis: {comp.get('least_stable', 'N/A')}\n")
+                f.write(f"Stability variance    : {comp.get('stability_variance', 0.0):.4f}\n")
+            else:
+                f.write(f"{diagnostic}\n")
+            f.write("\n")
+
+            f.write("=" * 80 + "\n")
+
 
 if __name__ == "__main__":
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Run Counterfactual Evaluation")
-    parser.add_argument("--kb-dir", type=str, default="outputs/kb/kb_final_v2", help="Path to Knowledge Base")
+    parser.add_argument("--kb-dir", type=str, default="outputs/kb/kb_final_concept", help="Path to Knowledge Base")
     parser.add_argument("--output-dir", type=str, default="outputs/evaluation/counterfactual", help="Output directory")
     parser.add_argument("--device", type=str, default="cpu", help="Device to run on (cpu/cuda)")
     parser.add_argument("--num-samples", type=int, default=None, help="Number of queries to sample")
-    
+
     args = parser.parse_args()
-    
+
+    from configs.eval_contract import load_eval_contract
+
+    contract = load_eval_contract()
     evaluator = CounterfactualEvaluator(
+        contract=contract,
         kb_dir=args.kb_dir,
         output_dir=args.output_dir,
         device=args.device,
-        num_samples=args.num_samples
+        num_samples=args.num_samples,
     )
-    
+
     evaluator.run_evaluation()
     evaluator.save_results()

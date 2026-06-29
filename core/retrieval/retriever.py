@@ -58,19 +58,28 @@ class KBRetriever:
         # Load appropriate index based on mode
         if retrieval_mode == "text":
             self.index = faiss.read_index(str(kb_dir / "text_index.faiss"))
+            emb_path = kb_dir / "text_embeddings.npy"
         elif retrieval_mode == "image":
             self.index = faiss.read_index(str(kb_dir / "image_index.faiss"))
+            emb_path = kb_dir / "image_embeddings.npy"
         else:  # fusion
             self.index = faiss.read_index(str(kb_dir / "concept_index.faiss"))
-        
+            emb_path = kb_dir / "concept_embeddings.npy"
+
         # Load metadata
         with open(kb_dir / "metadata.json") as f:
             self.metadata = json.load(f)
-        
+
+        # Load embeddings for downstream calibration / diagnostics
+        if emb_path.exists():
+            self.embeddings = np.load(emb_path)
+        else:
+            self.embeddings = None
+
         # Load mappings
         with open(kb_dir / "image_to_concept.json") as f:
             self.image_to_concept = json.load(f)
-        
+
         print(f"✓ Loaded concept KB: {len(self.metadata)} concepts")
     
     def search(

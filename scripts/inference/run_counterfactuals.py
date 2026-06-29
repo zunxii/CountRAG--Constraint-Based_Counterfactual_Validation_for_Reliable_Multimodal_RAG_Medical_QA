@@ -11,9 +11,12 @@ import sys
 from pathlib import Path
 import argparse
 
+from core.retrieval.retriever import KBRetriever
+
 # Fix imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+from configs.eval_contract import load_eval_contract
 from core.embeddings.biomedclip import BioMedCLIPEncoder
 from core.fusion.adaptive_fusion import AdaptiveFusion
 from core.reasoning.counterfactuals.stability.retrieval import StabilityRetriever
@@ -26,10 +29,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--query-text", required=True)
     parser.add_argument("--query-image", required=True)
+    parser.add_argument("--contract", default="configs/evaluation_contract.yaml")
     parser.add_argument("--kb-dir", default=INFERENCE_CONFIG["kb_dir"])
     args = parser.parse_args()
+    contract = load_eval_contract(args.contract)
 
-    KB_DIR = args.kb_dir
+
+    KB_DIR = args.kb_dir or contract["paths"]["kb_concept_dir"]
     QUERY_TEXT = args.query_text
     QUERY_IMAGE_PATH = args.query_image
     DEVICE = INFERENCE_CONFIG["device"]
@@ -41,20 +47,15 @@ def main():
 
     print("  Loading encoders + trained fusion...")
     encoder = BioMedCLIPEncoder(
-        device=DEVICE,
-        lora_path=INFERENCE_CONFIG.get("lora_path")
-    )
+    device=contract["environment"]["device"],
+    lora_path=contract["paths"]["models"]["lora_dir"],
+)
 
-    fusion = AdaptiveFusion().to(DEVICE)
-    fusion.load_state_dict(
-        torch.load(
-            INFERENCE_CONFIG["fusion_path"],
-            map_location=DEVICE
-        )
-    )
+    fusion = AdaptiveFusion().to(contract["environment"]["device"])
+    fusion.load_state_dict(torch.load(contract["paths"]["models"]["fusion_model_file"], map_location=contract["environment"]["device"]))
     fusion.eval()
-
-    retriever = StabilityRetriever(index, metadata)
+    kb = KBRetriever(KB_DIR)
+    retriever = StabilityRetriever(kb.index, kb.metadata)
 
     # ---------------- Encode query (original) ----------------
     print("\n✓ Encoding query...")

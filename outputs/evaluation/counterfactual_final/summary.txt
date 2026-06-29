@@ -1,0 +1,53 @@
+================================================================================
+COUNTERFACTUAL / CONSTRAINT EVALUATION SUMMARY
+================================================================================
+
+Timestamp        : 2026-06-28T14:01:54.391637
+Eval samples     : 200
+KB mode          : concept
+KB directory     : outputs/kb/kb_final_concept
+Contract         : configs/evaluation_contract.yaml
+
+ROBUSTNESS
+--------------------------------------------------------------------------------
+Mean JS divergence (no_text) : 0.0801
+Mean JS divergence (no_image): 0.1211
+Mean JS divergence (noisy)   : 0.0208
+Robustness distribution      : {'high': 121, 'low': 51, 'medium': 28}
+
+MODALITY EFFECTS
+--------------------------------------------------------------------------------
+Text contribution mean  : 0.0801
+Image contribution mean : 0.1211
+Interaction strength    : 0.1351
+Dominant modalities     : {'image': 104, 'text': 96}
+
+PERTURBATION ANALYSIS
+--------------------------------------------------------------------------------
+Robustness threshold    : 0.1
+Scale analysis          : {'0.01': {'mean_divergence': 0.0005055, 'std_divergence': 0.0010672018318949794, 'median_divergence': 0.0002, 'max_divergence': 0.0108, 'stable_ratio': 1.0}, '0.05': {'mean_divergence': 0.0207515, 'std_divergence': 0.020144872740973076, 'median_divergence': 0.0162, 'max_divergence': 0.1064, 'stable_ratio': 1.0}, '0.1': {'mean_divergence': 0.0908175, 'std_divergence': 0.06246564130584109, 'median_divergence': 0.08065, 'max_divergence': 0.3169, 'stable_ratio': 0.855}}
+
+STATISTICAL TESTS
+--------------------------------------------------------------------------------
+text_modality_test: p=4.603e-18, d=0.6761
+image_modality_test: p=9.011e-19, d=0.6934
+noise_robustness_test: p=4.371e-33, d=1.0275
+Comparative tests: {'text_vs_image_ttest': {'t_statistic': -2.780164705595836, 'p_value': 0.005954508216867631, 'more_important': 'image'}, 'mann_whitney_u': {'u_statistic': 19263.5, 'p_value': 0.5243475782175224}, 'paired_mean_difference': -0.041004}
+
+CONSTRAINTS
+--------------------------------------------------------------------------------
+Overall violation rate : 0.3200
+evidence_concentration: mean=0.8269, violation_rate=0.0200
+modality_consistency: mean=0.6623, violation_rate=0.0150
+decision_boundary_proximity: mean=0.9389, violation_rate=0.0450
+evidence_diversity: mean=0.8405, violation_rate=0.0750
+ood_validity: mean=0.5471, violation_rate=0.2950
+Reliability correlations: {'aggregate_vs_mean_js': {'rho': -0.6432295280062664, 'p_value': 9.600515713746037e-25}, 'aggregate_vs_overall_violation': {'rho': -0.41809502624239286, 'p_value': 7.265324412455438e-10}, 'aggregate_vs_robustness_level': {'rho': 0.44532340515716157, 'p_value': 3.9128099391769876e-11}}
+
+DIAGNOSTIC PROFILES
+--------------------------------------------------------------------------------
+Most stable diagnosis : hand lump
+Least stable diagnosis: skin irritation
+Stability variance    : 0.0390
+
+================================================================================

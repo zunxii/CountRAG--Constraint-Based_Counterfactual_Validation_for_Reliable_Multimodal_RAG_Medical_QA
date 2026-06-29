@@ -1,0 +1,206 @@
+{
+  "eye redness": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.0,
+      "no_image": 0.0693,
+      "noisy": 0.0132
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.4017261864997559,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "neck swelling": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.0693,
+      "no_image": 0.1386,
+      "noisy": 0.0397
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.5235336617215222,
+      "overall_violation_rate": 0.0
+    }
+  },
+  "skin dryness": {
+    "count": 2,
+    "robustness_distribution": {
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.0,
+      "no_image": 0.10395,
+      "noisy": 0.01985
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.44400382973898306,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "edema": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.1386,
+      "no_image": 0.0693,
+      "noisy": 0.0318
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.46465021359073944,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "skin irritation": {
+    "count": 2,
+    "robustness_distribution": {
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.1386,
+      "no_image": 0.10395,
+      "noisy": 0.0611
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.4044536580435184,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "skin rash": {
+    "count": 3,
+    "robustness_distribution": {
+      "high": 3,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.0924,
+      "no_image": 0.0693,
+      "noisy": 0.036333333333333336
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.4224828937030714,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "knee swelling": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.1386,
+      "no_image": 0.0693,
+      "noisy": 0.0451
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.488383585939533,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "itichy eyelid": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 0,
+      "medium": 1,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.2079,
+      "no_image": 0.0693,
+      "noisy": 0.0265
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.37331610312893393,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "mouth ulcers": {
+    "count": 4,
+    "robustness_distribution": {
+      "high": 2,
+      "medium": 2,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.155925,
+      "no_image": 0.08662500000000001,
+      "noisy": 0.04375
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.4599812669700505,
+      "overall_violation_rate": 0.75
+    }
+  },
+  "swollen eye": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.1386,
+      "no_image": 0.1386,
+      "noisy": 0.0265
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.45571134616608777,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "skin growth": {
+    "count": 1,
+    "robustness_distribution": {
+      "high": 1,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.1386,
+      "no_image": 0.0693,
+      "noisy": 0.0132
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.47118417932378953,
+      "overall_violation_rate": 1.0
+    }
+  },
+  "lip swelling": {
+    "count": 2,
+    "robustness_distribution": {
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "js_divergence_mean": {
+      "no_text": 0.10395,
+      "no_image": 0.0693,
+      "noisy": 0.0649
+    },
+    "constraint_summary": {
+      "mean_aggregate_score": 0.5238427234063299,
+      "overall_violation_rate": 0.0
+    }
+  }
+}

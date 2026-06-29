@@ -1,0 +1,53 @@
+================================================================================
+COUNTERFACTUAL / CONSTRAINT EVALUATION SUMMARY
+================================================================================
+
+Timestamp        : 2026-06-28T01:05:49.441913
+Eval samples     : 20
+KB mode          : concept
+KB directory     : outputs/kb/kb_final_concept
+Contract         : configs/evaluation_contract.yaml
+
+ROBUSTNESS
+--------------------------------------------------------------------------------
+Mean JS divergence (no_text) : 0.1109
+Mean JS divergence (no_image): 0.0866
+Mean JS divergence (noisy)   : 0.0173
+Robustness distribution      : {'high': 17, 'medium': 3}
+
+MODALITY EFFECTS
+--------------------------------------------------------------------------------
+Text contribution mean  : 0.1109
+Image contribution mean : 0.0866
+Interaction strength    : 0.0849
+Dominant modalities     : {'image': 9, 'text': 11}
+
+PERTURBATION ANALYSIS
+--------------------------------------------------------------------------------
+Robustness threshold    : 0.1
+Scale analysis          : {'0.01': {'mean_divergence': 0.017325, 'std_divergence': 0.0300077802411308, 'median_divergence': 0.0, 'max_divergence': 0.0693, 'stable_ratio': 1.0}, '0.05': {'mean_divergence': 0.05544, 'std_divergence': 0.041580000000000006, 'median_divergence': 0.0693, 'max_divergence': 0.1386, 'stable_ratio': 1.0}, '0.1': {'mean_divergence': 0.107415, 'std_divergence': 0.06745635088707364, 'median_divergence': 0.10395, 'max_divergence': 0.2079, 'stable_ratio': 0.8}}
+
+STATISTICAL TESTS
+--------------------------------------------------------------------------------
+text_modality_test: p=1.374e-07, d=1.8129
+image_modality_test: p=9.249e-07, d=1.5895
+noise_robustness_test: p=0.02099, d=0.5627
+Comparative tests: {'text_vs_image_ttest': {'t_statistic': 1.1958710327128594, 'p_value': 0.2464587420947933, 'more_important': 'text'}, 'mann_whitney_u': {'u_statistic': 251.5, 'p_value': 0.1407428733609226}, 'paired_mean_difference': 0.024255000000000002}
+
+CONSTRAINTS
+--------------------------------------------------------------------------------
+Overall violation rate : 0.7500
+evidence_concentration: mean=0.0000, violation_rate=1.0000
+modality_consistency: mean=0.6483, violation_rate=0.0000
+decision_boundary_proximity: mean=0.6973, violation_rate=0.2500
+evidence_diversity: mean=1.0000, violation_rate=0.0000
+ood_validity: mean=0.0689, violation_rate=1.0000
+Reliability correlations: {'aggregate_vs_mean_js': {'rho': 0.020303269959282933, 'p_value': 0.9322925785013441}, 'aggregate_vs_overall_violation': {'rho': -0.7509392614826382, 'p_value': 0.00013593257707635842}, 'aggregate_vs_robustness_level': {'rho': 0.23069739598748434, 'p_value': 0.3277954897241925}}
+
+DIAGNOSTIC PROFILES
+--------------------------------------------------------------------------------
+Most stable diagnosis : eye redness
+Least stable diagnosis: swollen eye
+Stability variance    : 0.0196
+
+================================================================================
