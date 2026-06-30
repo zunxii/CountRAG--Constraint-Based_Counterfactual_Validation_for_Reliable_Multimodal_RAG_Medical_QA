@@ -42,6 +42,7 @@ paths:
   kb_dir: outputs/kb/kb_final_concept
   retrieval_eval_dir: "outputs/evaluation/retrieval"
   counterfactual_eval_dir: "outputs/evaluation/counterfactual"
+  constraint_eval_dir: "outputs/evaluation/constraints"
   lora_eval_dir: "outputs/evaluation/lora"
   encoder_eval_dir: "outputs/evaluation/encoders"
   case_study_dir: "outputs/evaluation/case_studies"

@@ -1,0 +1,4 @@
+system,aggregate_score_mean,overall_violation_rate,mean_js,num_queries,evidence_concentration,evidence_concentration_violation_rate,modality_consistency,modality_consistency_violation_rate,decision_boundary_proximity,decision_boundary_proximity_violation_rate,evidence_diversity,evidence_diversity_violation_rate,ood_validity,ood_validity_violation_rate
+traditional,0.7926963629594981,0.24,0.077838,50,0.7791086148017574,0.04,0.6405540000000001,0.0,0.9507298807570406,0.06,1.0,0.0,0.65089822071767,0.0
+concept,0.7316348649675918,0.42,0.09762133333333334,50,0.6785505586598815,0.16,0.6405540000000001,0.0,0.9237763894364222,0.02,0.8555279503105591,0.14,0.5918283657916876,0.02
+countrag,0.764517702621543,0.28,0.07742933333333334,50,0.816917834669684,0.0,0.660386,0.0,0.9329587353162254,0.06,0.8330434782608694,0.08,0.5576231676783083,0.24

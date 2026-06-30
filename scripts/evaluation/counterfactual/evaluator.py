@@ -1,14 +1,25 @@
 """
-Counterfactual evaluator for stability, modality effects, and constraint safety.
+Counterfactual evaluator for system-level constraint comparison.
+
+Runs:
+- traditional  = flat KB + base encoder
+- concept      = concept KB + base encoder
+- countrag     = concept KB + LoRA encoder
+
+This is the evaluation you want for the radar figure.
 """
 from __future__ import annotations
 
-from pathlib import Path
-from datetime import datetime
 from collections import Counter, defaultdict
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+import csv
 import json
 import sys
-from typing import Any, Dict, List
+
+import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
@@ -17,20 +28,81 @@ from scripts.evaluation.counterfactual.robustness_analyzer import RobustnessAnal
 from scripts.utils.eval_query_loader import EvaluationQueryDataset
 
 
+@dataclass(frozen=True)
+class SystemSpec:
+    name: str
+    kb_dir: str
+    lora_path: Optional[str]
+
+
+def _ensure_dir(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+
+
+def _safe_json(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return {k: _safe_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_safe_json(v) for v in obj]
+    if isinstance(obj, tuple):
+        return [_safe_json(v) for v in obj]
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+    if isinstance(obj, (np.integer,)):
+        return int(obj)
+    if isinstance(obj, (np.floating,)):
+        return float(obj)
+    if isinstance(obj, (np.bool_,)):
+        return bool(obj)
+    if isinstance(obj, Path):
+        return str(obj)
+    return obj
+
+
+def save_json(path: Path, obj: Any) -> None:
+    _ensure_dir(path.parent)
+    with path.open("w", encoding="utf-8") as f:
+        json.dump(_safe_json(obj), f, indent=2, ensure_ascii=False)
+
+
+def save_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
+    _ensure_dir(path.parent)
+    if not rows:
+        with path.open("w", newline="", encoding="utf-8") as f:
+            f.write("")
+        return
+
+    fieldnames: List[str] = []
+    seen = set()
+    for row in rows:
+        for k in row.keys():
+            if k not in seen:
+                seen.add(k)
+                fieldnames.append(k)
+
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({k: _safe_json(row.get(k, "")) for k in fieldnames})
+
+
 class CounterfactualEvaluator:
     def __init__(
         self,
         contract: dict,
-        kb_dir: str,
+        kb_dir: Optional[str],
         output_dir: str,
         device: str = "cpu",
         num_samples: int | None = None,
+        compare_systems: bool = True,
     ):
         self.contract = contract
-        self.kb_dir = Path(kb_dir)
+        self.kb_dir = Path(kb_dir) if kb_dir else None
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.device = device
+        self.compare_systems = compare_systems
 
         eval_csv = contract["paths"]["eval_split_csv"]
         print(f"Loading evaluation queries from {eval_csv}...")
@@ -44,22 +116,57 @@ class CounterfactualEvaluator:
         else:
             self.eval_queries = list(self.eval_dataset)
 
-        self.stability_tester = StabilityTester(str(self.kb_dir), contract, device)
         self.robustness_analyzer = RobustnessAnalyzer()
 
-        self.results = {
+        self.system_specs = self._build_system_specs()
+
+        self.results: Dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "num_samples": len(self.eval_queries),
             "eval_queries_csv": eval_csv,
-            "kb_dir": str(kb_dir),
-            "kb_mode": self.stability_tester.kb_mode,
-            "stability_tests": [],
+            "compare_systems": self.compare_systems,
+            "systems": [spec.name for spec in self.system_specs],
+            "runs": {},
             "analysis": {},
+            "radar_ready": [],
         }
+
+    def _build_system_specs(self) -> List[SystemSpec]:
+        paths = self.contract["paths"]
+        models = paths["models"]
+
+        if self.compare_systems:
+            return [
+                SystemSpec(
+                    name="traditional",
+                    kb_dir=paths["kb_flat_dir"],
+                    lora_path=None,
+                ),
+                SystemSpec(
+                    name="concept",
+                    kb_dir=paths["kb_concept_dir"],
+                    lora_path=None,
+                ),
+                SystemSpec(
+                    name="countrag",
+                    kb_dir=paths["kb_concept_dir"],
+                    lora_path=models["lora_dir"],
+                ),
+            ]
+
+        # legacy single-system fallback
+        kb_dir = str(self.kb_dir or paths["kb_concept_dir"])
+        return [
+            SystemSpec(
+                name="single",
+                kb_dir=kb_dir,
+                lora_path=models["lora_dir"],
+            )
+        ]
 
     def run_evaluation(self):
         print("\n" + "=" * 70)
-        print("COUNTERFACTUAL STABILITY EVALUATION")
+        print("COUNTERFACTUAL / CONSTRAINT SYSTEM COMPARISON")
         print(f"Using {len(self.eval_queries)} reserved evaluation queries")
         print("=" * 70 + "\n")
 
@@ -72,18 +179,72 @@ class CounterfactualEvaluator:
             print(f"  {diag}: {count}")
         print()
 
-        print("[1/2] Running stability tests on evaluation queries...")
-        from tqdm import tqdm
-        for query in tqdm(self.eval_queries, desc="Testing stability"):
-            result = self.stability_tester.test_query(query)
-            self.results["stability_tests"].append(result)
+        for spec in self.system_specs:
+            print("\n" + "=" * 70)
+            print(f"RUNNING SYSTEM: {spec.name.upper()}")
+            print(f"KB: {spec.kb_dir}")
+            print(f"LoRA: {spec.lora_path if spec.lora_path else 'None'}")
+            print("=" * 70)
 
-        print(f"\n✓ Completed {len(self.results['stability_tests'])} stability tests")
+            tester = StabilityTester(
+                kb_dir=spec.kb_dir,
+                contract=self.contract,
+                device=self.device,
+                lora_path=spec.lora_path,
+                fusion_path=self.contract["paths"]["models"]["fusion_model_file"],
+            )
 
-        print("\n[2/2] Analyzing results...")
-        self.results["analysis"] = self.robustness_analyzer.analyze(self.results["stability_tests"])
+            stability_tests: List[Dict[str, Any]] = []
+            print(f"[1/2] Running stability tests for {spec.name}...")
+            from tqdm import tqdm
+            for query in tqdm(self.eval_queries, desc=f"Testing {spec.name}"):
+                result = tester.test_query(query)
+                result["system"] = spec.name
+                stability_tests.append(result)
+
+            print(f"✓ Completed {len(stability_tests)} stability tests for {spec.name}")
+
+            print(f"[2/2] Analyzing results for {spec.name}...")
+            analysis = self.robustness_analyzer.analyze(stability_tests)
+
+            self.results["runs"][spec.name] = {
+                "kb_dir": spec.kb_dir,
+                "lora_path": spec.lora_path,
+                "kb_mode": tester.kb_mode,
+                "stability_tests": stability_tests,
+                "analysis": analysis,
+            }
+
+            self.results["analysis"][spec.name] = analysis
+            self.results["radar_ready"].append(self._build_radar_row(spec.name, analysis))
 
         print("\n✓ Evaluation complete")
+
+    def _build_radar_row(self, system_name: str, analysis: Dict[str, Any]) -> Dict[str, Any]:
+        constraints = analysis.get("constraints_analysis", {}) if isinstance(analysis, dict) else {}
+        axis_summary = constraints.get("axis_summary", {}) if isinstance(constraints, dict) else {}
+        basic = analysis.get("basic_metrics", {}) if isinstance(analysis, dict) else {}
+        avg_div = basic.get("avg_divergences", {}) if isinstance(basic, dict) else {}
+
+        row = {
+            "system": system_name,
+            "aggregate_score_mean": float(constraints.get("aggregate_summary", {}).get("mean_score", 0.0)) if isinstance(constraints, dict) else 0.0,
+            "overall_violation_rate": float(constraints.get("overall_violation_rate", 0.0)) if isinstance(constraints, dict) else 0.0,
+            "mean_js": float(np.mean(list(avg_div.values()))) if avg_div else 0.0,
+            "num_queries": int(constraints.get("sample_size", 0)) if isinstance(constraints, dict) else 0,
+        }
+
+        for axis in [
+            "evidence_concentration",
+            "modality_consistency",
+            "decision_boundary_proximity",
+            "evidence_diversity",
+            "ood_validity",
+        ]:
+            row[axis] = float(axis_summary.get(axis, {}).get("mean_score", 0.0))
+            row[f"{axis}_violation_rate"] = float(axis_summary.get(axis, {}).get("violation_rate", 0.0))
+
+        return row
 
     def _convert_to_json_serializable(self, obj):
         import numpy as np
@@ -111,164 +272,304 @@ class CounterfactualEvaluator:
             json.dump(serializable_results, f, indent=2)
         print(f"\n✓ Results saved to {results_path}")
 
+        save_csv(self.output_dir / "radar_ready.csv", self.results["radar_ready"])
+        save_json(self.output_dir / "combined_summary.json", self.results["analysis"])
+
         summary_path = self.output_dir / "summary.txt"
         self._save_summary(summary_path)
         print(f"✓ Summary saved to {summary_path}")
 
-        self._save_per_diagnosis_breakdown()
+        self._save_per_system_breakdown()
 
-    def _save_per_diagnosis_breakdown(self):
-        """
-        Save per-diagnosis summary metrics for plotting / manuscript tables.
-        """
-        by_diag: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
-        for test in self.results.get("stability_tests", []):
-            diag = test.get("diagnosis", "unknown")
-            by_diag[diag].append(test)
-
+    def _save_per_system_breakdown(self):
         breakdown = {}
-        for diag, tests in by_diag.items():
-            stability_levels = [t.get("stability", {}).get("robustness_level", "unknown") for t in tests]
-            js_no_text = [t.get("stability", {}).get("js_divergence", {}).get("no_text", 0.0) for t in tests]
-            js_no_image = [t.get("stability", {}).get("js_divergence", {}).get("no_image", 0.0) for t in tests]
-            js_noisy = [t.get("stability", {}).get("js_divergence", {}).get("noisy", 0.0) for t in tests]
-            aggregate_scores = [t.get("constraints", {}).get("aggregate_score", 0.0) for t in tests if "constraints" in t]
-            violations = [bool(t.get("constraints", {}).get("overall_violation", False)) for t in tests if "constraints" in t]
-
-            breakdown[diag] = {
-                "count": len(tests),
-                "robustness_distribution": {
-                    "high": int(stability_levels.count("high")),
-                    "medium": int(stability_levels.count("medium")),
-                    "low": int(stability_levels.count("low")),
-                },
-                "js_divergence_mean": {
-                    "no_text": float(sum(js_no_text) / len(js_no_text)) if js_no_text else 0.0,
-                    "no_image": float(sum(js_no_image) / len(js_no_image)) if js_no_image else 0.0,
-                    "noisy": float(sum(js_noisy) / len(js_noisy)) if js_noisy else 0.0,
-                },
-                "constraint_summary": {
-                    "mean_aggregate_score": float(sum(aggregate_scores) / len(aggregate_scores)) if aggregate_scores else 0.0,
-                    "overall_violation_rate": float(sum(violations) / len(violations)) if violations else 0.0,
-                },
-            }
+        for system_name, bundle in self.results.get("runs", {}).items():
+            if not isinstance(bundle, dict):
+                continue
+            analysis = bundle.get("analysis", {})
+            constraints = analysis.get("constraints_analysis", {})
+            if constraints:
+                breakdown[system_name] = constraints
 
         if breakdown:
-            breakdown_path = self.output_dir / "per_diagnosis_metrics.json"
+            breakdown_path = self.output_dir / "constraints_per_system.json"
             with open(breakdown_path, "w", encoding="utf-8") as f:
                 json.dump(self._convert_to_json_serializable(breakdown), f, indent=2)
-            print(f"✓ Per-diagnosis metrics saved to {breakdown_path}")
+            print(f"✓ Per-system constraint summary saved to {breakdown_path}")
+
+    # ── Column widths for tabular sections ──────────────────────────────────
+    _AXIS_LABELS = {
+        "evidence_concentration":      "Evidence Concentration",
+        "modality_consistency":        "Modality Consistency",
+        "decision_boundary_proximity": "Decision Boundary Proximity",
+        "evidence_diversity":          "Evidence Diversity",
+        "ood_validity":                "OOD Validity",
+    }
+    _SYSTEMS_ORDER = ["traditional", "concept", "countrag"]
+    _SYSTEM_DISPLAY = {
+        "traditional": "Traditional",
+        "concept":     "Concept-KB",
+        "countrag":    "CountRAG (Ours)",
+    }
 
     def _save_summary(self, path: Path):
-        analysis = self.results.get("analysis", {})
-        basic = analysis.get("basic_metrics", {})
-        perturb = analysis.get("perturbation_analysis", {})
-        modality = analysis.get("modality_effects", {})
-        stats = analysis.get("statistical_tests", {})
-        diagnostic = analysis.get("diagnostic_profiles", {})
-        constraints = analysis.get("constraints_analysis", {})
+        runs = self.results.get("runs", {})
+        # Respect canonical order when present, else use insertion order
+        ordered_systems = [s for s in self._SYSTEMS_ORDER if s in runs] + \
+                          [s for s in runs if s not in self._SYSTEMS_ORDER]
+
+        W = 88  # total width
+
+        def hr(char="="):
+            return char * W + "\n"
+
+        def col_header(systems):
+            """Right-aligned system name columns (18 chars each)."""
+            line = f"{'Axis / Metric':<36}"
+            for s in systems:
+                line += f"{self._SYSTEM_DISPLAY.get(s, s):>17}"
+            return line + "\n"
+
+        def row(label, values, fmt=".4f"):
+            line = f"  {label:<34}"
+            for v in values:
+                if isinstance(v, float):
+                    line += f"{v:>17{fmt}}"
+                else:
+                    line += f"{str(v):>17}"
+            return line + "\n"
+
+        def delta_row(label, values, baseline_idx=0, fmt=".4f", higher_better=True):
+            """Row with Δ vs baseline in parentheses for non-baseline columns."""
+            base = values[baseline_idx] if isinstance(values[baseline_idx], float) else 0.0
+            line = f"  {label:<34}"
+            for i, v in enumerate(values):
+                if isinstance(v, float):
+                    if i == baseline_idx:
+                        line += f"{v:>17{fmt}}"
+                    else:
+                        delta = v - base
+                        sign = "+" if delta >= 0 else ""
+                        d_str = f"({sign}{delta:.3f})"
+                        cell = f"{v:{fmt}} {d_str}"
+                        line += f"{cell:>17}"
+                else:
+                    line += f"{str(v):>17}"
+            return line + "\n"
+
+        def viol_row(label, values, baseline_idx=0):
+            """Violation-rate row: lower is better → Δ sign flipped display."""
+            base = values[baseline_idx] if isinstance(values[baseline_idx], float) else 0.0
+            line = f"  {label:<34}"
+            for i, v in enumerate(values):
+                if isinstance(v, float):
+                    if i == baseline_idx:
+                        pct = f"{v*100:.1f}%"
+                        line += f"{pct:>17}"
+                    else:
+                        delta = v - base
+                        sign = "+" if delta >= 0 else ""
+                        pct = f"{v*100:.1f}%"
+                        d_str = f"({sign}{delta*100:.1f}pp)"
+                        cell = f"{pct} {d_str}"
+                        line += f"{cell:>17}"
+                else:
+                    line += f"{str(v):>17}"
+            return line + "\n"
 
         with open(path, "w", encoding="utf-8") as f:
-            f.write("=" * 80 + "\n")
-            f.write("COUNTERFACTUAL / CONSTRAINT EVALUATION SUMMARY\n")
-            f.write("=" * 80 + "\n\n")
-            f.write(f"Timestamp        : {self.results.get('timestamp', 'N/A')}\n")
-            f.write(f"Eval samples     : {self.results.get('num_samples', 'N/A')}\n")
-            f.write(f"KB mode          : {self.results.get('kb_mode', 'N/A')}\n")
-            f.write(f"KB directory     : {self.results.get('kb_dir', 'N/A')}\n")
-            f.write(f"Contract         : {self.contract.get('_contract_path', 'N/A')}\n\n")
-
-            f.write("ROBUSTNESS\n")
-            f.write("-" * 80 + "\n")
-            avg_div = basic.get("avg_divergences", {})
-            f.write(f"Mean JS divergence (no_text) : {avg_div.get('no_text', 0.0):.4f}\n")
-            f.write(f"Mean JS divergence (no_image): {avg_div.get('no_image', 0.0):.4f}\n")
-            f.write(f"Mean JS divergence (noisy)   : {avg_div.get('noisy', 0.0):.4f}\n")
-            f.write(f"Robustness distribution      : {basic.get('robustness_distribution', {})}\n\n")
-
-            f.write("MODALITY EFFECTS\n")
-            f.write("-" * 80 + "\n")
-            if isinstance(modality, dict) and "attribution_summary" in modality:
-                attr = modality["attribution_summary"]
-                f.write(f"Text contribution mean  : {attr['text_contribution']['mean']:.4f}\n")
-                f.write(f"Image contribution mean : {attr['image_contribution']['mean']:.4f}\n")
-                f.write(f"Interaction strength    : {attr['interaction_strength']['mean']:.4f}\n")
-                f.write(f"Dominant modalities     : {attr.get('dominant_modality_distribution', {})}\n")
-            else:
-                f.write(f"{modality}\n")
+            # ── Header ────────────────────────────────────────────────────────
+            f.write(hr())
+            f.write("THREE-STAGE CONSTRAINT EVIDENCE VIOLATION REPORT\n")
+            f.write("CountRAG vs Concept-KB vs Traditional — System Comparison\n")
+            f.write(hr())
+            f.write(f"Timestamp   : {self.results.get('timestamp', 'N/A')}\n")
+            f.write(f"Eval samples: {self.results.get('num_samples', 'N/A')}\n")
+            f.write(f"Contract    : {self.contract.get('_contract_path', 'N/A')}\n")
+            f.write(f"Systems     : {', '.join(self._SYSTEM_DISPLAY.get(s, s) for s in ordered_systems)}\n")
             f.write("\n")
 
-            f.write("PERTURBATION ANALYSIS\n")
-            f.write("-" * 80 + "\n")
-            if isinstance(perturb, dict):
-                f.write(f"Robustness threshold    : {perturb.get('robustness_threshold', None)}\n")
-                f.write(f"Scale analysis          : {perturb.get('scale_analysis', {})}\n")
-            else:
-                f.write(f"{perturb}\n")
+            # ── Stage 1: Evidence Retrieval Constraints ────────────────────────
+            f.write(hr())
+            f.write("STAGE 1 — EVIDENCE RETRIEVAL CONSTRAINTS\n")
+            f.write("Measures how well each system retrieves coherent, diverse,\n")
+            f.write("and modality-consistent evidence from the knowledge base.\n")
+            f.write(hr("-"))
+            f.write(col_header(ordered_systems))
+            f.write(hr("-"))
+
+            stage1_axes = ["evidence_concentration", "modality_consistency", "evidence_diversity"]
+            for axis in stage1_axes:
+                label = self._AXIS_LABELS[axis]
+                # Score rows
+                scores = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    scores.append(c.get("axis_summary", {}).get(axis, {}).get("mean_score", float("nan"))
+                                  if isinstance(c, dict) else float("nan"))
+                f.write(delta_row(f"{label} (score)", scores, higher_better=True))
+
+                # Violation-rate rows
+                viols = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    viols.append(c.get("axis_summary", {}).get(axis, {}).get("violation_rate", float("nan"))
+                                 if isinstance(c, dict) else float("nan"))
+                f.write(viol_row(f"  └─ Violation rate", viols))
+
+            f.write(hr("-"))
+            # Stage 1 summary: mean score across the 3 axes
+            for axis in stage1_axes:
+                pass  # already printed above
             f.write("\n")
 
-            f.write("STATISTICAL TESTS\n")
-            f.write("-" * 80 + "\n")
-            if isinstance(stats, dict):
-                for k in ("text_modality_test", "image_modality_test", "noise_robustness_test"):
-                    if k in stats and isinstance(stats[k], dict):
-                        f.write(f"{k}: p={stats[k].get('t_pvalue', 1.0):.4g}, d={stats[k].get('cohens_d', 0.0):.4f}\n")
-                if "comparative_tests" in stats:
-                    f.write(f"Comparative tests: {stats['comparative_tests']}\n")
-            else:
-                f.write(f"{stats}\n")
+            # ── Stage 2: Decision Boundary & OOD Constraints ──────────────────
+            f.write(hr())
+            f.write("STAGE 2 — DECISION BOUNDARY & OOD CONSTRAINTS\n")
+            f.write("Measures margin confidence near the decision boundary and\n")
+            f.write("out-of-distribution validity of the query against the KB.\n")
+            f.write(hr("-"))
+            f.write(col_header(ordered_systems))
+            f.write(hr("-"))
+
+            stage2_axes = ["decision_boundary_proximity", "ood_validity"]
+            for axis in stage2_axes:
+                label = self._AXIS_LABELS[axis]
+                scores = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    scores.append(c.get("axis_summary", {}).get(axis, {}).get("mean_score", float("nan"))
+                                  if isinstance(c, dict) else float("nan"))
+                f.write(delta_row(f"{label} (score)", scores, higher_better=True))
+
+                viols = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    viols.append(c.get("axis_summary", {}).get(axis, {}).get("violation_rate", float("nan"))
+                                 if isinstance(c, dict) else float("nan"))
+                f.write(viol_row(f"  └─ Violation rate", viols))
+
+            f.write(hr("-"))
+            # JS divergence rows
+            f.write(f"\n  {'Robustness (JSD — lower is better)':<34}")
+            for s in ordered_systems:
+                basic = runs[s]["analysis"].get("basic_metrics", {}) if s in runs else {}
+                avg_div = basic.get("avg_divergences", {}) if isinstance(basic, dict) else {}
+                mean_jsd = float(np.mean(list(avg_div.values()))) if avg_div else float("nan")
+                f.write(f"{mean_jsd:>17.4f}")
             f.write("\n")
 
-            f.write("CONSTRAINTS\n")
-            f.write("-" * 80 + "\n")
-            if isinstance(constraints, dict) and "axis_summary" in constraints:
-                f.write(f"Overall violation rate : {constraints.get('overall_violation_rate', 0.0):.4f}\n")
-                for axis, vals in constraints["axis_summary"].items():
-                    f.write(
-                        f"{axis}: mean={vals['mean_score']:.4f}, "
-                        f"violation_rate={vals['violation_rate']:.4f}\n"
-                    )
-                if "reliability_correlations" in constraints:
-                    f.write(f"Reliability correlations: {constraints['reliability_correlations']}\n")
-            else:
-                f.write(f"{constraints}\n")
+            for pert, label in [("no_text", "  JSD (no-text)"), ("no_image", "  JSD (no-image)"), ("noisy", "  JSD (noisy)")]:
+                f.write(f"  {label:<34}")
+                for s in ordered_systems:
+                    basic = runs[s]["analysis"].get("basic_metrics", {}) if s in runs else {}
+                    avg_div = basic.get("avg_divergences", {}) if isinstance(basic, dict) else {}
+                    f.write(f"{avg_div.get(pert, float('nan')):>17.4f}")
+                f.write("\n")
             f.write("\n")
 
-            f.write("DIAGNOSTIC PROFILES\n")
-            f.write("-" * 80 + "\n")
-            if isinstance(diagnostic, dict) and "_comparative" in diagnostic:
-                comp = diagnostic["_comparative"]
-                f.write(f"Most stable diagnosis : {comp.get('most_stable', 'N/A')}\n")
-                f.write(f"Least stable diagnosis: {comp.get('least_stable', 'N/A')}\n")
-                f.write(f"Stability variance    : {comp.get('stability_variance', 0.0):.4f}\n")
-            else:
-                f.write(f"{diagnostic}\n")
+            # ── Stage 3: Aggregate Constraint & Overall Violation ─────────────
+            f.write(hr())
+            f.write("STAGE 3 — AGGREGATE CONSTRAINT & OVERALL VIOLATION ANALYSIS\n")
+            f.write("Weighted aggregate of all five constraint axes plus the\n")
+            f.write("four-trigger overall violation rate (cross-links JSD probing).\n")
+            f.write(hr("-"))
+            f.write(col_header(ordered_systems))
+            f.write(hr("-"))
+
+            # Aggregate score
+            agg_scores = []
+            for s in ordered_systems:
+                c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                agg_scores.append(
+                    c.get("aggregate_summary", {}).get("mean_score", float("nan"))
+                    if isinstance(c, dict) else float("nan")
+                )
+            f.write(delta_row("Aggregate constraint score", agg_scores, higher_better=True))
+
+            # Overall violation rate
+            ovr = []
+            for s in ordered_systems:
+                c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                ovr.append(c.get("overall_violation_rate", float("nan")) if isinstance(c, dict) else float("nan"))
+            f.write(viol_row("Overall violation rate", ovr))
+
+            # Robustness distribution
+            f.write(hr("-"))
+            for level in ["high", "medium", "low"]:
+                f.write(f"  {'Robustness: ' + level:<34}")
+                for s in ordered_systems:
+                    basic = runs[s]["analysis"].get("basic_metrics", {}) if s in runs else {}
+                    dist = basic.get("robustness_distribution", {}) if isinstance(basic, dict) else {}
+                    f.write(f"{dist.get(level, 0):>17d}")
+                f.write("\n")
+
+            # All 5 axes full table
+            f.write(hr("-"))
+            f.write(f"  {'Per-axis violation rates (all 5 axes):'}\n")
+            f.write(hr("-"))
+            all_axes = list(self._AXIS_LABELS.keys())
+            for axis in all_axes:
+                label = self._AXIS_LABELS[axis]
+                viols = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    viols.append(c.get("axis_summary", {}).get(axis, {}).get("violation_rate", float("nan"))
+                                 if isinstance(c, dict) else float("nan"))
+                f.write(viol_row(label, viols))
             f.write("\n")
 
-            f.write("=" * 80 + "\n")
+            # ── Reliability Correlations (CountRAG only, research context) ────
+            countrag_constraints = {}
+            if "countrag" in runs:
+                countrag_constraints = runs["countrag"]["analysis"].get("constraints_analysis", {})
+            if isinstance(countrag_constraints, dict) and "reliability_correlations" in countrag_constraints:
+                f.write(hr())
+                f.write("RELIABILITY CORRELATIONS (CountRAG)\n")
+                f.write("Spearman ρ between aggregate constraint score and system signals.\n")
+                f.write(hr("-"))
+                corrs = countrag_constraints["reliability_correlations"]
+                for key, vals in corrs.items():
+                    rho = vals.get("rho", float("nan"))
+                    p   = vals.get("p_value", float("nan"))
+                    label = key.replace("_", " ").title()
+                    f.write(f"  {label:<44} ρ={rho:+.3f}  p={p:.4f}\n")
+                f.write("\n")
 
+            # ── Radar-ready table (for copy-paste into figures) ────────────────
+            f.write(hr())
+            f.write("RADAR-READY TABLE  (mean constraint scores per axis, 0–1 scale)\n")
+            f.write("Use this to build the radar / spider diagram directly.\n")
+            f.write(hr("-"))
+            f.write(col_header(ordered_systems))
+            f.write(hr("-"))
+            for axis in all_axes:
+                label = self._AXIS_LABELS[axis]
+                scores = []
+                for s in ordered_systems:
+                    c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                    scores.append(c.get("axis_summary", {}).get(axis, {}).get("mean_score", float("nan"))
+                                  if isinstance(c, dict) else float("nan"))
+                f.write(row(label, scores))
+            f.write(hr("-"))
+            # Add aggregate as last row
+            agg_row_vals = []
+            for s in ordered_systems:
+                c = runs[s]["analysis"].get("constraints_analysis", {}) if s in runs else {}
+                agg_row_vals.append(
+                    c.get("aggregate_summary", {}).get("mean_score", float("nan"))
+                    if isinstance(c, dict) else float("nan")
+                )
+            f.write(row("Aggregate (weighted)", agg_row_vals))
+            f.write(hr())
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run Counterfactual Evaluation")
-    parser.add_argument("--kb-dir", type=str, default="outputs/kb/kb_final_concept", help="Path to Knowledge Base")
-    parser.add_argument("--output-dir", type=str, default="outputs/evaluation/counterfactual", help="Output directory")
-    parser.add_argument("--device", type=str, default="cpu", help="Device to run on (cpu/cuda)")
-    parser.add_argument("--num-samples", type=int, default=None, help="Number of queries to sample")
-
-    args = parser.parse_args()
-
-    from configs.eval_contract import load_eval_contract
-
-    contract = load_eval_contract()
-    evaluator = CounterfactualEvaluator(
-        contract=contract,
-        kb_dir=args.kb_dir,
-        output_dir=args.output_dir,
-        device=args.device,
-        num_samples=args.num_samples,
-    )
-
-    evaluator.run_evaluation()
-    evaluator.save_results()
+            # ── System metadata footer ─────────────────────────────────────────
+            f.write("SYSTEM CONFIGURATION\n")
+            f.write(hr("-"))
+            for s in ordered_systems:
+                bundle = runs.get(s, {})
+                disp   = self._SYSTEM_DISPLAY.get(s, s)
+                f.write(f"  {disp:<20} KB={bundle.get('kb_dir','N/A')}  "
+                        f"LoRA={bundle.get('lora_path','None')}  "
+                        f"mode={bundle.get('kb_mode','N/A')}\n")
+            f.write(hr())

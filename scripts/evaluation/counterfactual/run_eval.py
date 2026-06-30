@@ -11,6 +11,7 @@ from scripts.evaluation.counterfactual.evaluator import CounterfactualEvaluator
 def main():
     parser = argparse.ArgumentParser(description="Counterfactual evaluation using locked contract")
     parser.add_argument("--contract", default="configs/evaluation_contract.yaml")
+    parser.add_argument("--single-system", action="store_true", help="Run only one KB stack")
     parser.add_argument("--kb-dir", default=None)
     parser.add_argument("--num-samples", type=int, default=None)
     parser.add_argument("--output-dir", default=None)
@@ -25,12 +26,13 @@ def main():
     num_samples = args.num_samples if args.num_samples is not None else contract["counterfactual"]["num_samples"]
 
     evaluator = CounterfactualEvaluator(
-        contract=contract,
-        kb_dir=kb_dir,
-        output_dir=output_dir,
-        device=device,
-        num_samples=num_samples,
-    )
+    contract=contract,
+    kb_dir=kb_dir,
+    output_dir=output_dir,
+    device=device,
+    num_samples=num_samples,
+    compare_systems=not args.single_system,
+)
     evaluator.run_evaluation()
     evaluator.save_results()
 

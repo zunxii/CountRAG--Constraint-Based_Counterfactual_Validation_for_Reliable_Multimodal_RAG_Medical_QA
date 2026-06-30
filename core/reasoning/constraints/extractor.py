@@ -87,20 +87,24 @@ class ConstraintExtractor:
     def extract(
         self,
         retrieved_metadata: list,
-        baseline_distribution: Dict[str, float],
         img_emb,
         txt_emb,
         top1_prob: float,
         top2_prob: float,
         query_distance: float,
         percentile_95: float,
+        baseline_distribution: Optional[Dict[str, float]] = None,
+        distribution: Optional[Dict[str, float]] = None,
         retrieved: Optional[List[Dict[str, Any]]] = None,
         support_reference: float | None = None,
         robustness_level: str = "high",
         max_js_divergence: float = 0.0,
     ):
+        # Accept both 'baseline_distribution' (from runner.py) and legacy 'distribution'
+        dist_input: Dict[str, float] = baseline_distribution or distribution or {}
+
         # ── Constraint scores ────────────────────────────────────────────────
-        concentration = 1.0 - self._normalized_entropy(baseline_distribution)
+        concentration = 1.0 - self._normalized_entropy(dist_input)
         modality      = modality_consistency_constraint(img_emb, txt_emb)
         boundary      = boundary_analysis_constraint(top1_prob, top2_prob)
 
@@ -108,7 +112,7 @@ class ConstraintExtractor:
         ref         = float(support_reference) if support_reference is not None else 1.0
         diversity   = float(np.clip(min(1.0, top_support / max(ref, 1e-9)), 0.0, 1.0))
 
-        distribution = distribution_check_constraint(query_distance, percentile_95)
+        dist_check   = distribution_check_constraint(query_distance, percentile_95)
         ratio        = float(query_distance) / max(float(percentile_95), 1e-9)
         ood_validity = 1.0 / (1.0 + np.exp(4.0 * (ratio - 1.0)))
 
@@ -164,7 +168,7 @@ class ConstraintExtractor:
             "modality_consistency": modality,
             "boundary_analysis":    boundary,
             "evidence_diversity":   evidence_diversity_constraint(retrieved_metadata),
-            "distribution_check":   distribution,
+            "distribution_check":   dist_check,
             "scores":               scores,
             "violations":           violations,
             "aggregate_score":      aggregate,

@@ -1,0 +1,92 @@
+========================================================================================
+THREE-STAGE CONSTRAINT EVIDENCE VIOLATION REPORT
+CountRAG vs Concept-KB vs Traditional — System Comparison
+========================================================================================
+Timestamp   : 2026-06-30T13:40:30.835176
+Eval samples: 50
+Contract    : configs/evaluation_contract.yaml
+Systems     : Traditional, Concept-KB, CountRAG (Ours)
+
+========================================================================================
+STAGE 1 — EVIDENCE RETRIEVAL CONSTRAINTS
+Measures how well each system retrieves coherent, diverse,
+and modality-consistent evidence from the knowledge base.
+----------------------------------------------------------------------------------------
+Axis / Metric                             Traditional       Concept-KB  CountRAG (Ours)
+----------------------------------------------------------------------------------------
+  Evidence Concentration (score)               0.7791  0.6786 (-0.101)  0.8169 (+0.038)
+    └─ Violation rate                            4.0%  16.0% (+12.0pp)    0.0% (-4.0pp)
+  Modality Consistency (score)                 0.6406  0.6406 (+0.000)  0.6604 (+0.020)
+    └─ Violation rate                            0.0%    0.0% (+0.0pp)    0.0% (+0.0pp)
+  Evidence Diversity (score)                   1.0000  0.8555 (-0.144)  0.8330 (-0.167)
+    └─ Violation rate                            0.0%  14.0% (+14.0pp)    8.0% (+8.0pp)
+----------------------------------------------------------------------------------------
+
+========================================================================================
+STAGE 2 — DECISION BOUNDARY & OOD CONSTRAINTS
+Measures margin confidence near the decision boundary and
+out-of-distribution validity of the query against the KB.
+----------------------------------------------------------------------------------------
+Axis / Metric                             Traditional       Concept-KB  CountRAG (Ours)
+----------------------------------------------------------------------------------------
+  Decision Boundary Proximity (score)           0.9507  0.9238 (-0.027)  0.9330 (-0.018)
+    └─ Violation rate                            6.0%    2.0% (-4.0pp)    6.0% (+0.0pp)
+  OOD Validity (score)                         0.6509  0.5918 (-0.059)  0.5576 (-0.093)
+    └─ Violation rate                            0.0%    2.0% (+2.0pp)  24.0% (+24.0pp)
+----------------------------------------------------------------------------------------
+
+  Robustness (JSD — lower is better)           0.0778           0.0976           0.0774
+    JSD (no-text)                              0.0252           0.0424           0.0818
+    JSD (no-image)                             0.1664           0.1985           0.1264
+    JSD (noisy)                                0.0419           0.0519           0.0241
+
+========================================================================================
+STAGE 3 — AGGREGATE CONSTRAINT & OVERALL VIOLATION ANALYSIS
+Weighted aggregate of all five constraint axes plus the
+four-trigger overall violation rate (cross-links JSD probing).
+----------------------------------------------------------------------------------------
+Axis / Metric                             Traditional       Concept-KB  CountRAG (Ours)
+----------------------------------------------------------------------------------------
+  Aggregate constraint score                   0.7927  0.7316 (-0.061)  0.7645 (-0.028)
+  Overall violation rate                        24.0%  42.0% (+18.0pp)   28.0% (+4.0pp)
+----------------------------------------------------------------------------------------
+  Robustness: high                                 27               24               31
+  Robustness: medium                               14               11                6
+  Robustness: low                                   9               15               13
+----------------------------------------------------------------------------------------
+  Per-axis violation rates (all 5 axes):
+----------------------------------------------------------------------------------------
+  Evidence Concentration                         4.0%  16.0% (+12.0pp)    0.0% (-4.0pp)
+  Modality Consistency                           0.0%    0.0% (+0.0pp)    0.0% (+0.0pp)
+  Decision Boundary Proximity                    6.0%    2.0% (-4.0pp)    6.0% (+0.0pp)
+  Evidence Diversity                             0.0%  14.0% (+14.0pp)    8.0% (+8.0pp)
+  OOD Validity                                   0.0%    2.0% (+2.0pp)  24.0% (+24.0pp)
+
+========================================================================================
+RELIABILITY CORRELATIONS (CountRAG)
+Spearman ρ between aggregate constraint score and system signals.
+----------------------------------------------------------------------------------------
+  Aggregate Vs Mean Js                         ρ=-0.526  p=0.0001
+  Aggregate Vs Overall Violation               ρ=-0.250  p=0.0799
+  Aggregate Vs Robustness Level                ρ=+0.231  p=0.1066
+
+========================================================================================
+RADAR-READY TABLE  (mean constraint scores per axis, 0–1 scale)
+Use this to build the radar / spider diagram directly.
+----------------------------------------------------------------------------------------
+Axis / Metric                             Traditional       Concept-KB  CountRAG (Ours)
+----------------------------------------------------------------------------------------
+  Evidence Concentration                       0.7791           0.6786           0.8169
+  Modality Consistency                         0.6406           0.6406           0.6604
+  Decision Boundary Proximity                  0.9507           0.9238           0.9330
+  Evidence Diversity                           1.0000           0.8555           0.8330
+  OOD Validity                                 0.6509           0.5918           0.5576
+----------------------------------------------------------------------------------------
+  Aggregate (weighted)                         0.7927           0.7316           0.7645
+========================================================================================
+SYSTEM CONFIGURATION
+----------------------------------------------------------------------------------------
+  Traditional          KB=outputs/kb/kb_final_v2  LoRA=None  mode=flat
+  Concept-KB           KB=outputs/kb/kb_final_concept  LoRA=None  mode=concept
+  CountRAG (Ours)      KB=outputs/kb/kb_final_concept  LoRA=outputs/models/trained_lora  mode=concept
+========================================================================================

@@ -126,6 +126,17 @@ Examples:
     )
     eval_lora_parser.add_argument("--output-dir", default="outputs/evaluation/lora")
 
+    eval_constraints_parser = subparsers.add_parser(
+        "eval-constraints",
+        help="Modality-wise constraint evaluation for radar plots"
+    )
+    eval_constraints_parser.add_argument("--kb-dir", default="outputs/kb/kb_final_concept")
+    eval_constraints_parser.add_argument("--num-samples", type=int, default=200)
+    eval_constraints_parser.add_argument("--output-dir", default="outputs/evaluation/constraints")
+    eval_constraints_parser.add_argument("--device", default="cpu")
+    eval_constraints_parser.add_argument("--seed", type=int, default=42)
+    eval_constraints_parser.add_argument("--no-noisy", action="store_true")
+
     
     # ========================================
     # INFERENCE COMMANDS
@@ -270,6 +281,19 @@ Examples:
         print(" Running LoRA Evaluation")
         return run_script("scripts/evaluation/lora/run_eval.py",
                          ["--output-dir", args.output_dir])
+
+    elif args.command == "eval-constraints":
+        print(" Running Modality Constraint Evaluation")
+        script_args = [
+            "--kb-dir", args.kb_dir,
+            "--num-samples", str(args.num_samples),
+            "--output-dir", args.output_dir,
+            "--device", args.device,
+            "--seed", str(args.seed),
+        ]
+        if args.no_noisy:
+            script_args.append("--no-noisy")
+        return run_script("scripts/evaluation/constraints/run_eval.py", script_args)
 
 def _build_pipeline_args(args):
     script_args = []

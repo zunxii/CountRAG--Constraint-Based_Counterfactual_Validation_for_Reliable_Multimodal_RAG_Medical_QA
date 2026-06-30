@@ -288,7 +288,8 @@ class StabilityRunner:
                     max_js_divergence=max_js_divergence,
                 )
             except Exception as exc:
-                constraints = {"error": str(exc)}
+                import traceback
+                constraints = {"error": str(exc), "traceback": traceback.format_exc()}
 
         return {
             "baseline": baseline["distribution"],

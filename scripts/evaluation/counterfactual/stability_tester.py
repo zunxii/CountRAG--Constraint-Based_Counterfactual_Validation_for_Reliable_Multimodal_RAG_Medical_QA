@@ -18,8 +18,23 @@ from core.reasoning.counterfactuals.stability.runner import StabilityRunner
 from core.retrieval.retriever import KBRetriever
 
 
+class _Unset:
+    """Sentinel to distinguish 'caller didn't pass lora_path' from 'caller explicitly passed None'."""
+    pass
+
+
+_UNSET = _Unset()
+
+
 class StabilityTester:
-    def __init__(self, kb_dir: str, contract: dict, device: str = "cpu"):
+    def __init__(
+        self,
+        kb_dir: str,
+        contract: dict,
+        device: str = "cpu",
+        lora_path=_UNSET,
+        fusion_path: Optional[str] = None,
+    ):
         self.device = device
         self.contract = contract
         kb_dir = Path(kb_dir)
@@ -37,8 +52,14 @@ class StabilityTester:
         self._support_reference = self._compute_support_reference()
         self._ood_threshold_95 = self._compute_ood_threshold_95()
 
-        lora_path = contract["paths"]["models"]["lora_dir"]
-        fusion_path = Path(contract["paths"]["models"]["fusion_model_file"])
+        model_paths = contract["paths"]["models"]
+        # KEY FIX: only fall back to the contract's default lora_dir when the
+        # caller did not pass lora_path at all. An explicit lora_path=None
+        # (used by the "traditional" and "concept" systems to mean "no LoRA")
+        # must be respected as-is, not silently overridden.
+        if lora_path is _UNSET:
+            lora_path = model_paths.get("lora_dir")
+        fusion_path = Path(fusion_path if fusion_path is not None else model_paths["fusion_model_file"])
 
         self.encoder = BioMedCLIPEncoder(device=device, lora_path=lora_path)
         self.image_loader = ImageLoader()
