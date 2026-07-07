@@ -1,0 +1,21 @@
+{
+  "num_queries": 200,
+  "num_rows": 800,
+  "counterfactual": {
+    "rows": 9,
+    "by_robustness": {
+      "high": 3,
+      "medium": 3,
+      "low": 3
+    }
+  },
+  "constraints": {
+    "flagged_rate": 0.32,
+    "cross_rows": 3
+  },
+  "correlations": {
+    "aggregate_vs_mean_js": -0.6303624137638523,
+    "aggregate_vs_overall_violation": -0.348845716833684,
+    "aggregate_vs_robustness_level": 0.4088996461859355
+  }
+}
